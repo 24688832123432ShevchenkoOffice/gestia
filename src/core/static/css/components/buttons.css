@@ -1,0 +1,35 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 1.1rem;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-inline: 0;
+}
+
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.product__actions,
+.product__info form {
+  margin-top: 0.75rem;
+}
+
+.product__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+}

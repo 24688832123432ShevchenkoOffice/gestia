@@ -1,0 +1,14 @@
+{% load i18n %}
+<form data-qa="lead-form" method="post" action="{% url 'callback' %}" hx-post="{% url 'callback' %}" hx-target="this" hx-swap="outerHTML">
+  {% csrf_token %}
+  {{ callback_form.sku }}
+  {% if callback_form.non_field_errors %}<p class="field__error">{{ callback_form.non_field_errors }}</p>{% endif %}
+  {% include "commerce/_field.html" with field=callback_form.name %}
+  {% include "commerce/_field.html" with field=callback_form.phone %}
+  <label class="check">
+    {{ callback_form.consent }}
+    <span><a href="{% url 'privacy' %}">{% trans "Погоджуюсь на обробку персональних даних" %}</a></span>
+  </label>
+  {% if callback_form.consent.errors %}<p class="field__error">{{ callback_form.consent.errors }}</p>{% endif %}
+  <button class="btn" type="submit">{% trans "Надіслати заявку" %}</button>
+</form>

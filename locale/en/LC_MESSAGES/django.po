@@ -1,0 +1,178 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "Меню"
+msgstr "Menu"
+
+msgid "Головна"
+msgstr "Home"
+
+msgid "Про нас"
+msgstr "About"
+
+msgid "Каталог"
+msgstr "Catalogue"
+
+msgid "Кошик"
+msgstr "Basket"
+
+msgid "Пошук товарів"
+msgstr "Search products"
+
+msgid "Пошук"
+msgstr "Search"
+
+msgid "Знайти"
+msgstr "Find"
+
+msgid "Зворотний зв'язок"
+msgstr "Contact"
+
+msgid "Політика конфіденційності"
+msgstr "Privacy policy"
+
+msgid "До каталогу"
+msgstr "Browse the catalogue"
+
+msgid "Розділ"
+msgstr "Section"
+
+msgid "Товарів немає."
+msgstr "No products found."
+
+msgid "Фільтр"
+msgstr "Filter"
+
+msgid "Закрити"
+msgstr "Close"
+
+msgid "В наявності"
+msgstr "In stock"
+
+msgid "Під замовлення"
+msgstr "Made to order"
+
+msgid "Немає в наявності"
+msgstr "Out of stock"
+
+msgid "Показати"
+msgstr "Show"
+
+msgid "Скинути"
+msgstr "Reset"
+
+msgid "Попереднє фото"
+msgstr "Previous photo"
+
+msgid "Наступне фото"
+msgstr "Next photo"
+
+msgid "Артикул"
+msgstr "SKU"
+
+msgid "Додати в кошик"
+msgstr "Add to basket"
+
+msgid "Замовити одразу"
+msgstr "Order now"
+
+msgid "Замовити"
+msgstr "Request a call"
+
+msgid "Товари з цього ж сету"
+msgstr "From the same set"
+
+msgid "Схожі товари"
+msgstr "Similar pieces"
+
+msgid "Кількість"
+msgstr "Quantity"
+
+msgid "Оновити"
+msgstr "Update"
+
+msgid "Разом"
+msgstr "Total"
+
+msgid "Оформити замовлення"
+msgstr "Checkout"
+
+msgid "Кошик порожній."
+msgstr "The basket is empty."
+
+msgid "Оформлення замовлення"
+msgstr "Checkout"
+
+msgid "Погоджуюсь на обробку персональних даних"
+msgstr "I agree to the processing of personal data"
+
+msgid "Підтвердити замовлення"
+msgstr "Place the order"
+
+msgid "Дякуємо"
+msgstr "Thank you"
+
+msgid "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами"
+msgstr "Thank you for the order. A consultant will contact you shortly"
+
+msgid "Номер"
+msgstr "Number"
+
+msgid "Надіслати заявку"
+msgstr "Send request"
+
+msgid "Надіслати"
+msgstr "Send"
+
+msgid "Сторінку не знайдено"
+msgstr "Page not found"
+
+msgid "На головну"
+msgstr "Back home"
+
+msgid "Ім'я"
+msgstr "Name"
+
+msgid "Телефон"
+msgstr "Phone"
+
+msgid "Повідомлення"
+msgstr "Message"
+
+msgid "Адреса доставки"
+msgstr "Delivery address"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Доставка"
+msgstr "Delivery"
+
+msgid "Оплата"
+msgstr "Payment"
+
+msgid "Укажіть телефон цифрами, без літер."
+msgstr "Enter the phone with digits only."
+
+msgid "Цей товар зараз не можна замовити."
+msgstr "This piece cannot be ordered right now."
+
+msgid "Нова пошта — відділення"
+msgstr "Nova Poshta — branch"
+
+msgid "Нова пошта — кур'єр"
+msgstr "Nova Poshta — courier"
+
+msgid "Онлайн карткою"
+msgstr "Card online"
+
+msgid "При отриманні"
+msgstr "Pay on delivery"
+
+msgid "Замовлення %(number)s"
+msgstr "Order %(number)s"
+
+msgid "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами. Номер: %(number)s"
+msgstr "Thank you for the order. A consultant will contact you shortly. Number: %(number)s"

@@ -1,0 +1,5 @@
+{% if media.video %}
+  <video class="block-video" controls playsinline preload="metadata"{% if media.image %} poster="{{ media.image.url }}"{% endif %}>
+    <source src="{{ media.video.url }}">
+  </video>
+{% endif %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/cart.css' %}">
+{% endblock %}
+{% block title %}{% trans "Кошик" %}{% endblock %}
+
+{% block content %}
+  <div class="container cart-page" data-qa="cart-page">
+    <header class="page-header">
+      <h1>{% trans "Кошик" %}</h1>
+    </header>
+    <div id="cart-body">
+      {% include "commerce/_cart_body.html" %}
+    </div>
+  </div>
+{% endblock %}

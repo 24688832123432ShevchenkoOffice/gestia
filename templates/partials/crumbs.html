@@ -1,0 +1,19 @@
+{% load i18n %}
+<nav class="crumbs" aria-label="{% trans 'Розділ' %}">
+  <ol>
+    <li><a href="{% url 'home' %}">{% trans "Головна" %}</a></li>
+    <li><a href="{% url 'catalog' %}">{% trans "Каталог" %}</a></li>
+    {% for crumb in crumbs %}
+      <li>
+        {% if forloop.last and not product %}
+          <span aria-current="page">{{ crumb.name }}</span>
+        {% else %}
+          <a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+    {% if product %}
+      <li><span aria-current="page">{{ product.name }}</span></li>
+    {% endif %}
+  </ol>
+</nav>

@@ -1,0 +1,32 @@
+{% load i18n %}
+{% if rows %}
+  <ul class="cart-lines">
+    {% for row in rows %}
+      <li class="cart-line">
+        {% if row.product.cover %}
+          <img src="{{ row.product.cover.image.url }}" alt="" width="96" height="120">
+        {% endif %}
+        <div>
+          <a href="{{ row.product.get_absolute_url }}">{{ row.product.name }}</a>
+          <p>{{ row.unit_label }}</p>
+        </div>
+        <form method="post" action="{% url 'cart_update' %}" hx-post="{% url 'cart_update' %}" hx-target="#cart-body" hx-swap="innerHTML">
+          {% csrf_token %}
+          <input type="hidden" name="sku" value="{{ row.sku }}">
+          <label class="visually-hidden" for="qty-{{ row.sku }}">{% trans "Кількість" %}</label>
+          <input id="qty-{{ row.sku }}" name="qty" type="number" min="0" max="99" value="{{ row.qty }}" inputmode="numeric">
+          <button class="btn btn--ghost" type="submit">{% trans "Оновити" %}</button>
+        </form>
+        <p class="cart-line__sum">{{ row.line_label }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+  <p class="cart-total">{% trans "Разом" %} {{ total_label }}</p>
+  <a class="btn" data-qa="checkout-cta" href="{% url 'checkout' %}">{% trans "Оформити замовлення" %}</a>
+{% else %}
+  <p class="empty">{% trans "Кошик порожній." %}</p>
+  <a class="btn" href="{% url 'catalog' %}">{% trans "До каталогу" %}</a>
+{% endif %}
+{% if request.META.HTTP_HX_REQUEST %}
+  <span id="cart-count" data-qa="cart-count" hx-swap-oob="outerHTML">{{ cart_count }}</span>
+{% endif %}

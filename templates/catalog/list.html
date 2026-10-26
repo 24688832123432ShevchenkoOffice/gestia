@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/catalog.css' %}">
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/pages/catalog.js' %}" defer></script>
+{% endblock %}
+{% block title %}{% if category %}{{ category.name }}{% else %}{% trans "Каталог" %}{% endif %} — Gestia{% endblock %}
+
+{% block content %}
+  <div class="container catalog-page">
+    {% include "partials/crumbs.html" %}
+    <header class="page-header">
+      <h1>{% if category %}{{ category.name }}{% else %}{% trans "Каталог" %}{% endif %}</h1>
+    </header>
+    <div class="catalog-layout">
+      <button class="btn btn--ghost filters-open" type="button" data-filters-open>{% trans "Фільтр" %}</button>
+      {% include "catalog/_filters.html" %}
+      <div id="catalog-results">
+        {% include "catalog/_results.html" %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

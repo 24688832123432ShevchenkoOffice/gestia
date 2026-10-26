@@ -1,0 +1,8 @@
+{% load i18n %}
+<p class="thanks-note" data-qa="lead-success">
+  {% if long %}
+    {% trans "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами" %}
+  {% else %}
+    {% trans "Дякуємо" %}
+  {% endif %}
+</p>

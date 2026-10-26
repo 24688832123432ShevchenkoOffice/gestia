@@ -1,0 +1,45 @@
+.container {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.band {
+  padding-block: 2.5rem;
+}
+
+.band--ink {
+  background: var(--ink);
+  color: var(--accent-ink);
+}
+
+.band--ink .lead {
+  color: #d9cfc2;
+}
+
+.block-video {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto 2rem;
+  background: var(--ink);
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}
+
+.page-copy__grid {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.page-copy__grid img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+@media (min-width: 800px) {
+  .page-copy__grid {
+    grid-template-columns: 0.8fr 1.2fr;
+    align-items: start;
+    gap: 2.5rem;
+  }
+}

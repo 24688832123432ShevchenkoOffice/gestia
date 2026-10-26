@@ -1,0 +1,41 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="theme-color" content="#f3eee6">
+  <title>{% block title %}Gestia{% endblock %}</title>
+  <meta name="description" content="{% block description %}{% endblock %}">
+  {% for code, url in lang_switch_urls.items %}
+    <link rel="alternate" hreflang="{{ code }}" href="{{ request.scheme }}://{{ request.get_host }}{{ url }}">
+  {% endfor %}
+  <link rel="icon" href="{% static 'images/mark.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/nav.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/buttons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/cards.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/modal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/crumbs.css' %}">
+  <link rel="stylesheet" href="{% url 'theme_css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  {% include "partials/header.html" %}
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+  {% include "partials/footer.html" %}
+  <script src="{% static 'js/vendor/htmx.min.js' %}" defer></script>
+  <script src="{% static 'js/utils.js' %}" defer></script>
+  <script src="{% static 'js/nav.js' %}" defer></script>
+  <script src="{% static 'js/dialog.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

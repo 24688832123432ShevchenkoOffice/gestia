@@ -1,0 +1,20 @@
+.crumbs {
+  padding-top: 1rem;
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.crumbs li:not(:last-child)::after {
+  content: "›";
+  margin-left: 0.5rem;
+}
+
+.crumbs a {
+  text-decoration: none;
+}

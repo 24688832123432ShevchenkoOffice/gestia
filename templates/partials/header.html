@@ -1,0 +1,71 @@
+{% load i18n %}
+<header class="site-header">
+  <div class="site-header__bar">
+    <a class="logo" href="{% url 'home' %}">
+      {% if site_settings.logo %}
+        <img src="{{ site_settings.logo.url }}" alt="Gestia" width="132" height="36">
+      {% else %}
+        <span class="logo__word">Gestia</span>
+      {% endif %}
+    </a>
+    <div class="site-tools">
+      {% if site_settings.phone %}
+        <a class="site-tools__phone" href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>
+      {% endif %}
+      <div class="switch" data-qa="lang-switch">
+        {% for code, url in lang_switch_urls.items %}
+          <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ url }}">
+            <input type="hidden" name="language" value="{{ code }}">
+            <button type="submit" class="switch__btn{% if code == LANGUAGE_CODE %} is-current{% endif %}"{% if code == LANGUAGE_CODE %} aria-current="true"{% endif %}>{{ code|upper }}</button>
+          </form>
+        {% endfor %}
+      </div>
+      <div class="switch">
+        <form action="{% url 'set_currency' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <input type="hidden" name="currency" value="uah">
+          <button type="submit" class="switch__btn{% if currency == 'uah' %} is-current{% endif %}">₴</button>
+        </form>
+        <form action="{% url 'set_currency' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <input type="hidden" name="currency" value="eur">
+          <button type="submit" class="switch__btn{% if currency == 'eur' %} is-current{% endif %}">€</button>
+        </form>
+      </div>
+      <a class="cart-link" href="{% url 'cart' %}">
+        <span class="visually-hidden">{% trans "Кошик" %}</span>
+        <span aria-hidden="true">₴</span>
+        {% include "partials/cart_count.html" %}
+      </a>
+    </div>
+    <button class="nav-toggle" type="button" data-menu-open data-qa="menu-open" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle__lines" aria-hidden="true"></span>
+      <span class="visually-hidden">{% trans "Меню" %}</span>
+    </button>
+    <nav class="site-nav" id="site-nav" data-site-nav>
+      <ul class="site-nav__list">
+        <li><a href="{% url 'home' %}">{% trans "Головна" %}</a></li>
+        <li><a href="{% url 'about' %}">{% trans "Про нас" %}</a></li>
+        <li class="site-nav__catalog">
+          <a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>
+          {% if nav_categories %}
+            <ul class="site-nav__sub">
+              {% for cat in nav_categories %}
+                <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      </ul>
+      <form class="search" data-qa="search" action="{% url 'catalog' %}" method="get">
+        <label class="visually-hidden" for="q">{% trans "Пошук товарів" %}</label>
+        <input id="q" name="q" type="search" maxlength="80" value="{{ request.GET.q }}" placeholder="{% trans 'Пошук' %}">
+        <button type="submit">{% trans "Знайти" %}</button>
+      </form>
+    </nav>
+  </div>
+</header>

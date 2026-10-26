@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+{% endblock %}
+{% block title %}{{ page.seo_title }}{% endblock %}
+{% block description %}{{ page.seo_description }}{% endblock %}
+
+{% block content %}
+  <article class="container page-copy">
+    <header class="page-header">
+      <h1>{{ page.title }}</h1>
+    </header>
+    <div class="page-copy__grid">
+      {% if page.image %}
+        <img src="{{ page.image.url }}" alt="" width="900" height="1100">
+      {% endif %}
+      <div class="prose">{{ page.body|linebreaks }}</div>
+    </div>
+    {% include "partials/video.html" with media=page %}
+  </article>
+{% endblock %}

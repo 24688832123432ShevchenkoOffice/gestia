@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load i18n shop_tags static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/product.css' %}">
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/pages/gallery.js' %}" defer></script>
+{% endblock %}
+{% block title %}{{ product.seo_title }}{% endblock %}
+{% block description %}{{ product.seo_description }}{% endblock %}
+
+{% block content %}
+  <article class="container product">
+    {% include "partials/crumbs.html" %}
+    <div class="product__grid">
+      <div class="gallery" data-gallery>
+        {% with cover=product.images.all|first %}
+          {% if cover %}
+            <img class="gallery__main" data-gallery-main src="{{ cover.image.url }}" alt="{{ product.name }}" width="900" height="1120">
+          {% endif %}
+        {% endwith %}
+        {% if product.images.all|length > 1 %}
+          <div class="gallery__thumbs">
+            <button type="button" data-gallery-prev aria-label="{% trans 'Попереднє фото' %}">‹</button>
+            {% for image in product.images.all %}
+              <button type="button" data-gallery-thumb data-full="{{ image.image.url }}">
+                <img src="{{ image.image.url }}" alt="" width="120" height="150">
+              </button>
+            {% endfor %}
+            <button type="button" data-gallery-next aria-label="{% trans 'Наступне фото' %}">›</button>
+          </div>
+        {% endif %}
+      </div>
+      <div class="product__info">
+        <h1>{{ product.name }}</h1>
+        <p class="product__sku">{% trans "Артикул" %} {{ product.sku }}</p>
+        <p class="product__price">{% product_price product %}</p>
+        <p class="product__stock">{{ product.get_stock_status_display }}</p>
+        {% if attrs %}
+          <ul class="product__attrs">
+            {% for attr in attrs %}
+              <li>{{ attr.group.name }} — {{ attr.name }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div class="prose">{{ product.description|linebreaks }}</div>
+        {% if product.stock_status != "out" %}
+          <form data-qa="cart-add" method="post" action="{% url 'cart_add' %}" hx-post="{% url 'cart_add' %}" hx-target="#cart-count" hx-swap="outerHTML">
+            {% csrf_token %}
+            <input type="hidden" name="sku" value="{{ product.sku }}">
+            <button class="btn" type="submit">{% trans "Додати в кошик" %}</button>
+          </form>
+        {% endif %}
+        <div class="product__actions">
+          <button class="btn btn--ghost" type="button" data-open-dialog="buy-dialog"{% if product.stock_status == "out" %} disabled{% endif %}>{% trans "Замовити одразу" %}</button>
+          <button class="btn btn--ghost" type="button" data-open-dialog="callback-dialog">{% trans "Замовити" %}</button>
+        </div>
+      </div>
+    </div>
+
+    {% if set_products %}
+      <section class="product__more">
+        <h2>{% trans "Товари з цього ж сету" %}</h2>
+        {% include "catalog/_grid.html" with products=set_products %}
+      </section>
+    {% endif %}
+    {% if related %}
+      <section class="product__more">
+        <h2>{% trans "Схожі товари" %}</h2>
+        {% include "catalog/_grid.html" with products=related %}
+      </section>
+    {% endif %}
+  </article>
+
+  <dialog class="sheet" id="callback-dialog">
+    <p class="sheet__meta">{{ product.name }} · {{ product.sku }}</p>
+    {% include "commerce/_callback_form.html" %}
+    <button class="btn btn--ghost" type="button" data-close-dialog>{% trans "Закрити" %}</button>
+  </dialog>
+  <dialog class="sheet" id="buy-dialog">
+    <p class="sheet__meta">{{ product.name }} · {{ product.sku }}</p>
+    {% include "commerce/_buy_form.html" %}
+    <button class="btn btn--ghost" type="button" data-close-dialog>{% trans "Закрити" %}</button>
+  </dialog>
+{% endblock %}

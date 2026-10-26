@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/cart.css' %}">
+{% endblock %}
+{% block title %}{% trans "Оформлення замовлення" %}{% endblock %}
+
+{% block content %}
+  <div class="container checkout">
+    <header class="page-header">
+      <h1>{% trans "Оформлення замовлення" %}</h1>
+    </header>
+    <div class="checkout__grid">
+      <form method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<p class="field__error">{{ form.non_field_errors }}</p>{% endif %}
+        {% include "commerce/_field.html" with field=form.name %}
+        {% include "commerce/_field.html" with field=form.phone %}
+        {% include "commerce/_field.html" with field=form.email %}
+        {% include "commerce/_field.html" with field=form.delivery_method %}
+        {% include "commerce/_field.html" with field=form.address %}
+        {% include "commerce/_field.html" with field=form.payment_method %}
+        <label class="check">
+          {{ form.consent }}
+          <span><a href="{% url 'privacy' %}">{% trans "Погоджуюсь на обробку персональних даних" %}</a></span>
+        </label>
+        {% if form.consent.errors %}<p class="field__error">{{ form.consent.errors }}</p>{% endif %}
+        <button class="btn" type="submit">{% trans "Підтвердити замовлення" %}</button>
+      </form>
+      <aside class="checkout__sum">
+        <ul>
+          {% for row in rows %}
+            <li>{{ row.product.name }} × {{ row.qty }} — {{ row.line_label }}</li>
+          {% endfor %}
+        </ul>
+        <p>{% trans "Разом" %} {{ total_label }}</p>
+      </aside>
+    </div>
+  </div>
+{% endblock %}

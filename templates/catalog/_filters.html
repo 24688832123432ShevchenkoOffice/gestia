@@ -1,0 +1,38 @@
+{% load i18n %}
+<form id="filters"
+      class="filters"
+      data-qa="filter-form"
+      method="get"
+      action="{{ request.path }}"
+      hx-get="{{ request.path }}"
+      hx-target="#catalog-results"
+      hx-swap="innerHTML"
+      hx-push-url="true"
+      hx-trigger="change delay:200ms, submit">
+  <div class="filters__head">
+    <p>{% trans "Фільтр" %}</p>
+    <button class="btn btn--ghost" type="button" data-filters-close>{% trans "Закрити" %}</button>
+  </div>
+  {% if parsed.q %}
+    <input type="hidden" name="q" value="{{ parsed.q }}">
+  {% endif %}
+  {% for group in filter_groups %}
+    <fieldset>
+      <legend>{{ group.group.name }}</legend>
+      {% for value in group.values %}
+        {% with mark=group.group.slug|add:":"|add:value.slug %}
+          <label class="check">
+            <input type="checkbox" name="{{ group.group.slug }}" value="{{ value.slug }}"{% if mark in parsed.selected %} checked{% endif %}>
+            <span>{{ value.name }}</span>
+          </label>
+        {% endwith %}
+      {% endfor %}
+    </fieldset>
+  {% endfor %}
+  <label class="check">
+    <input type="checkbox" name="in_stock" value="1"{% if parsed.in_stock %} checked{% endif %}>
+    <span>{% trans "В наявності" %}</span>
+  </label>
+  <button class="btn" type="submit">{% trans "Показати" %}</button>
+  <a class="filters__reset" href="{{ filters_reset_url }}">{% trans "Скинути" %}</a>
+</form>

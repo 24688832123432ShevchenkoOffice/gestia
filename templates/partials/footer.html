@@ -1,0 +1,22 @@
+{% load i18n %}
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div>
+      <p class="logo__word">Gestia</p>
+      {% if site_settings.footer_note %}<p>{{ site_settings.footer_note }}</p>{% endif %}
+      {% if site_settings.address %}<p>{{ site_settings.address }}</p>{% endif %}
+      {% if site_settings.phone %}<p><a href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a></p>{% endif %}
+      {% if site_settings.email %}<p><a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a></p>{% endif %}
+    </div>
+    <div>
+      <p class="site-footer__label">{% trans "Зворотний зв'язок" %}</p>
+      {% include "commerce/_contact_form.html" %}
+    </div>
+  </div>
+  <div class="container site-footer__legal">
+    <a href="{% url 'privacy' %}">{% trans "Політика конфіденційності" %}</a>
+    {% if request.resolver_match.url_name == "home" %}
+      <a href="https://prometeylabs.com" rel="nofollow noopener" target="_blank">PrometeyLabs</a>
+    {% endif %}
+  </div>
+</footer>

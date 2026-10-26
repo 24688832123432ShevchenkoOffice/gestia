@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Дякуємо" %}{% endblock %}
+
+{% block content %}
+  <div class="container page-copy">
+    <header class="page-header">
+      {% if kind == "contact" %}
+        <h1 data-qa="lead-success">{% trans "Дякуємо" %}</h1>
+      {% else %}
+        <h1 data-qa="lead-success">{% trans "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами" %}</h1>
+        {% if number %}<p>{% trans "Номер" %} {{ number }}</p>{% endif %}
+      {% endif %}
+    </header>
+    <a class="btn" href="{% url 'home' %}">{% trans "На головну" %}</a>
+  </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+.sheet {
+  width: min(32rem, calc(100% - 1.5rem));
+  max-height: calc(100dvh - 1.5rem - env(safe-area-inset-bottom));
+  margin: auto;
+  padding: 1.25rem 1rem calc(1rem + env(safe-area-inset-bottom));
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: auto;
+}
+
+.sheet::backdrop {
+  background: rgba(36, 28, 22, 0.46);
+}
+
+.sheet__meta {
+  margin-bottom: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.thanks-note {
+  font-size: var(--step-1);
+}

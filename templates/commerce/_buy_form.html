@@ -1,0 +1,15 @@
+{% load i18n %}
+<form data-qa="lead-form" method="post" action="{% url 'buy_now' %}" hx-post="{% url 'buy_now' %}" hx-target="this" hx-swap="outerHTML">
+  {% csrf_token %}
+  {{ buy_form.sku }}
+  {% if buy_form.non_field_errors %}<p class="field__error">{{ buy_form.non_field_errors }}</p>{% endif %}
+  {% include "commerce/_field.html" with field=buy_form.name %}
+  {% include "commerce/_field.html" with field=buy_form.phone %}
+  {% include "commerce/_field.html" with field=buy_form.address %}
+  <label class="check">
+    {{ buy_form.consent }}
+    <span><a href="{% url 'privacy' %}">{% trans "Погоджуюсь на обробку персональних даних" %}</a></span>
+  </label>
+  {% if buy_form.consent.errors %}<p class="field__error">{{ buy_form.consent.errors }}</p>{% endif %}
+  <button class="btn" type="submit">{% trans "Замовити одразу" %}</button>
+</form>
