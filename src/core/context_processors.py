@@ -13,15 +13,27 @@ def shop(request):
     site = None
     home_blocks = {}
     nav_categories = []
+    menu_categories = []
+    menu_cards = []
+    footer_columns = {"category": [], "info": [], "legal": []}
     cart_count = 0
     try:
+        from src.catalog.models import Category, Product
         from src.catalog.selectors import nav_categories as load_nav
         from src.commerce.cart import item_count
-        from src.content.models import HomeBlock, SiteSettings
+        from src.content.models import FooterLink, HomeBlock, SiteSettings
 
         site = SiteSettings.load()
         home_blocks = {block.key: block for block in HomeBlock.objects.all()}
         nav_categories = list(load_nav())
+        menu_categories = list(
+            Category.objects.filter(parent__isnull=True, is_active=True).order_by("sort", "name_uk")
+        )
+        featured = Product.objects.filter(slug="boks-rizdvyanyi-shyshky", is_active=True).prefetch_related("images").first()
+        if featured is not None:
+            menu_cards = [featured, featured, featured]
+        for link in FooterLink.objects.all():
+            footer_columns.setdefault(link.column, []).append(link)
         cart_count = item_count(request)
     except (OperationalError, ProgrammingError):
         pass
@@ -35,6 +47,9 @@ def shop(request):
         "site_settings": site,
         "home_blocks": home_blocks,
         "nav_categories": nav_categories,
+        "menu_categories": menu_categories,
+        "menu_cards": menu_cards,
+        "footer_columns": footer_columns,
         "currency": currency,
         "cart_count": cart_count,
         "lang_switch_urls": switch,

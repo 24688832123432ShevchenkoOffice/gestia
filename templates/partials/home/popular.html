@@ -1,0 +1,22 @@
+{% load shop_tags %}
+<section class="popular">
+  {% if block.title %}<h2>{{ block.title }}</h2>{% endif %}
+  <div class="pop-rail">
+    {% for product in popular %}
+      <a class="pop-card" href="{{ product.get_absolute_url }}">
+        <span class="pop-card__media">
+          {% with cover=product.cover %}
+            {% if cover %}<img src="{{ cover.image.url }}" alt="" width="368" height="416">{% endif %}
+          {% endwith %}
+        </span>
+        <span class="pop-card__meta">
+          <span class="pop-card__name">{{ product.name }}</span>
+          <span class="pop-card__price{% if product.price_weight == 500 %} is-medium{% endif %}">{% home_price product %}</span>
+        </span>
+      </a>
+    {% endfor %}
+  </div>
+  {% if block.cta %}
+    <a class="figma-btn figma-btn--brown" href="{% url 'catalog' %}">{{ block.cta }}</a>
+  {% endif %}
+</section>

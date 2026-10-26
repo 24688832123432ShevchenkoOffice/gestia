@@ -18,7 +18,7 @@ class ProductImageInline(TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(ModelAdmin):
-    list_display = ("name_uk", "parent", "slug", "is_active", "sort")
+    list_display = ("name_uk", "parent", "slug", "is_active", "sort", "home_sort", "menu_featured")
     list_filter = ("is_active", "parent")
     search_fields = ("name_uk", "name_ru", "name_en", "slug")
     prepopulated_fields = {"slug": ("name_uk",)}
@@ -47,7 +47,17 @@ class ProductSetAdmin(ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(ModelAdmin):
-    list_display = ("name_uk", "sku", "category", "price_uah", "price_eur", "stock_status", "is_active")
+    list_display = (
+        "name_uk",
+        "sku",
+        "category",
+        "price_uah",
+        "price_eur",
+        "price_weight",
+        "is_popular",
+        "stock_status",
+        "is_active",
+    )
     list_filter = ("is_active", "stock_status", "category", "product_set")
     search_fields = ("name_uk", "name_ru", "name_en", "sku", "slug")
     prepopulated_fields = {"slug": ("name_uk",)}

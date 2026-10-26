@@ -95,4 +95,4 @@ OR усередині групи, AND між групами. `q` зберіга�
 
 ## Seed
 
-`python manage.py seed_demo` — ідемпотентний.
+`python manage.py load_figma_content` — контент головної з макета Figma.

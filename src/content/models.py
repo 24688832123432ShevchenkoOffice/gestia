@@ -35,6 +35,10 @@ class SiteSettings(SingletonModel):
     address_ru = models.CharField("Адреса (RU)", max_length=255, blank=True)
     address_en = models.CharField("Адреса (EN)", max_length=255, blank=True)
     instagram_url = models.URLField("Instagram", blank=True)
+    pinterest_url = models.URLField("Pinterest", blank=True)
+    developer_note_uk = models.CharField("Підпис розробника", max_length=160, blank=True)
+    developer_note_ru = models.CharField("Підпис розробника (RU)", max_length=160, blank=True)
+    developer_note_en = models.CharField("Підпис розробника (EN)", max_length=160, blank=True)
     logo = models.ImageField(
         "Логотип",
         upload_to="site/",
@@ -67,15 +71,37 @@ class SiteSettings(SingletonModel):
     def footer_note(self):
         return localized(self, "footer_note")
 
+    @property
+    def developer_note(self):
+        return localized(self, "developer_note")
+
+    @property
+    def copyright_lead(self):
+        note = self.footer_note or ""
+        return note.split("|", 1)[0]
+
+    @property
+    def copyright_tail(self):
+        note = self.footer_note or ""
+        parts = note.split("|", 1)
+        return parts[1] if len(parts) == 2 else ""
+
 
 class HomeBlock(models.Model):
     class Key(models.TextChoices):
         HERO = "hero", "Головний банер"
         CATEGORIES = "categories", "Категорії"
+        VIDEO = "video", "Відео 1"
+        POPULAR = "popular", "Популярні товари"
         ADVANTAGES = "advantages", "Переваги"
+        VIDEO_2 = "video_2", "Відео 2"
+        REVIEWS = "reviews", "Відгуки"
+        CALLBACK = "callback", "Зворотний дзвінок"
+        LOCALE = "locale", "Країна та мова"
+        MEGA = "mega", "Мегаменю"
 
     key = models.CharField("Ключ", max_length=32, choices=Key.choices, unique=True)
-    title_uk = models.CharField("Заголовок", max_length=200)
+    title_uk = models.CharField("Заголовок", max_length=200, blank=True)
     title_ru = models.CharField("Заголовок (RU)", max_length=200, blank=True)
     title_en = models.CharField("Заголовок (EN)", max_length=200, blank=True)
     text_uk = models.TextField("Текст", blank=True)
@@ -87,12 +113,33 @@ class HomeBlock(models.Model):
         blank=True,
         validators=[IMAGE_VALIDATOR],
     )
+    image_mobile = models.ImageField(
+        "Зображення (мобільне)",
+        upload_to="home/",
+        blank=True,
+        validators=[IMAGE_VALIDATOR],
+    )
     video = models.FileField(
         "Відео",
         upload_to="home/video/",
         blank=True,
         validators=[VIDEO_VALIDATOR],
     )
+    text_mobile_uk = models.TextField("Текст (мобільний)", blank=True)
+    text_mobile_ru = models.TextField("Текст (мобільний, RU)", blank=True)
+    text_mobile_en = models.TextField("Текст (мобільний, EN)", blank=True)
+    cta_uk = models.CharField("Текст кнопки", max_length=200, blank=True)
+    cta_ru = models.CharField("Текст кнопки (RU)", max_length=200, blank=True)
+    cta_en = models.CharField("Текст кнопки (EN)", max_length=200, blank=True)
+    link_uk = models.CharField("Другий підпис", max_length=160, blank=True)
+    link_ru = models.CharField("Другий підпис (RU)", max_length=160, blank=True)
+    link_en = models.CharField("Другий підпис (EN)", max_length=160, blank=True)
+    note_uk = models.TextField("Примітка", blank=True)
+    note_ru = models.TextField("Примітка (RU)", blank=True)
+    note_en = models.TextField("Примітка (EN)", blank=True)
+    lines_uk = models.TextField("Рядки підписів", blank=True)
+    lines_ru = models.TextField("Рядки підписів (RU)", blank=True)
+    lines_en = models.TextField("Рядки підписів (EN)", blank=True)
     sort = models.PositiveIntegerField("Порядок", default=0)
 
     class Meta:
@@ -111,6 +158,29 @@ class HomeBlock(models.Model):
     def text(self):
         return localized(self, "text")
 
+    @property
+    def cta(self):
+        return localized(self, "cta")
+
+    @property
+    def text_mobile(self):
+        return localized(self, "text_mobile") or self.text
+
+    @property
+    def link_label(self):
+        return localized(self, "link")
+
+    @property
+    def note(self):
+        return localized(self, "note")
+
+    @property
+    def field_labels(self):
+        parts = localized(self, "lines").splitlines()
+        while len(parts) < 3:
+            parts.append("")
+        return parts[:3]
+
 
 class Advantage(models.Model):
     title_uk = models.CharField("Заголовок", max_length=160)
@@ -119,6 +189,12 @@ class Advantage(models.Model):
     text_uk = models.TextField("Текст", blank=True)
     text_ru = models.TextField("Текст (RU)", blank=True)
     text_en = models.TextField("Текст (EN)", blank=True)
+    image = models.ImageField(
+        "Зображення",
+        upload_to="home/advantages/",
+        blank=True,
+        validators=[IMAGE_VALIDATOR],
+    )
     sort = models.PositiveIntegerField("Порядок", default=0)
 
     class Meta:
@@ -226,3 +302,81 @@ class PrivacyPage(SingletonModel):
     @property
     def seo_description(self):
         return localized(self, "seo_description")
+
+
+class Review(models.Model):
+    class Rating(models.TextChoices):
+        GOLD_FOUR = "gold4", "4 золоті"
+        BLACK_FIVE = "black5", "5 чорних"
+
+    author_uk = models.CharField("Ім'я", max_length=80)
+    author_ru = models.CharField("Ім'я (RU)", max_length=80, blank=True)
+    author_en = models.CharField("Ім'я (EN)", max_length=80, blank=True)
+    text_uk = models.TextField("Текст")
+    text_ru = models.TextField("Текст (RU)", blank=True)
+    text_en = models.TextField("Текст (EN)", blank=True)
+    rating_kind = models.CharField(
+        "Рейтинг",
+        max_length=16,
+        choices=Rating.choices,
+        default=Rating.GOLD_FOUR,
+    )
+    sort = models.PositiveIntegerField("Порядок", default=0)
+
+    class Meta:
+        ordering = ["sort", "id"]
+        verbose_name = "Відгук"
+        verbose_name_plural = "Відгуки"
+
+    def __str__(self):
+        return self.author_uk
+
+    @property
+    def author(self):
+        return localized(self, "author")
+
+    @property
+    def text(self):
+        return localized(self, "text")
+
+
+class FooterLink(models.Model):
+    class Column(models.TextChoices):
+        CATEGORY = "category", "Категорії"
+        INFO = "info", "Інформація"
+        LEGAL = "legal", "Документи"
+
+    column = models.CharField("Колонка", max_length=16, choices=Column.choices)
+    label_uk = models.CharField("Підпис", max_length=200)
+    label_ru = models.CharField("Підпис (RU)", max_length=200, blank=True)
+    label_en = models.CharField("Підпис (EN)", max_length=200, blank=True)
+    url_name = models.CharField("Ім'я URL", max_length=40, blank=True)
+    url_arg = models.CharField("Аргумент URL", max_length=80, blank=True)
+    underlined = models.BooleanField("З лінією", default=False)
+    sort = models.PositiveIntegerField("Порядок", default=0)
+
+    class Meta:
+        ordering = ["column", "sort", "id"]
+        verbose_name = "Посилання підвалу"
+        verbose_name_plural = "Посилання підвалу"
+
+    def __str__(self):
+        return self.label_uk
+
+    @property
+    def label(self):
+        return localized(self, "label")
+
+    def href(self):
+        from django.urls import NoReverseMatch, reverse
+
+        if self.url_name == "category" and self.url_arg:
+            return reverse("category", kwargs={"slug": self.url_arg})
+        if self.url_name == "anchor":
+            return reverse("home") + "#" + (self.url_arg or "callback")
+        if self.url_name:
+            try:
+                return reverse(self.url_name)
+            except NoReverseMatch:
+                return ""
+        return self.url_arg or ""

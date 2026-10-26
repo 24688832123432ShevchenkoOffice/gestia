@@ -1,0 +1,126 @@
+.callback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+  margin-bottom: 78px;
+}
+
+.callback__form,
+.callback__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.callback__form {
+  gap: 30px;
+}
+
+.figma-field {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px;
+  padding-left: 18px;
+  border: 1px solid var(--brown);
+  background: var(--field-wash);
+}
+
+.figma-field--area {
+  align-items: flex-start;
+  height: 112px;
+  padding-top: 10px;
+}
+
+.field-ico--desk {
+  display: none;
+}
+
+.field-ico {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+}
+
+.figma-field--area .field-ico {
+  width: 20px;
+  height: 20px;
+}
+
+.figma-field input,
+.figma-field textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--brown);
+  font: 500 16px/normal var(--font);
+  letter-spacing: -0.48px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.figma-field textarea {
+  height: 88px;
+  resize: none;
+}
+
+.figma-field input::placeholder,
+.figma-field textarea::placeholder {
+  color: var(--brown);
+  opacity: 1;
+}
+
+.figma-error {
+  margin: -6px 0 0;
+  color: #000;
+  font-size: 12px;
+  letter-spacing: -0.36px;
+}
+
+.consent {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: min(279px, 100%);
+}
+
+.consent input {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: 0;
+  opacity: 0;
+}
+
+.consent__mark {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  margin-top: 2px;
+}
+
+.consent__mark--desk {
+  display: none;
+}
+
+.consent span,
+.consent a {
+  color: #000;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  text-decoration: none;
+}
+
+.callback .figma-btn--wide {
+  font-weight: 400;
+}
+

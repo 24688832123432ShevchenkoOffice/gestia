@@ -1,0 +1,459 @@
+@media (min-width: 768px) {
+  .page-home .hero {
+    margin-top: calc(-1 * var(--header-h));
+  }
+
+  .hero,
+  .vbanner {
+    height: min(871px, 78vw);
+  }
+
+  .hero__img,
+  .vbanner__img {
+    opacity: 1;
+  }
+
+  .hero__copy {
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 8%;
+    width: min(902px, calc(100% - 48px));
+    transform: translateX(-50%);
+    gap: 60px;
+  }
+
+  .hero h1 {
+    font-size: 60px;
+    letter-spacing: -4.2px;
+  }
+
+  .hero__intro p {
+    width: min(458px, 100%);
+    font-size: 18px;
+    letter-spacing: -0.54px;
+  }
+
+  .video-mark--mob,
+  .field-ico--mob,
+  .consent__mark--mob,
+  .rating--mob {
+    display: none;
+  }
+
+  .video-mark--desk,
+  .vbanner__ico--desk,
+  .field-ico--desk,
+  .consent__mark--desk,
+  .rating--desk {
+    display: block;
+  }
+
+  .video-mark--desk {
+    width: 216px;
+    left: calc(50% + 1px);
+    top: 14.8%;
+    transform: translateX(-50%);
+  }
+
+  .video-mark--desk .video-mark__a {
+    left: 23.39px;
+    top: 47.57px;
+    width: 125.545px;
+    height: 120.866px;
+  }
+
+  .video-mark--desk .video-mark__b {
+    left: 139.58px;
+    top: 49.13px;
+    width: 53.805px;
+    height: 117.747px;
+    transform: scaleY(-1) rotate(180deg);
+  }
+
+  .video-mark--desk .video-mark__b img {
+    width: 53.8051px;
+    height: 117.747px;
+  }
+
+  .video-mark--desk .video-mark__c {
+    left: 80.32px;
+    top: 78.76px;
+    width: 38.209px;
+    height: 13.256px;
+  }
+
+  .vbanner__ico--desk {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 218px;
+    height: 155px;
+    transform: translate(-50%, -50%);
+  }
+
+  .cats,
+  .vbanner,
+  .popular,
+  .benefits,
+  .reviews,
+  .callback {
+    margin-top: 80px;
+  }
+
+  .cat-rail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 303px));
+    justify-content: center;
+    gap: 30px;
+    overflow: visible;
+    padding: 0 24px;
+  }
+
+  .cat-card,
+  .cat-card:nth-child(3) {
+    flex: none;
+    align-items: center;
+    width: 100%;
+  }
+
+  .cat-card__media {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 303 / 342;
+  }
+
+  .cat-card__name {
+    font-weight: 400;
+  }
+
+  .popular {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding-inline: 24px;
+  }
+
+  .popular h2,
+  .benefits h2,
+  .reviews h2,
+  .callback h2 {
+    font-size: 42px;
+    letter-spacing: -2.94px;
+  }
+
+  .pop-rail {
+    gap: 30px;
+    width: 100%;
+    padding-bottom: 4px;
+  }
+
+  .pop-card {
+    flex: 0 0 368px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #000;
+    text-decoration: none;
+  }
+
+  .pop-card__media {
+    width: 368px;
+    height: 416px;
+  }
+
+  .pop-card:nth-child(1) .pop-card__media,
+  .pop-card:nth-child(3) .pop-card__media {
+    height: 415px;
+  }
+
+  .pop-card:nth-child(1) .pop-card__media img {
+    width: 100.01%;
+    height: 107.6%;
+    left: 0;
+    top: -3.69%;
+  }
+
+  .pop-card:nth-child(4) .pop-card__media img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pop-card__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 16px;
+    letter-spacing: -0.48px;
+    line-height: normal;
+  }
+
+  .pop-card__name {
+    width: 127px;
+  }
+
+  .pop-card:nth-child(3) .pop-card__name {
+    width: 126px;
+  }
+
+  .pop-card:nth-child(4) .pop-card__name {
+    width: 119px;
+  }
+
+  .pop-card__price {
+    white-space: nowrap;
+  }
+
+  .benefits {
+    gap: 60px;
+    align-items: flex-start;
+    width: min(1302px, calc(100% - 48px));
+    margin-inline: auto;
+  }
+
+  .benefits__head {
+    width: 100%;
+  }
+
+  .benefits h2 {
+    width: auto;
+  }
+
+  .benefits__lead--desk,
+  .only-desk {
+    display: block;
+  }
+
+  .benefits__lead--mob,
+  .only-mob {
+    display: none;
+  }
+
+  .pop-card__price.is-medium {
+    font-weight: 500;
+  }
+
+  .benefits__head p,
+  .callback__head p {
+    width: min(403px, 100%);
+    font-size: 18px;
+    letter-spacing: -0.54px;
+  }
+
+  .benefit-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 303px));
+    gap: 30px;
+  }
+
+  .benefit h3 {
+    font-size: 24px;
+    letter-spacing: -1.68px;
+  }
+
+  .benefit p {
+    font-size: 18px;
+    letter-spacing: -0.54px;
+  }
+
+  .benefits .figma-btn {
+    display: inline-flex;
+    width: 190px;
+  }
+
+  .popular .figma-btn {
+    width: 190px;
+  }
+
+  .cat-card:nth-child(3) .cat-card__media img {
+    width: 100%;
+    height: 117.02%;
+    left: 0;
+    top: -15.72%;
+    object-fit: fill;
+  }
+
+  .cat-card:nth-child(4) .cat-card__media img {
+    width: 301.965px;
+    height: 374px;
+    left: 0;
+    top: calc(50% + 10px);
+    transform: translateY(-50%);
+    object-fit: fill;
+  }
+
+  .reviews {
+    gap: 60px;
+    align-items: flex-start;
+    width: min(1302px, calc(100% - 48px));
+    margin-inline: auto;
+  }
+
+  .review-rail {
+    gap: 30px;
+  }
+
+  .review-card {
+    flex-basis: 368px;
+    gap: 60px;
+  }
+
+  .review-card h3 {
+    font-size: 24px;
+    letter-spacing: -1.68px;
+  }
+
+  .review-card p {
+    width: 307px;
+    font-size: 18px;
+    letter-spacing: -0.54px;
+  }
+
+  .rating--desk {
+    width: 98px;
+    height: 18px;
+  }
+
+  .callback {
+    width: min(526px, calc(100% - 48px));
+    margin-inline: auto;
+    margin-bottom: 100px;
+  }
+
+  .callback__form {
+    width: min(414px, 100%);
+  }
+
+  .figma-field {
+    border-color: #000;
+    background: transparent;
+  }
+
+  .figma-field input,
+  .figma-field textarea,
+  .figma-field input::placeholder,
+  .figma-field textarea::placeholder {
+    color: #000;
+  }
+
+  .callback .figma-btn--wide {
+    font-weight: 500;
+    border-color: var(--brown);
+    color: var(--brown);
+  }
+}
+
+@media (min-width: 1440px) {
+  .home-frame {
+    width: 1440px;
+    margin-inline: auto;
+    position: relative;
+  }
+
+  .hero,
+  .vbanner {
+    width: 1442px;
+    height: 871px;
+    margin-left: -1px;
+  }
+
+  .hero__copy {
+    top: 511px;
+    bottom: auto;
+    width: 902px;
+  }
+
+  .video-mark--desk {
+    top: 129.4px;
+  }
+
+  .cats {
+    width: 969px;
+    margin-top: 120px;
+    margin-left: 236px;
+  }
+
+  .cat-rail {
+    padding: 0;
+    gap: 30px;
+  }
+
+  .cat-card {
+    width: 303px;
+  }
+
+  .cat-card__media {
+    width: 303px;
+    height: 342px;
+    aspect-ratio: auto;
+  }
+
+  .vbanner,
+  .popular,
+  .benefits,
+  .reviews,
+  .callback {
+    margin-top: 120px;
+  }
+
+  .popular {
+    width: 1440px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0 0 69px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .popular h2 {
+    width: 1302px;
+  }
+
+  .pop-rail {
+    width: 1562px;
+    max-width: none;
+  }
+
+  .benefits {
+    width: 1302px;
+    margin-left: 70px;
+    margin-right: 0;
+  }
+
+  .benefit-list {
+    grid-template-columns: repeat(4, 303px);
+  }
+
+  .benefit,
+  .benefit h3,
+  .benefit p,
+  .benefit__media {
+    width: 303px;
+  }
+
+  .reviews {
+    width: 1440px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0 0 49px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reviews h2 {
+    width: 1301px;
+  }
+
+  .review-rail {
+    width: 1562px;
+  }
+
+  .callback {
+    margin-left: calc(50% - 262px);
+    margin-bottom: 100px;
+  }
+}

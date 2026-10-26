@@ -1,71 +1,172 @@
-{% load i18n %}
-<header class="site-header">
+{% load i18n shop_tags static %}
+<header class="site-header" data-header>
   <div class="site-header__bar">
-    <a class="logo" href="{% url 'home' %}">
-      {% if site_settings.logo %}
-        <img src="{{ site_settings.logo.url }}" alt="Gestia" width="132" height="36">
-      {% else %}
-        <span class="logo__word">Gestia</span>
-      {% endif %}
-    </a>
-    <div class="site-tools">
-      {% if site_settings.phone %}
-        <a class="site-tools__phone" href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>
-      {% endif %}
-      <div class="switch" data-qa="lang-switch">
-        {% for code, url in lang_switch_urls.items %}
-          <form action="{% url 'set_language' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ url }}">
-            <input type="hidden" name="language" value="{{ code }}">
-            <button type="submit" class="switch__btn{% if code == LANGUAGE_CODE %} is-current{% endif %}"{% if code == LANGUAGE_CODE %} aria-current="true"{% endif %}>{{ code|upper }}</button>
-          </form>
-        {% endfor %}
-      </div>
-      <div class="switch">
-        <form action="{% url 'set_currency' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <input type="hidden" name="currency" value="uah">
-          <button type="submit" class="switch__btn{% if currency == 'uah' %} is-current{% endif %}">₴</button>
-        </form>
-        <form action="{% url 'set_currency' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <input type="hidden" name="currency" value="eur">
-          <button type="submit" class="switch__btn{% if currency == 'eur' %} is-current{% endif %}">€</button>
-        </form>
-      </div>
-      <a class="cart-link" href="{% url 'cart' %}">
-        <span class="visually-hidden">{% trans "Кошик" %}</span>
-        <span aria-hidden="true">₴</span>
-        {% include "partials/cart_count.html" %}
-      </a>
-    </div>
-    <button class="nav-toggle" type="button" data-menu-open data-qa="menu-open" aria-expanded="false" aria-controls="site-nav">
-      <span class="nav-toggle__lines" aria-hidden="true"></span>
+    <button class="burger-btn" type="button" data-burger aria-expanded="false" aria-controls="burger-panel">
+      <img class="burger-btn__open" src="{% static 'figma/mobile/b37e7.svg' %}" width="36" height="13" alt="">
+      <img class="burger-btn__close" src="{% static 'figma/mobile_burger/596f5.svg' %}" width="36.6968" height="15.4876" alt="">
       <span class="visually-hidden">{% trans "Меню" %}</span>
     </button>
-    <nav class="site-nav" id="site-nav" data-site-nav>
-      <ul class="site-nav__list">
-        <li><a href="{% url 'home' %}">{% trans "Головна" %}</a></li>
-        <li><a href="{% url 'about' %}">{% trans "Про нас" %}</a></li>
-        <li class="site-nav__catalog">
-          <a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>
-          {% if nav_categories %}
-            <ul class="site-nav__sub">
-              {% for cat in nav_categories %}
-                <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </li>
-      </ul>
-      <form class="search" data-qa="search" action="{% url 'catalog' %}" method="get">
-        <label class="visually-hidden" for="q">{% trans "Пошук товарів" %}</label>
-        <input id="q" name="q" type="search" maxlength="80" value="{{ request.GET.q }}" placeholder="{% trans 'Пошук' %}">
-        <button type="submit">{% trans "Знайти" %}</button>
-      </form>
+
+    <nav class="head-nav" aria-label="{% trans 'Основне' %}">
+      <button class="head-nav__catalog" type="button" data-catalog aria-expanded="false" aria-controls="mega-panel">
+        <span>{% trans "Каталог" %}</span>
+        <img src="{% static 'figma/desktop/ccc79.svg' %}" width="61.0059" height="1" alt="">
+      </button>
+      <a class="head-nav__about" href="{% url 'about' %}">{% trans "Про нас" %}</a>
+      <a class="icon-btn" href="{% url 'catalog' %}" aria-label="{% trans 'Пошук' %}">
+        <img src="{% static 'figma/desktop/d595f.svg' %}" width="22" height="22" alt="">
+      </a>
     </nav>
+
+    {% include "partials/brand.html" with kind="header" %}
+
+    <div class="head-actions">
+      <button class="lang-btn" type="button" data-locale-open aria-expanded="false" aria-controls="locale-panel">
+        <span class="lang-btn__ua">UA</span><span class="lang-btn__en">/EN</span>
+      </button>
+      <div class="cur-switch">
+        <form action="{% url 'set_currency' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button class="cur-switch__uah" type="submit" name="currency" value="uah">₴</button>
+        </form>
+        <span class="cur-switch__slash">/</span>
+        <form action="{% url 'set_currency' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button class="cur-switch__eur" type="submit" name="currency" value="eur">€</button>
+        </form>
+      </div>
+      {% if site_settings.phone %}
+        <a class="icon-btn" href="tel:{{ site_settings.phone|cut:' ' }}" aria-label="{% trans 'Зателефонувати' %}">
+          <img src="{% static 'figma/desktop/f6cbe.svg' %}" width="24" height="24" alt="">
+        </a>
+      {% endif %}
+      <button class="icon-btn" type="button" aria-label="{% trans 'Обране' %}">
+        <img src="{% static 'figma/desktop/dba9b.svg' %}" width="21" height="21" alt="">
+      </button>
+      <a class="icon-btn head-bag" href="{% url 'cart' %}" aria-label="{% trans 'Кошик' %}">
+        <img src="{% static 'figma/desktop/38908.svg' %}" width="17.5213" height="18.7918" alt="">
+        <span class="visually-hidden">{% include "partials/cart_count.html" %}</span>
+      </a>
+    </div>
+
+    <div class="head-mobile-tools">
+      <a class="icon-btn" href="{% url 'catalog' %}" aria-label="{% trans 'Пошук' %}">
+        <img src="{% static 'figma/mobile/d595f.svg' %}" width="22" height="22" alt="">
+      </a>
+      <a class="icon-btn head-bag" href="{% url 'cart' %}" aria-label="{% trans 'Кошик' %}">
+        <img src="{% static 'figma/mobile/38908.svg' %}" width="17.5213" height="18.7918" alt="">
+      </a>
+    </div>
+  </div>
+
+  <div class="mega" id="mega-panel" data-mega hidden>
+    <button class="mega__scrim" type="button" data-catalog-close tabindex="-1" aria-label="{% trans 'Закрити каталог' %}"></button>
+    <div class="mega__panel">
+      <div class="mega__inner">
+        <div class="mega__nav">
+          <div class="mega__cats">
+            <a href="{% url 'catalog' %}">{% trans "Усі товари" %}</a>
+            <div class="mega__list">
+              {% for cat in menu_categories %}
+                <a class="{% if cat.menu_featured %}is-feature{% endif %}" href="{{ cat.get_absolute_url }}">
+                  <span>{{ cat.name }}</span>
+                  {% if cat.menu_featured %}
+                    <img src="{% static 'figma/megamenu/8af5b.svg' %}" width="109" height="1" alt="">
+                  {% endif %}
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="mega__social">
+            {% include "partials/social_row.html" with tone="dark" %}
+          </div>
+        </div>
+        <div class="mega__grid">
+          <div class="mega__products">
+            {% for product in menu_cards %}
+              <a class="mega-card" href="{{ product.get_absolute_url }}">
+                <span class="mega-card__media">
+                  {% with cover=product.cover %}
+                    {% if cover %}<img src="{{ cover.image.url }}" alt="" width="200" height="226">{% endif %}
+                  {% endwith %}
+                </span>
+                <span class="mega-card__meta">
+                  <span class="mega-card__name">{{ product.menu_name }}</span>
+                  <span class="mega-card__price">{% home_price product %}</span>
+                </span>
+              </a>
+            {% endfor %}
+          </div>
+          {% if home_blocks.mega.cta %}
+            <a class="figma-btn figma-btn--mini" href="{% url 'catalog' %}">{{ home_blocks.mega.cta }}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="locale" id="locale-panel" data-locale hidden>
+    {% if home_blocks.locale %}
+      <p class="locale__title">{{ home_blocks.locale.title }}</p>
+      <img class="locale__rule" src="{% static 'figma/locale_popup/dfae6.svg' %}" width="268" height="1" alt="">
+      <p class="locale__current">
+        <img src="{% static 'figma/locale_popup/e071b.svg' %}" width="21" height="15" alt="">
+        <span>{{ home_blocks.locale.text }}</span>
+      </p>
+      <img class="locale__rule" src="{% static 'figma/locale_popup/dfae6.svg' %}" width="268" height="1" alt="">
+      <button class="figma-btn figma-btn--locale" type="button" data-locale-close>{{ home_blocks.locale.cta }}</button>
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <input type="hidden" name="language" value="{% if LANGUAGE_CODE == 'en' %}uk{% else %}en{% endif %}">
+        <button class="locale__change" type="submit">{{ home_blocks.locale.link_label }}</button>
+      </form>
+    {% endif %}
   </div>
 </header>
+
+<div class="burger" id="burger-panel" data-burger-panel hidden>
+  <div class="burger__body">
+    <form class="burger-search" action="{% url 'catalog' %}" method="get">
+      <img src="{% static 'figma/mobile_burger/a3570.svg' %}" width="22" height="22" alt="">
+      <label class="visually-hidden" for="burger-q">{% trans "Пошук товарів" %}</label>
+      <input id="burger-q" name="q" type="search" maxlength="80" enterkeyhint="search" autocomplete="off">
+      <img class="burger-search__line" src="{% static 'figma/mobile_burger/cb9a5.svg' %}" width="362" height="1" alt="">
+    </form>
+    <div class="burger__catalog">
+      <div class="burger__catalog-head">
+        <p>{% trans "Каталог" %}</p>
+        <img src="{% static 'figma/mobile_burger/fed4e.svg' %}" width="15" height="15" alt="">
+      </div>
+      <div class="burger__cats">
+        <a href="{% url 'catalog' %}">{% trans "Усі товари" %}</a>
+        {% for cat in menu_categories %}
+          <a class="{% if cat.menu_featured %}is-feature{% endif %}" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+        {% endfor %}
+      </div>
+      <img class="burger__rule" src="{% static 'figma/mobile_burger/e4369.svg' %}" width="362" height="1" alt="">
+      <a class="burger__about" href="{% url 'about' %}">{% trans "Про нас" %}</a>
+    </div>
+    <div class="burger__foot">
+      {% include "partials/social_row.html" with tone="dark" %}
+      <button class="lang-btn" type="button" data-locale-open>
+        <span class="lang-btn__ua">UA</span><span class="lang-btn__en">/EN</span>
+      </button>
+      <div class="cur-switch">
+        <form action="{% url 'set_currency' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button class="cur-switch__uah" type="submit" name="currency" value="uah">₴</button>
+        </form>
+        <span class="cur-switch__slash">/</span>
+        <form action="{% url 'set_currency' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button class="cur-switch__eur" type="submit" name="currency" value="eur">€</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 # CONTENT_MANIFEST — Gestia
 
 mode: typed singletons + фіксовані блоки. Не SiteBlock, не конструктор сторінок.
-seed command: `python manage.py seed_demo`
+seed command: `python manage.py load_figma_content`
 CMS_ALLOW_STATIC_FALLBACK=false
 мова контенту: *_uk / *_ru / *_en, fallback на uk якщо переклад порожній.
 UI-рядки: gettext, не поля моделей.

@@ -1,0 +1,21 @@
+<section class="benefits">
+  <header class="benefits__head">
+    {% if block.title %}<h2>{{ block.title }}</h2>{% endif %}
+    {% if block.text %}<p class="benefits__lead benefits__lead--desk">{{ block.text }}</p>{% endif %}
+    {% if block.text_mobile or block.text %}<p class="benefits__lead benefits__lead--mob">{{ block.text_mobile|linebreaksbr }}</p>{% endif %}
+  </header>
+  <div class="benefit-list">
+    {% for item in advantages %}
+      <article class="benefit">
+        <span class="benefit__media">
+          {% if block.image %}<img src="{{ block.image.url }}" alt="" width="303" height="197">{% endif %}
+        </span>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.text|linebreaksbr }}</p>
+      </article>
+    {% endfor %}
+  </div>
+  {% if block.cta %}
+    <a class="figma-btn figma-btn--ink" href="{% url 'catalog' %}">{{ block.cta }}</a>
+  {% endif %}
+</section>

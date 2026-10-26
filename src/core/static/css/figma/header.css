@@ -1,0 +1,246 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: #fff;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+@media (min-width: 1440px) {
+  .site-header {
+    position: relative;
+    padding-top: 0;
+  }
+}
+
+.site-header__bar {
+  position: relative;
+  height: 69.211px;
+  background: #fff;
+}
+
+.burger-btn,
+.head-mobile-tools {
+  display: flex;
+}
+
+.head-nav,
+.head-actions {
+  display: none;
+}
+
+.burger-btn {
+  position: absolute;
+  left: 8px;
+  top: 12px;
+  width: 44px;
+  height: 44px;
+}
+
+.burger-btn__open,
+.burger-btn__close {
+  position: absolute;
+  display: block;
+}
+
+.burger-btn__open {
+  left: 8px;
+  top: 16.9px;
+  width: 36px;
+  height: 13px;
+}
+
+.burger-btn__close {
+  left: 8px;
+  top: 14px;
+  width: 36.6968px;
+  height: 15.4876px;
+  display: none;
+}
+
+body.is-burger .burger-btn__open {
+  display: none;
+}
+
+body.is-burger .burger-btn__close {
+  display: block;
+}
+
+.brand--header {
+  position: absolute;
+  left: 50%;
+  top: 13px;
+  width: 112.746px;
+  height: 43.211px;
+  transform: translateX(calc(-50% - 1.62px));
+}
+
+.brand {
+  text-decoration: none;
+}
+
+.brand__photo,
+.brand__gold,
+.brand__cream {
+  position: absolute;
+  pointer-events: none;
+}
+
+.brand__photo {
+  inset: 0;
+  overflow: hidden;
+}
+
+.brand__photo img {
+  position: absolute;
+  width: 131.39%;
+  height: 133.62%;
+  left: -15.83%;
+  top: -17.92%;
+}
+
+.brand__gold {
+  background: linear-gradient(to right, #d4b99f, #754c28);
+}
+
+.brand__gold--desk {
+  display: none;
+}
+
+.brand__gold--mob {
+  left: 31.11px;
+  top: 0;
+  width: 45.821px;
+  height: 39.972px;
+  -webkit-mask-image: url("../../figma/mobile/89827.png");
+  mask-image: url("../../figma/mobile/89827.png");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 27.298px 38.022px;
+  mask-size: 27.298px 38.022px;
+  -webkit-mask-position: 13.649px 0;
+  mask-position: 13.649px 0;
+}
+
+body.is-burger .brand__gold--mob {
+  -webkit-mask-image: url("../../figma/mobile_burger/27292.png");
+  mask-image: url("../../figma/mobile_burger/27292.png");
+}
+
+.head-mobile-tools {
+  position: absolute;
+  right: 16px;
+  top: 22.94px;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+body.is-burger .head-mobile-tools .icon-btn:first-child {
+  display: none;
+}
+
+.head-bag {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.head-bag img {
+  position: absolute;
+  left: 12.5%;
+  top: 12.5%;
+  width: 17.5213px;
+  height: 18.7918px;
+}
+
+.lang-btn,
+.cur-switch,
+.cur-switch button {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  color: #000;
+}
+
+.cur-switch {
+  display: flex;
+  align-items: center;
+}
+
+.cur-switch form {
+  margin: 0;
+}
+
+.head-nav {
+  position: absolute;
+  left: 69px;
+  top: 50%;
+  transform: translateY(calc(-50% + 0.31px));
+  align-items: center;
+  gap: 22px;
+  height: 19.838px;
+}
+
+.head-nav__catalog {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #000;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  cursor: pointer;
+}
+
+.head-nav__catalog img {
+  width: 61.006px;
+  height: 1px;
+  display: block;
+}
+
+body.is-mega .head-nav__catalog {
+  font-weight: 500;
+}
+
+.head-nav__about {
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.48px;
+  line-height: normal;
+  text-decoration: none;
+}
+
+.head-actions {
+  position: absolute;
+  left: 1139px;
+  top: 50%;
+  transform: translateY(calc(-50% + 0.39px));
+  align-items: center;
+  gap: 22px;
+}
+
+body.is-locale .lang-btn__en,
+body.is-locale .cur-switch__slash,
+body.is-locale .cur-switch__eur {
+  color: var(--ink-50);
+}
+
+.mega,
+.locale,
+.burger {
+  display: none;
+}
+
+.mega:not([hidden]),
+.locale:not([hidden]) {
+  display: block;
+}
+

@@ -1,0 +1,21 @@
+{% load static %}
+<section class="vbanner{% if with_icon %} vbanner--icon{% endif %}" aria-hidden="true">
+  {% if block.image %}
+    <picture>
+      {% if block.image_mobile %}
+        <source media="(max-width: 767px)" srcset="{{ block.image_mobile.url }}">
+      {% endif %}
+      <img class="vbanner__img" src="{{ block.image.url }}" alt="" width="1442" height="871">
+    </picture>
+  {% endif %}
+  {% if with_icon %}
+    <img class="vbanner__ico vbanner__ico--desk" src="{% static 'figma/desktop/7442b.svg' %}" width="218" height="155" alt="">
+    <div class="video-mark video-mark--mob video-mark--banner" aria-hidden="true">
+      <img class="video-mark__a" src="{% static 'figma/mobile/580df.svg' %}" width="76.722" height="73.8628" alt="">
+      <span class="video-mark__b">
+        <img src="{% static 'figma/mobile/d4cf1.svg' %}" width="32.8809" height="71.9567" alt="">
+      </span>
+      <img class="video-mark__c" src="{% static 'figma/mobile/8510a.svg' %}" width="23.3502" height="8.10108" alt="">
+    </div>
+  {% endif %}
+</section>

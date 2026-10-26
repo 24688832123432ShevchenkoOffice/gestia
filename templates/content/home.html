@@ -1,62 +1,38 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load static %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/figma/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/figma/home-form.css' %}">
+  <link rel="stylesheet" href="{% static 'css/figma/home-desk.css' %}">
 {% endblock %}
 
-{% block title %}{% if home_blocks.hero %}{{ home_blocks.hero.title }}{% else %}Gestia{% endif %}{% endblock %}
-{% block description %}{% if home_blocks.hero %}{{ home_blocks.hero.text|truncatechars:160 }}{% endif %}{% endblock %}
+{% block title %}{% if home_blocks.hero.title %}{{ home_blocks.hero.title|truncatechars:80 }}{% else %}Gestia Home{% endif %}{% endblock %}
+{% block description %}{% if home_blocks.hero.text %}{{ home_blocks.hero.text|truncatechars:160 }}{% endif %}{% endblock %}
 
 {% block content %}
-  <section class="hero">
-    <div class="hero__media">
-      {% if home_blocks.hero.image %}
-        <img src="{{ home_blocks.hero.image.url }}" alt="" width="1200" height="900">
-      {% endif %}
-    </div>
-    <div class="hero__copy">
-      <h1>{{ home_blocks.hero.title }}</h1>
-      {% if home_blocks.hero.text %}<p>{{ home_blocks.hero.text|linebreaksbr }}</p>{% endif %}
-      <a class="btn" href="{% url 'catalog' %}">{% trans "До каталогу" %}</a>
-    </div>
-  </section>
-  {% include "partials/video.html" with media=home_blocks.hero %}
-
-  <section class="band">
-    <div class="container">
-      <h2>{{ home_blocks.categories.title }}</h2>
-      {% if home_blocks.categories.text %}<p class="lead">{{ home_blocks.categories.text|linebreaksbr }}</p>{% endif %}
-      <ul class="cat-rail">
-        {% for cat in categories %}
-          <li>
-            <a class="cat-rail__link" href="{{ cat.get_absolute_url }}">
-              {% if cat.image %}
-                <img src="{{ cat.image.url }}" alt="" width="640" height="800">
-              {% endif %}
-              <span>{{ cat.name }}</span>
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </section>
-  {% include "partials/video.html" with media=home_blocks.categories %}
-
-  <section class="band band--ink">
-    <div class="container">
-      <h2>{{ home_blocks.advantages.title }}</h2>
-      {% if home_blocks.advantages.text %}<p class="lead">{{ home_blocks.advantages.text|linebreaksbr }}</p>{% endif %}
-      <div class="adv">
-        {% for item in advantages %}
-          <article class="adv-row">
-            <p class="adv-row__num">0{{ forloop.counter }}</p>
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.text|linebreaksbr }}</p>
-          </article>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-  {% include "partials/video.html" with media=home_blocks.advantages %}
+  <div class="home-frame">
+    {% if home_blocks.hero %}
+      {% include "partials/home/hero.html" with block=home_blocks.hero %}
+    {% endif %}
+    {% include "partials/home/categories.html" %}
+    {% if home_blocks.video %}
+      {% include "partials/home/video_banner.html" with block=home_blocks.video %}
+    {% endif %}
+    {% if home_blocks.popular %}
+      {% include "partials/home/popular.html" with block=home_blocks.popular %}
+    {% endif %}
+    {% if home_blocks.advantages %}
+      {% include "partials/home/benefits.html" with block=home_blocks.advantages %}
+    {% endif %}
+    {% if home_blocks.video_2 %}
+      {% include "partials/home/video_banner.html" with block=home_blocks.video_2 with_icon=1 %}
+    {% endif %}
+    {% if home_blocks.reviews %}
+      {% include "partials/home/reviews.html" with block=home_blocks.reviews %}
+    {% endif %}
+    {% if home_blocks.callback %}
+      {% include "partials/home/callback.html" with block=home_blocks.callback %}
+    {% endif %}
+  </div>
 {% endblock %}

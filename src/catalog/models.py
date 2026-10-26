@@ -30,6 +30,8 @@ class Category(TimeStampedModel):
     )
     is_active = models.BooleanField("Активна", default=True)
     sort = models.PositiveIntegerField("Порядок", default=0)
+    home_sort = models.PositiveIntegerField("Порядок на головній", null=True, blank=True)
+    menu_featured = models.BooleanField("Акцент у меню", default=False)
 
     class Meta:
         ordering = ["sort", "name_uk"]
@@ -170,6 +172,9 @@ class Product(TimeStampedModel):
         default=Stock.IN_STOCK,
     )
     is_active = models.BooleanField("Активний", default=True)
+    is_popular = models.BooleanField("Популярний на головній", default=False)
+    menu_name_uk = models.CharField("Назва в меню", max_length=200, blank=True)
+    price_weight = models.PositiveSmallIntegerField("Насиченість ціни на головній", default=400)
     sort = models.PositiveIntegerField("Порядок", default=0)
     filter_attrs = models.ManyToManyField(
         ProductAttribute,
@@ -206,6 +211,10 @@ class Product(TimeStampedModel):
     @property
     def name(self):
         return localized(self, "name")
+
+    @property
+    def menu_name(self):
+        return self.menu_name_uk or self.name
 
     @property
     def description(self):

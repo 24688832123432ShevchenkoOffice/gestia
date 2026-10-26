@@ -1,0 +1,91 @@
+:root {
+  --font: "Inter", sans-serif;
+  --header-h: calc(69.211px + env(safe-area-inset-top, 0px));
+  --brown: #251008;
+  --cream: #feedda;
+  --cream-50: rgba(254, 237, 218, 0.5);
+  --white-70: rgba(255, 255, 255, 0.7);
+  --ink-50: rgba(0, 0, 0, 0.5);
+  --field-wash: rgba(37, 16, 8, 0.02);
+}
+
+body {
+  font-family: var(--font);
+  font-weight: 400;
+  -webkit-text-size-adjust: 100%;
+}
+
+.figma-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 12px 16px;
+  border: 1px solid var(--brown);
+  background: transparent;
+  color: var(--brown);
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.figma-btn--ink {
+  border-color: #000;
+  color: #000;
+}
+
+.figma-btn--mini {
+  width: 135px;
+}
+
+.figma-btn--wide {
+  width: 100%;
+  font-weight: 500;
+}
+
+.icon-btn,
+.lang-btn,
+.cur-switch button,
+.locale__change,
+.burger-btn {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-family: var(--font);
+  cursor: pointer;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.icon-btn {
+  display: inline-flex;
+  line-height: 0;
+}
+
+.icon-btn img,
+.social-row img,
+.brand__photo img,
+.video-mark img,
+.rating,
+.field-ico,
+.consent__mark,
+.burger-search img,
+.head-nav__catalog img,
+.foot-feature__line,
+.site-footer__rule,
+.locale__rule,
+.locale__current img {
+  max-width: none;
+}
