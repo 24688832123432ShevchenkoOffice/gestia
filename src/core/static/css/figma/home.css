@@ -362,6 +362,7 @@
   line-height: normal;
   letter-spacing: -0.48px;
   white-space: pre-line;
+  overflow-wrap: break-word;
 }
 
 .benefits .figma-btn {
@@ -418,6 +419,7 @@
   font-weight: 400;
   line-height: normal;
   letter-spacing: -0.42px;
+  overflow-wrap: break-word;
 }
 
 .rating--desk {

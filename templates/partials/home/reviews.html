@@ -1,4 +1,4 @@
-{% load static %}
+{% load shop_tags static %}
 <section class="reviews">
   {% if block.title %}<h2>{{ block.title }}</h2>{% endif %}
   <div class="review-rail">
@@ -14,7 +14,7 @@
             <img class="rating rating--mob" src="{% static 'figma/mobile/b07a3.svg' %}" width="83" height="15" alt="">
           {% endif %}
         </header>
-        <p>{{ review.text }}</p>
+        <p><span class="only-mob">{{ review.text }}</span><span class="only-desk">{{ review.text|figma_nbsp }}</span></p>
       </article>
     {% endfor %}
   </div>

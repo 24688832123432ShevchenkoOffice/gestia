@@ -1,3 +1,4 @@
+{% load shop_tags %}
 <section class="benefits">
   <header class="benefits__head">
     {% if block.title %}<h2>{{ block.title }}</h2>{% endif %}
@@ -11,7 +12,7 @@
           {% if block.image %}<img src="{{ block.image.url }}" alt="" width="303" height="197">{% endif %}
         </span>
         <h3>{{ item.title }}</h3>
-        <p>{{ item.text|linebreaksbr }}</p>
+        <p><span class="only-mob">{{ item.text|linebreaksbr }}</span><span class="only-desk">{{ item.text|figma_nbsp|linebreaksbr }}</span></p>
       </article>
     {% endfor %}
   </div>

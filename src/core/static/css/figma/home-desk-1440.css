@@ -1,0 +1,171 @@
+@media (min-width: 1440px) {
+  .home-frame {
+    width: 1440px;
+    margin-inline: auto;
+    position: relative;
+    overflow-x: clip;
+  }
+
+  .hero,
+  .vbanner {
+    width: 1440px;
+    height: 871px;
+    margin-left: 0;
+    overflow: hidden;
+  }
+
+  .hero__img,
+  .vbanner__img {
+    position: absolute;
+    top: 0;
+    width: 1442px;
+    height: 871px;
+    max-width: none;
+    object-fit: fill;
+    object-position: bottom;
+  }
+
+  .hero__img {
+    left: 0;
+  }
+
+  .vbanner__img {
+    left: -1px;
+  }
+
+  .hero__copy {
+    top: 511px;
+    bottom: auto;
+    width: 902px;
+  }
+
+  .video-mark--desk {
+    top: 129.4px;
+  }
+
+  .cats {
+    width: 969px;
+    margin-top: 120px;
+    margin-left: 236px;
+  }
+
+  .cat-rail {
+    padding: 0;
+    gap: 30px;
+  }
+
+  .cat-card {
+    width: 303px;
+  }
+
+  .cat-card__media {
+    width: 303px;
+    height: 342px;
+    aspect-ratio: auto;
+  }
+
+  .cat-card__name {
+    height: 19px;
+    line-height: 19px;
+  }
+
+  .vbanner,
+  .popular,
+  .benefits,
+  .reviews,
+  .callback {
+    margin-top: 120px;
+  }
+
+  .popular {
+    width: 1440px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0 0 69px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .popular h2 {
+    width: 1302px;
+  }
+
+  .pop-rail {
+    width: 1562px;
+    max-width: none;
+    padding-bottom: 0;
+  }
+
+  .pop-card__name {
+    line-height: 19px;
+  }
+
+  .benefits {
+    width: 1302px;
+    margin-left: 70px;
+    margin-right: 0;
+    padding-inline: 0;
+  }
+
+  .benefits .figma-btn {
+    margin-top: -30px;
+  }
+
+  .benefits__head p,
+  .benefit p {
+    line-height: 22px;
+  }
+
+  .benefit-list {
+    grid-template-columns: repeat(4, 303px);
+  }
+
+  .benefit,
+  .benefit h3,
+  .benefit p,
+  .benefit__media {
+    width: 303px;
+  }
+
+  .reviews {
+    width: 1440px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0 0 49px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reviews h2 {
+    width: 1301px;
+  }
+
+  .review-rail {
+    width: 1562px;
+  }
+
+  .review-card p {
+    line-height: 22px;
+  }
+
+  .callback {
+    width: 526px;
+    padding-inline: 0;
+    margin-left: calc(50% - 262px);
+    margin-bottom: 100px;
+  }
+
+  .callback h2 {
+    white-space: nowrap;
+  }
+
+  .callback__head p {
+    line-height: 22px;
+  }
+
+  .consent span,
+  .consent a {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+}

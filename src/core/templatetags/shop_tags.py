@@ -24,6 +24,11 @@ def product_price(context, product):
     return format_money(amount, currency)
 
 
+@register.filter
+def figma_nbsp(value):
+    return str(value).replace(" ", "\u00a0")
+
+
 @register.simple_tag(takes_context=True)
 def home_price(context, product):
     currency = context.get("currency") or "uah"
