@@ -1,0 +1,34 @@
+{% for band in catalog_bands %}
+  {% if band.layout == "row" %}
+    <div class="catalog-row">
+      {% for cell in band.grid %}
+        {% include "catalog/_cell.html" with cell=cell %}
+      {% endfor %}
+    </div>
+  {% elif band.layout == "split_end" %}
+    <div class="catalog-split">
+      {% for cell in band.feature %}
+        {% include "catalog/_cell.html" with cell=cell %}
+      {% endfor %}
+      <div class="catalog-grid">
+        {% for cell in band.grid %}
+          {% include "catalog/_cell.html" with cell=cell %}
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="catalog-split">
+      <div class="catalog-grid">
+        {% for cell in band.grid %}
+          {% include "catalog/_cell.html" with cell=cell %}
+        {% endfor %}
+      </div>
+      {% for cell in band.feature %}
+        {% include "catalog/_cell.html" with cell=cell %}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endfor %}
+{% if catalog_cta %}
+  <button class="figma-btn figma-btn--ink catalog-more" type="button"><span>{{ catalog_cta }}</span></button>
+{% endif %}

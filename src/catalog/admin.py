@@ -2,6 +2,7 @@ from django.contrib import admin
 from unfold.admin import ModelAdmin, TabularInline
 
 from src.catalog.models import (
+    CatalogCell,
     Category,
     Product,
     ProductAttribute,
@@ -43,6 +44,14 @@ class ProductSetAdmin(ModelAdmin):
     list_display = ("name_uk", "slug")
     search_fields = ("name_uk", "name_ru", "name_en", "slug")
     prepopulated_fields = {"slug": ("name_uk",)}
+
+
+@admin.register(CatalogCell)
+class CatalogCellAdmin(ModelAdmin):
+    list_display = ("product", "band", "layout", "role", "sort", "price_uah", "crop")
+    list_filter = ("band", "layout", "role")
+    autocomplete_fields = ("product",)
+    ordering = ("band", "sort")
 
 
 @admin.register(Product)

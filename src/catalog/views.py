@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from src.catalog.models import Category, Product
 from src.catalog.selectors import (
     base_products,
+    catalog_bands,
     category_scope,
     filter_catalog,
     filter_groups_for_catalog,
@@ -13,6 +14,11 @@ from src.catalog.selectors import (
     same_set,
 )
 from src.commerce.forms import BuyNowForm, CallbackForm, style_form
+from src.content.models import HomeBlock
+
+
+def _filters_active(parsed):
+    return bool(parsed["q"] or parsed["in_stock"] or parsed["attrs"])
 
 
 def _catalog_context(request, category=None):
@@ -22,6 +28,9 @@ def _catalog_context(request, category=None):
         qs = qs.filter(category_id__in=category_scope(category))
     facet_base = qs
     products = filter_catalog(qs, parsed)
+    active = _filters_active(parsed)
+    bands = [] if active else catalog_bands()
+    block = HomeBlock.objects.filter(key=HomeBlock.Key.CATALOG).first()
     subcategories = []
     if category:
         subcategories = [child for child in category.children.filter(is_active=True) if child.has_public_products]
@@ -39,6 +48,9 @@ def _catalog_context(request, category=None):
         "subcategories": subcategories,
         "filters_reset_url": filters_reset_url(request),
         "crumbs": category.chain() if category else [],
+        "catalog_bands": bands,
+        "show_mosaic": bool(bands),
+        "catalog_cta": block.cta if block else "",
     }
 
 

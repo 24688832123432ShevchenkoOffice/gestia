@@ -7,6 +7,7 @@ from django.core.files import File
 from django.core.management.base import BaseCommand
 
 from src.catalog.models import (
+    CatalogCell,
     Category,
     Product,
     ProductAttribute,
@@ -25,6 +26,7 @@ from src.content.models import (
 
 DESKTOP = Path(settings.BASE_DIR) / "docs" / "figma" / "desktop"
 MOBILE = Path(settings.BASE_DIR) / "docs" / "figma" / "mobile"
+CATALOG = Path(settings.BASE_DIR) / "docs" / "figma" / "catalog"
 ZERO = Decimal("0.00")
 CTA = "Перейти до каталогу"
 
@@ -53,7 +55,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self._wipe()
         categories = self._categories()
-        self._products(categories)
+        products = self._products(categories)
+        self._cells(products)
         self._blocks()
         self._advantages()
         self._reviews()
@@ -66,6 +69,10 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("load_figma_content завершено"))
 
     def _wipe(self):
+        for cell in CatalogCell.objects.all():
+            if cell.image:
+                cell.image.delete(save=False)
+        CatalogCell.objects.all().delete()
         for image in ProductImage.objects.all():
             image.image.delete(save=False)
         Product.objects.all().delete()
@@ -114,12 +121,15 @@ class Command(BaseCommand):
 
     def _products(self, categories):
         specs = (
-            ("GH-01", "velykodnii-ukrainskyi", "Бокс Великодній «Украіньсикй»", "479da.png", "8990.00", 400, 1, "podarunkovi-sety"),
-            ("GH-02", "boks-rizdvyanyi-shyshky", "Бокс «Різдвяний Шишки»", "db3d5.png", "4980.00", 400, 2, "rizdvyani-boksy"),
-            ("GH-03", "velykodnii-hnizdo", "Бокс Великодній «Гніздо»", "14fec.png", "2450.00", 400, 3, "podarunkovi-sety"),
-            ("GH-04", "vesilnyi", "Бокс «Весільний»", "72b4d.png", "14980.00", 500, 4, "podarunkovi-sety"),
+            ("GH-01", "velykodnii-ukrainskyi", "Бокс Великодній «Украіньсикй»", DESKTOP / "479da.png", "8990.00", 400, 1, "podarunkovi-sety", True),
+            ("GH-02", "boks-rizdvyanyi-shyshky", "Бокс «Різдвяний Шишки»", DESKTOP / "db3d5.png", "4980.00", 400, 2, "rizdvyani-boksy", True),
+            ("GH-03", "velykodnii-hnizdo", "Бокс Великодній «Гніздо»", DESKTOP / "14fec.png", "2450.00", 400, 3, "podarunkovi-sety", True),
+            ("GH-04", "vesilnyi", "Бокс «Весільний»", DESKTOP / "72b4d.png", "14980.00", 500, 4, "podarunkovi-sety", True),
+            ("GH-05", "vesnianyi", "Бокс «Весняний»", CATALOG / "2dcde.png", "2450.00", 400, 5, "rizdvyani-boksy", False),
+            ("GH-06", "gazetnyi", "Бокс «Газетний»", CATALOG / "729be.png", "5130.00", 400, 6, "rizdvyani-boksy", False),
         )
-        for sku, slug, name, image, price, weight, sort, category_slug in specs:
+        made = {}
+        for sku, slug, name, image, price, weight, sort, category_slug, popular in specs:
             product = Product.objects.create(
                 category=categories[category_slug],
                 sku=sku,
@@ -129,12 +139,44 @@ class Command(BaseCommand):
                 price_uah=Decimal(price),
                 price_eur=ZERO,
                 price_weight=weight,
-                is_popular=True,
+                is_popular=popular,
                 is_active=True,
                 sort=sort,
             )
             shot = ProductImage(product=product, sort=1)
-            _save(shot, "image", DESKTOP / image, f"{slug}.png")
+            _save(shot, "image", image, f"{slug}.png")
+            made[sku] = product
+        return made
+
+    def _cells(self, products):
+        specs = (
+            (1, "split_start", "grid", 1, "GH-01", "8990.00", "ukr", 127, "479da.png"),
+            (1, "split_start", "grid", 2, "GH-04", "4980.00", "cover", 119, "72b4d.png"),
+            (1, "split_start", "grid", 3, "GH-02", "4980.00", "shysh", 127, "db3d5.png"),
+            (1, "split_start", "grid", 4, "GH-03", "2450.00", "hnizdo", 126, "14fec.png"),
+            (1, "split_start", "feature", 1, "GH-05", "2450.00", "cover", 143, "2dcde.png"),
+            (2, "row", "grid", 1, "GH-04", "4980.00", "cover", 119, "72b4d.png"),
+            (2, "row", "grid", 2, "GH-01", "8990.00", "ukr", 127, "479da.png"),
+            (2, "row", "grid", 3, "GH-05", "2450.00", "cover", 143, "2dcde.png"),
+            (2, "row", "grid", 4, "GH-06", "5130.00", "cover", 127, "729be.png"),
+            (3, "split_end", "feature", 1, "GH-05", "2450.00", "wide", 143, "72b4d.png"),
+            (3, "split_end", "grid", 1, "GH-01", "8990.00", "ukr", 127, "479da.png"),
+            (3, "split_end", "grid", 2, "GH-06", "5130.00", "cover", 127, "729be.png"),
+            (3, "split_end", "grid", 3, "GH-02", "4980.00", "shysh", 127, "db3d5.png"),
+            (3, "split_end", "grid", 4, "GH-03", "2450.00", "hnizdo", 126, "14fec.png"),
+        )
+        for band, layout, role, sort, sku, price, crop, name_width, image in specs:
+            cell = CatalogCell.objects.create(
+                product=products[sku],
+                band=band,
+                layout=layout,
+                role=role,
+                sort=sort,
+                price_uah=Decimal(price),
+                crop=crop,
+                name_width=name_width,
+            )
+            _save(cell, "image", CATALOG / image, f"cell-{band}-{role}-{sort}-{image}")
 
     def _blocks(self):
         hero_title = "Декор для дому, текстиль \nі флористика"
@@ -184,6 +226,7 @@ class Command(BaseCommand):
             ),
             ("locale", 8, "Країна та мова", "Україна/Гривня ", "", "Підтвердити", "Змінити", "", "", ""),
             ("mega", 9, "", "", "", "Дивитись все", "", "", "", ""),
+            ("catalog", 10, "", "", "", "Завантажити все", "", "", "", ""),
         )
         for key, sort, title, text, mobile_text, cta, link, note, image, mobile in rows:
             block = HomeBlock.objects.create(

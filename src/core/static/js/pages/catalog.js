@@ -1,33 +1,29 @@
 const panel = document.getElementById("filters");
 const openBtn = document.querySelector("[data-filters-open]");
-const desktop = window.matchMedia("(min-width: 900px)");
 
-function sync() {
+function closePanel() {
   if (!panel) {
     return;
   }
-  if (desktop.matches) {
-    panel.classList.remove("is-open");
-    panel.removeAttribute("aria-hidden");
-    document.body.classList.remove("nav-lock");
-  } else if (!panel.classList.contains("is-open")) {
-    panel.setAttribute("aria-hidden", "true");
+  panel.classList.remove("is-open");
+  panel.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("nav-lock");
+  if (openBtn) {
+    openBtn.setAttribute("aria-expanded", "false");
   }
 }
 
 if (panel && openBtn) {
+  closePanel();
   openBtn.addEventListener("click", () => {
     panel.classList.add("is-open");
     panel.removeAttribute("aria-hidden");
     document.body.classList.add("nav-lock");
+    openBtn.setAttribute("aria-expanded", "true");
   });
   panel.addEventListener("click", (event) => {
     if (event.target.closest("[data-filters-close]")) {
-      panel.classList.remove("is-open");
-      panel.setAttribute("aria-hidden", "true");
-      document.body.classList.remove("nav-lock");
+      closePanel();
     }
   });
-  desktop.addEventListener("change", sync);
-  sync();
 }

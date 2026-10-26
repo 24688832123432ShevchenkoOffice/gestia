@@ -1,13 +1,17 @@
-{% load i18n shop_tags %}
+{% load shop_tags %}
 <ul class="product-grid" data-qa="product-grid">
   {% for product in products %}
     <li class="product-card" data-qa="product-card">
       <a href="{{ product.get_absolute_url }}">
-        {% if product.cover %}
-          <img src="{{ product.cover.image.url }}" alt="" width="600" height="750">
-        {% endif %}
-        <span class="product-card__name">{{ product.name }}</span>
-        <span class="product-card__price">{% product_price product %}</span>
+        <span class="product-card__media">
+          {% if product.cover %}
+            <img src="{{ product.cover.image.url }}" alt="" width="303" height="342">
+          {% endif %}
+        </span>
+        <span class="product-card__meta">
+          <span class="product-card__name">{{ product.name }}</span>
+          <span class="product-card__price">{% home_price product %}</span>
+        </span>
       </a>
     </li>
   {% endfor %}

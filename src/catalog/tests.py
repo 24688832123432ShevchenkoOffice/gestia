@@ -4,7 +4,7 @@ from django.http import QueryDict
 from django.test import TestCase
 from django.utils import translation
 
-from src.catalog.models import Category, Product, ProductAttribute, ProductAttributeGroup
+from src.catalog.models import CatalogCell, Category, Product, ProductAttribute, ProductAttributeGroup
 from src.catalog.selectors import filter_catalog, parse_catalog_filters
 
 
@@ -44,6 +44,23 @@ class FacetTests(TestCase):
         parsed = parse_catalog_filters(query)
         skus = set(filter_catalog(Product.objects.all(), parsed).values_list("sku", flat=True))
         self.assertEqual(skus, {"A", "C"})
+
+    def test_catalog_mosaic_uses_cell_price_until_filter(self):
+        CatalogCell.objects.create(
+            product=self.a,
+            band=2,
+            layout=CatalogCell.Layout.ROW,
+            role=CatalogCell.Role.GRID,
+            sort=1,
+            price_uah=Decimal("8990"),
+            crop=CatalogCell.Crop.UKR,
+            name_width=127,
+        )
+        page = self.client.get("/katalog/")
+        self.assertContains(page, "8 990 UAH")
+        filtered = self.client.get("/katalog/?in_stock=1")
+        self.assertNotContains(filtered, "8 990 UAH")
+        self.assertContains(filtered, "data-qa=\"product-grid\"")
 
     def test_search_keeps_name(self):
         query = QueryDict(mutable=True)

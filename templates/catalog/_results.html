@@ -1,12 +1,9 @@
 {% load i18n %}
-{% if subcategories %}
-  <ul class="subcats">
-    {% for cat in subcategories %}
-      <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
-    {% endfor %}
-  </ul>
-{% endif %}
-{% include "catalog/_grid.html" %}
-{% if not products %}
-  <p class="empty">{% trans "Товарів немає." %}</p>
+{% if show_mosaic %}
+  {% include "catalog/_mosaic.html" %}
+{% else %}
+  {% include "catalog/_grid.html" %}
+  {% if not products %}
+    <p class="empty">{% trans "Товарів немає." %}</p>
+  {% endif %}
 {% endif %}

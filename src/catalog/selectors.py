@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 from django.db.models import Q
 
-from src.catalog.models import Category, Product, ProductAttribute, ProductAttributeGroup
+from src.catalog.models import CatalogCell, Category, Product, ProductAttribute, ProductAttributeGroup
 
 ATTRIBUTE_FILTER_KEYS = (
     ProductAttributeGroup.Slug.STYLE,
@@ -81,6 +81,25 @@ def filter_groups_for_catalog(product_qs):
         if values:
             groups.append({"group": group, "values": list(values)})
     return groups
+
+
+def catalog_bands():
+    cells = (
+        CatalogCell.objects.select_related("product", "product__category")
+        .prefetch_related("product__images")
+        .order_by("band", "sort", "id")
+    )
+    bands = []
+    index = {}
+    for cell in cells:
+        band = index.get(cell.band)
+        if band is None:
+            band = {"layout": cell.layout, "grid": [], "feature": []}
+            index[cell.band] = band
+            bands.append(band)
+        key = "feature" if cell.role == CatalogCell.Role.FEATURE else "grid"
+        band[key].append(cell)
+    return bands
 
 
 def filters_reset_url(request):

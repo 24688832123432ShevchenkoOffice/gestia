@@ -99,6 +99,7 @@ class HomeBlock(models.Model):
         CALLBACK = "callback", "Зворотний дзвінок"
         LOCALE = "locale", "Країна та мова"
         MEGA = "mega", "Мегаменю"
+        CATALOG = "catalog", "Каталог"
 
     key = models.CharField("Ключ", max_length=32, choices=Key.choices, unique=True)
     title_uk = models.CharField("Заголовок", max_length=200, blank=True)

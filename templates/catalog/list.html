@@ -3,6 +3,7 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/pages/catalog.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/catalog-1440.css' %}">
 {% endblock %}
 {% block extra_js %}
   <script src="{% static 'js/pages/catalog.js' %}" defer></script>
@@ -10,17 +11,16 @@
 {% block title %}{% if category %}{{ category.name }}{% else %}{% trans "Каталог" %}{% endif %} — Gestia{% endblock %}
 
 {% block content %}
-  <div class="container catalog-page">
-    {% include "partials/crumbs.html" %}
-    <header class="page-header">
-      <h1>{% if category %}{{ category.name }}{% else %}{% trans "Каталог" %}{% endif %}</h1>
-    </header>
-    <div class="catalog-layout">
-      <button class="btn btn--ghost filters-open" type="button" data-filters-open>{% trans "Фільтр" %}</button>
-      {% include "catalog/_filters.html" %}
-      <div id="catalog-results">
-        {% include "catalog/_results.html" %}
-      </div>
+  <div class="catalog-frame">
+    <div class="catalog-top">
+      <p class="catalog-crumb">
+        <a href="{% url 'home' %}">{% trans "Головна" %}</a>/<a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>{% for crumb in crumbs %}/{% if forloop.last %}<span aria-current="page">{{ crumb.name }}</span>{% else %}<a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a>{% endif %}{% endfor %}
+      </p>
+      <button class="btn btn--ghost filters-open" type="button" data-filters-open aria-expanded="false" aria-controls="filters">{% trans "Фільтр" %}</button>
+    </div>
+    {% include "catalog/_filters.html" %}
+    <div id="catalog-results" class="catalog-board">
+      {% include "catalog/_results.html" %}
     </div>
   </div>
 {% endblock %}

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
@@ -243,6 +245,66 @@ class Product(TimeStampedModel):
             images = list(cached["images"])
             return images[0] if images else None
         return self.images.order_by("sort", "id").first()
+
+
+class CatalogCell(models.Model):
+    class Layout(models.TextChoices):
+        SPLIT_START = "split_start", "Сітка і велика"
+        ROW = "row", "Ряд"
+        SPLIT_END = "split_end", "Велика і сітка"
+
+    class Role(models.TextChoices):
+        GRID = "grid", "Картка"
+        FEATURE = "feature", "Велика"
+
+    class Crop(models.TextChoices):
+        UKR = "ukr", "107.6%"
+        COVER = "cover", "cover"
+        SHYSH = "shysh", "114.41%"
+        HNIZDO = "hnizdo", "114.99%"
+        WIDE = "wide", "115.8%"
+
+    product = models.ForeignKey(
+        Product,
+        verbose_name="Товар",
+        related_name="catalog_cells",
+        on_delete=models.CASCADE,
+    )
+    band = models.PositiveSmallIntegerField("Ряд композиції")
+    layout = models.CharField("Композиція", max_length=16, choices=Layout.choices)
+    role = models.CharField("Роль", max_length=16, choices=Role.choices)
+    sort = models.PositiveSmallIntegerField("Порядок", default=0)
+    price_uah = models.DecimalField("Ціна у фреймі, грн", max_digits=10, decimal_places=2)
+    crop = models.CharField("Кадр фото", max_length=16, choices=Crop.choices, default=Crop.COVER)
+    name_width = models.PositiveSmallIntegerField("Ширина назви", default=127)
+    image = models.ImageField(
+        "Фото комірки",
+        upload_to="catalog/cells/",
+        blank=True,
+        validators=[IMAGE_VALIDATOR],
+    )
+
+    class Meta:
+        ordering = ["band", "sort", "id"]
+        verbose_name = "Комірка каталогу"
+        verbose_name_plural = "Комірки каталогу"
+
+    def __str__(self):
+        return f"{self.band}:{self.role}:{self.product.name_uk}"
+
+    @property
+    def price_label(self):
+        whole = int(Decimal(self.price_uah).quantize(Decimal("1")))
+        return f"{whole:,}".replace(",", " ") + " UAH"
+
+    @property
+    def photo_url(self):
+        if self.image:
+            return self.image.url
+        cover = self.product.cover
+        if cover:
+            return cover.image.url
+        return ""
 
 
 class ProductImage(models.Model):
