@@ -388,7 +388,6 @@ class Command(BaseCommand):
             ("legal", "Публічний договір (оферта)", "offer", "", False, 1),
             ("legal", "Політика конфіденційності", "privacy", "", False, 2),
             ("legal", "Політика cookies", "cookies", "", False, 3),
-            ("legal", "Доставка та оплата", "shipping", "", False, 4),
         )
         for column, label, url_name, url_arg, underlined, sort in rows:
             FooterLink.objects.create(
@@ -403,10 +402,10 @@ class Command(BaseCommand):
     def _settings(self):
         site = SiteSettings.load()
         site.phone = "+380 000 00 00"
-        site.instagram_url = ""
-        site.pinterest_url = ""
+        site.instagram_url = "https://www.instagram.com/"
+        site.pinterest_url = "https://www.pinterest.com/"
         site.footer_note_uk = "© Gestia Home 2026. У|сі права захищені."
-        site.developer_note_uk = "Розроблено PrometeyLabs"
+        site.developer_note_uk = ""
         site.save()
 
     def _clear_demo_pages(self):

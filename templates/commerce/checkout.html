@@ -91,9 +91,9 @@
               <img src="{% static 'figma/checkout/2202114d-934e-4538-a1cb-21d85f94634c.svg' %}" width="32" height="32" alt="">
             </div>
             <label class="co-consent">
-              <input type="checkbox" name="consent" {% if form.consent.value %}checked{% endif %}>
-              <img src="{% static 'figma/checkout/ce660dc3-a654-4abc-88e8-bb5169c88969.svg' %}" width="9" height="9" alt="">
-              <span>{% trans "Погоджуюсь на обробку персональних даних згідно з" %} <a href="{% url 'privacy' %}">{% trans "Політикою конфіденційності" %}</a></span>
+              <input type="checkbox" name="consent" required{% if form.consent.value %} checked{% endif %}>
+              <span class="co-consent__box" aria-hidden="true"></span>
+              <span class="co-consent__text">{% trans "Погоджуюсь на обробку персональних даних згідно з" %} <a href="{% url 'privacy' %}">{% trans "Політикою конфіденційності" %}</a></span>
             </label>
             {% if form.consent.errors %}<p class="co-error">{{ form.consent.errors|striptags }}</p>{% endif %}
           </section>

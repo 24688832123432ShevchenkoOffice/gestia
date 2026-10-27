@@ -16,12 +16,45 @@
   background: #000;
 }
 
-.hero__img,
-.vbanner__img {
+.hero__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: bottom;
+  opacity: 0.8;
+  max-width: none;
+}
+
+.hero__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+  pointer-events: none;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.8;
+}
+
+.vbanner picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.vbanner__img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   opacity: 0.8;
   max-width: none;
 }
@@ -443,14 +476,24 @@
   }
 
   .hero__img,
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+  }
+
   .vbanner__img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     max-width: none;
-    object-fit: fill;
-    object-position: bottom;
+    object-fit: cover;
+    object-position: center;
   }
 
   .hero__intro p {

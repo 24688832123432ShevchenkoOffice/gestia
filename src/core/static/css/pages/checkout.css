@@ -289,26 +289,59 @@ img.co-arrow {
 .co-consent {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 10px;
+  touch-action: manipulation;
 }
 
-.co-consent img {
+.co-consent__box {
+  box-sizing: border-box;
   flex: 0 0 auto;
-  width: 9px;
-  height: 9px;
-  max-width: none;
-  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border: 1px solid #251008;
+  border-radius: 50%;
+  background: #fff;
+  transition: border-color 0.2s ease;
 }
 
-.co-consent span,
-.co-consent a {
+.co-consent__box::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 3px auto 0;
+  border-radius: 50%;
+  background: #251008;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.co-consent input:checked + .co-consent__box::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.co-consent input:focus-visible + .co-consent__box {
+  outline: 2px solid #251008;
+  outline-offset: 2px;
+}
+
+.co-consent__text,
+.co-consent__text a {
   max-width: 300px;
   color: #000;
   font-size: 12px;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.35;
   letter-spacing: -0.36px;
   text-decoration: none;
+}
+
+.co-consent__text a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .co-error {
@@ -468,8 +501,8 @@ img.co-arrow {
     width: 414px;
   }
 
-  .co-consent span,
-  .co-consent a {
+  .co-consent__text,
+  .co-consent__text a {
     max-width: none;
     white-space: nowrap;
   }

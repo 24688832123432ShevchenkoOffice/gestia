@@ -9,8 +9,7 @@
 
     <nav class="head-nav" aria-label="{% trans 'Основне' %}">
       <button class="head-nav__catalog" type="button" data-catalog aria-expanded="false" aria-controls="mega-panel">
-        <span>{% trans "Каталог" %}</span>
-        <img src="{% static 'figma/desktop/ccc79.svg' %}" width="61.0059" height="1" alt="">
+        {% trans "Каталог" %}
       </button>
       <a class="head-nav__about" href="{% url 'about' %}">{% trans "Про нас" %}</a>
       <a class="icon-btn" href="{% url 'catalog' %}" aria-label="{% trans 'Пошук' %}">

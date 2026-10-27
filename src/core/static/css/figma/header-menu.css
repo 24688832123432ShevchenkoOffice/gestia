@@ -270,7 +270,14 @@
   letter-spacing: -0.48px;
   line-height: normal;
   text-decoration: none;
+  text-underline-offset: 3px;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+a.social-row__item:hover,
+a.social-row__item:focus-visible {
+  text-decoration: underline;
 }
 
 .social-row__item img {

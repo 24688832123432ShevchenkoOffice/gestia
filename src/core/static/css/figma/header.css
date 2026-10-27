@@ -204,6 +204,16 @@ body.is-burger .head-mobile-tools .icon-btn:first-child {
   line-height: normal;
   letter-spacing: -0.48px;
   color: #000;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.switch__trigger:hover,
+.switch__trigger:focus-visible,
+.switch.is-open .switch__trigger {
+  text-decoration-color: #000;
 }
 
 .switch__opt {
@@ -263,8 +273,29 @@ body.is-burger .head-mobile-tools .icon-btn:first-child {
   background: #f3eee6;
 }
 
-.switch.is-open .switch__trigger {
+.head-actions .icon-btn,
+.head-mobile-tools .icon-btn {
   color: #000;
+  transition: color 0.2s ease;
+}
+
+.head-actions .icon-btn img,
+.head-mobile-tools .icon-btn img {
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.head-actions .icon-btn:hover,
+.head-actions .icon-btn:focus-visible,
+.head-mobile-tools .icon-btn:hover,
+.head-mobile-tools .icon-btn:focus-visible {
+  color: #754c28;
+}
+
+.head-actions .icon-btn:hover img,
+.head-actions .icon-btn:focus-visible img,
+.head-mobile-tools .icon-btn:hover img,
+.head-mobile-tools .icon-btn:focus-visible img {
+  filter: brightness(0) saturate(100%) invert(29%) sepia(24%) saturate(1100%) hue-rotate(346deg) brightness(0.92);
 }
 
 .head-nav {
@@ -277,11 +308,8 @@ body.is-burger .head-mobile-tools .icon-btn:first-child {
   height: 19.838px;
 }
 
-.head-nav__catalog {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
+.head-nav__catalog,
+.head-nav__about {
   border: 0;
   background: transparent;
   padding: 0;
@@ -291,26 +319,22 @@ body.is-burger .head-mobile-tools .icon-btn:first-child {
   font-weight: 400;
   line-height: normal;
   letter-spacing: -0.48px;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
   cursor: pointer;
 }
 
-.head-nav__catalog img {
-  width: 61.006px;
-  height: 1px;
-  display: block;
+.head-nav__catalog:hover,
+.head-nav__catalog:focus-visible,
+.head-nav__about:hover,
+.head-nav__about:focus-visible {
+  text-decoration-color: #000;
 }
 
 body.is-mega .head-nav__catalog {
   font-weight: 500;
-}
-
-.head-nav__about {
-  color: #000;
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: -0.48px;
-  line-height: normal;
-  text-decoration: none;
 }
 
 .head-actions {

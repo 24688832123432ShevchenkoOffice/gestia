@@ -1,30 +1,32 @@
 {% load static %}
 <div class="social-row social-row--{{ tone }}">
 {% if site_settings %}
-  {% if site_settings.instagram_url %}
-  <a class="social-row__item" href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener noreferrer">
-  {% else %}
-  <span class="social-row__item">
-  {% endif %}
+  <a
+    class="social-row__item"
+    href="{% if site_settings.instagram_url %}{{ site_settings.instagram_url }}{% else %}https://www.instagram.com/{% endif %}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
     {% if tone == "cream" %}
       <img src="{% static 'figma/desktop/52c18.svg' %}" width="15" height="15" alt="">
     {% else %}
       <img src="{% static 'figma/megamenu/fef35.svg' %}" width="15" height="15" alt="">
     {% endif %}
     <span>Instagram</span>
-  {% if site_settings.instagram_url %}</a>{% else %}</span>{% endif %}
-  {% if site_settings.pinterest_url %}
-  <a class="social-row__item" href="{{ site_settings.pinterest_url }}" target="_blank" rel="noopener noreferrer">
-  {% else %}
-  <span class="social-row__item">
-  {% endif %}
+  </a>
+  <a
+    class="social-row__item"
+    href="{% if site_settings.pinterest_url %}{{ site_settings.pinterest_url }}{% else %}https://www.pinterest.com/{% endif %}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
     {% if tone == "cream" %}
       <img src="{% static 'figma/desktop/69f85.svg' %}" width="15" height="15" alt="">
     {% else %}
       <img src="{% static 'figma/megamenu/90edf.svg' %}" width="15" height="15" alt="">
     {% endif %}
     <span>Pinterest</span>
-  {% if site_settings.pinterest_url %}</a>{% else %}</span>{% endif %}
+  </a>
   {% if site_settings.phone %}
     <a class="social-row__item" href="tel:{{ site_settings.phone|cut:' ' }}">
       {% if tone == "cream" %}

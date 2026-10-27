@@ -7,17 +7,9 @@
       <div class="site-footer__col">
         {% for link in footer_columns.category %}
           {% if link.href %}
-            {% if link.underlined %}
-              <span class="foot-feature">
-                <a href="{{ link.href }}">{{ link.label }}</a>
-                <img class="foot-feature__line foot-feature__line--desk" src="{% static 'figma/desktop/22820.svg' %}" width="122" height="1" alt="">
-                <img class="foot-feature__line foot-feature__line--mob" src="{% static 'figma/desktop/22820.svg' %}" width="122" height="1" alt="">
-              </span>
-            {% else %}
-              <a href="{{ link.href }}">{{ link.label }}</a>
-            {% endif %}
+            <a href="{{ link.href }}">{{ link.label }}</a>
           {% else %}
-            <span{% if link.underlined %} class="foot-feature"{% endif %}>{{ link.label }}</span>
+            <span>{{ link.label }}</span>
           {% endif %}
         {% endfor %}
       </div>
@@ -44,10 +36,20 @@
               <span class="site-footer__lead">{{ site_settings.copyright_lead }}</span><span class="site-footer__tail">{{ site_settings.copyright_tail }}</span>
             </p>
           {% endif %}
-          {% if site_settings.developer_note %}
-            <p>{{ site_settings.developer_note }}</p>
-          {% endif %}
         {% endif %}
+        <p class="site-footer__credit">
+          {% trans "Вітрину зібрано в" %}
+          {% if request.resolver_match.url_name == "home" %}
+            <a
+              class="site-footer__credit-link"
+              href="https://www.prometeylabs.com/internet-shop-v2/"
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+            >PrometeyLabs</a>
+          {% else %}
+            <span class="site-footer__credit-name">PrometeyLabs</span>
+          {% endif %}
+        </p>
       </div>
     </div>
   </div>

@@ -9,8 +9,14 @@
   }
 
   .hero__img,
+  .hero__video,
   .vbanner__img {
     opacity: 1;
+  }
+
+  .vbanner__img {
+    object-fit: cover;
+    object-position: center;
   }
 
   .hero__copy {
