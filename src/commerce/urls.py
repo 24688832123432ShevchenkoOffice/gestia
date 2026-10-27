@@ -10,6 +10,7 @@ urlpatterns = [
     path("obrane/toggle/", views.wishlist_toggle, name="wishlist_toggle"),
     path("obrane/prybraty/", views.wishlist_remove, name="wishlist_remove"),
     path("zamovlennia/", views.checkout, name="checkout"),
+    path("zamovlennia/np/warehouses/", views.np_warehouses, name="np_warehouses"),
     path("thank-you/", views.thanks, name="thanks"),
     path("diakuiemo/", views.thanks, name="thanks_legacy"),
     path("zayavka/", views.callback, name="callback"),

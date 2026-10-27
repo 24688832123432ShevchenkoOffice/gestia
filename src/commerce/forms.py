@@ -50,8 +50,6 @@ class BuyNowForm(ConsentForm):
 
 
 class CheckoutForm(ConsentForm):
-    LOCKER = "np_locker"
-
     name = forms.CharField(label=_("Ім’я"), max_length=120)
     phone = forms.CharField(label=_("Номер телефону"), max_length=32)
     email = forms.EmailField(label=_("Email"))
@@ -59,13 +57,13 @@ class CheckoutForm(ConsentForm):
         label=_("Доставка"),
         choices=[
             (Order.Delivery.BRANCH, _("Нова пошта (відділення)")),
-            (LOCKER, _("Нова пошта (поштамат)")),
+            (Order.Delivery.LOCKER, _("Нова пошта (поштамат)")),
             (Order.Delivery.COURIER, _("Кур’єрська доставка")),
         ],
         initial=Order.Delivery.BRANCH,
     )
     city = forms.CharField(label=_("Місто"), max_length=120, required=False)
-    branch = forms.CharField(label=_("Відділення"), max_length=120, required=False)
+    branch = forms.CharField(label=_("Відділення"), max_length=255, required=False)
     address = forms.CharField(label=_("Адреса доставки"), max_length=255, required=False)
     payment_method = forms.ChoiceField(
         label=_("Оплата"),

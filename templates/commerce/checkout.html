@@ -54,17 +54,31 @@
               {% endfor %}
             </div>
             {% if form.delivery_method.errors %}<p class="co-error">{{ form.delivery_method.errors|striptags }}</p>{% endif %}
-            <div class="co-fields">
+            <div class="co-fields" data-np-ship>
               <label class="co-field">
                 <img class="co-ico" src="{% static 'figma/checkout/a6cfae51-d224-4303-8a57-ef3c65ad5db9.svg' %}" width="22" height="22" alt="">
-                <input name="city" type="text" maxlength="120" autocomplete="address-level2" placeholder="{% trans 'Місто' %}" value="{{ form.city.value|default_if_none:'' }}">
+                <input name="city" type="text" maxlength="120" autocomplete="address-level2" spellcheck="false" data-np-city placeholder="{% trans 'Місто' %}" value="{{ form.city.value|default_if_none:'' }}">
               </label>
               {% if form.city.errors %}<p class="co-error">{{ form.city.errors|striptags }}</p>{% endif %}
               <label class="co-field co-field--plain">
-                <input name="branch" type="text" maxlength="120" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="np-branch-listbox" autocomplete="off" data-autocomplete-min="2" data-autocomplete-endpoint="" placeholder="{% trans 'Відділення' %}" value="{{ form.branch.value|default_if_none:'' }}">
+                <input
+                  name="branch"
+                  type="text"
+                  maxlength="255"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  aria-controls="np-branch-listbox"
+                  autocomplete="off"
+                  spellcheck="false"
+                  data-np-branch
+                  data-autocomplete-min="2"
+                  data-autocomplete-endpoint="{% url 'np_warehouses' %}"
+                  placeholder="{% trans 'Відділення' %}"
+                  value="{{ form.branch.value|default_if_none:'' }}"
+                >
                 <img class="co-arrow" src="{% static 'figma/checkout/ef8b2949-5e35-4987-b356-507e5c04e922.svg' %}" width="15" height="15" alt="">
               </label>
-              <!-- hx-get="" hx-trigger="keyup changed delay:300ms" hx-target="#np-branch-listbox" hx-swap="innerHTML" -->
               <ul id="np-branch-listbox" class="co-branch-list" role="listbox" hidden></ul>
               {% if form.branch.errors %}<p class="co-error">{{ form.branch.errors|striptags }}</p>{% endif %}
               {% if form.address.errors %}<p class="co-error">{{ form.address.errors|striptags }}</p>{% endif %}

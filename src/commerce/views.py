@@ -1,14 +1,15 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 
 from src.catalog.models import Product
 from src.commerce.cart import add, clear, lines, set_qty
 from src.commerce import wishlist as wish
 from src.commerce.forms import BuyNowForm, CallbackForm, CheckoutForm, ContactForm, style_form
 from src.commerce.models import Inquiry, Order
+from src.commerce import novaposhta
 from src.commerce.services import create_inquiry, create_order, row_from_product
 from src.core.utils import format_money
 
@@ -68,6 +69,21 @@ def checkout(request):
         "commerce/checkout.html",
         {"form": form, "rows": rows, "total": total, "total_label": format_money(total, currency)},
     )
+
+
+@require_GET
+def np_warehouses(request):
+    query = (request.GET.get("q") or "").strip()
+    kind = "locker" if request.GET.get("kind") == "locker" else "branch"
+    if len(query) < 2:
+        return JsonResponse({"city": "", "city_ref": "", "items": [], "cities": []})
+    if not novaposhta.configured():
+        return JsonResponse(
+            {"city": "", "city_ref": "", "items": [], "cities": [], "error": "not_configured"},
+            status=503,
+        )
+    payload = novaposhta.find_warehouses(query, kind=kind)
+    return JsonResponse(payload)
 
 
 def thanks(request):

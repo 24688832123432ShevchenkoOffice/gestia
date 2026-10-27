@@ -94,6 +94,7 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="shop@example.com")
 ORDER_NOTIFY_EMAIL = config("ORDER_NOTIFY_EMAIL", default="")
 TELEGRAM_BOT_TOKEN = config("TELEGRAM_BOT_TOKEN", default="")
 TELEGRAM_CHAT_ID = config("TELEGRAM_CHAT_ID", default="")
+NOVA_POSHTA_API_KEY = config("NOVA_POSHTA_API_KEY", default="")
 
 CACHES = {
     "default": {

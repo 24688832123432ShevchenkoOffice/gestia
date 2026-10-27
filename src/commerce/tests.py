@@ -1,6 +1,7 @@
 from decimal import Decimal
+from unittest.mock import patch
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils import translation
 
 from src.catalog.models import Category, Product
@@ -94,13 +95,12 @@ class CheckoutTests(TestCase):
         self.assertIn('aria-controls="np-branch-listbox"', field)
         self.assertIn('autocomplete="off"', field)
         self.assertIn('data-autocomplete-min="2"', field)
-        self.assertIn('data-autocomplete-endpoint=""', field)
+        self.assertIn('data-autocomplete-endpoint="/zamovlennia/np/warehouses/"', field)
         self.assertNotIn("hx-", field)
         self.assertIn(
             '<ul id="np-branch-listbox" class="co-branch-list" role="listbox" hidden>',
             html,
         )
-        self.assertIn("<!-- hx-get=", html)
         self.assertNotIn("novaposhta", html.lower())
 
     def test_checkout_joins_city_and_branch(self):
@@ -125,6 +125,32 @@ class CheckoutTests(TestCase):
         self.assertEqual(order.delivery_method, "np_locker")
         self.assertEqual(order.delivery_address, "Київ, Поштамат 5")
         self.assertEqual(order.payment_method, Order.Payment.CARD)
+
+    def test_np_warehouses_requires_two_chars(self):
+        response = self.client.get("/zamovlennia/np/warehouses/", {"q": "к"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["items"], [])
+
+    @override_settings(NOVA_POSHTA_API_KEY="")
+    def test_np_warehouses_without_key(self):
+        response = self.client.get("/zamovlennia/np/warehouses/", {"q": "ки"})
+        self.assertEqual(response.status_code, 503)
+
+    @override_settings(NOVA_POSHTA_API_KEY="test-key")
+    @patch("src.commerce.novaposhta.find_warehouses")
+    def test_np_warehouses_returns_items(self, mocked):
+        mocked.return_value = {
+            "city": "м. Київ",
+            "city_ref": "city-ref",
+            "items": [{"ref": "w1", "label": "Відділення №1: вул. Хрещатик", "number": "1"}],
+            "cities": [{"ref": "city-ref", "name": "м. Київ"}],
+        }
+        response = self.client.get("/zamovlennia/np/warehouses/", {"q": "ки", "kind": "branch"})
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["city"], "м. Київ")
+        self.assertEqual(len(payload["items"]), 1)
+        mocked.assert_called_once_with("ки", kind="branch")
 
     def test_cart_update_qty(self):
         session = self.client.session

@@ -11,6 +11,7 @@ class Order(models.Model):
 
     class Delivery(models.TextChoices):
         BRANCH = "np_branch", _("Нова пошта — відділення")
+        LOCKER = "np_locker", _("Нова пошта — поштамат")
         COURIER = "np_courier", _("Нова пошта — кур'єр")
 
     class Payment(models.TextChoices):
