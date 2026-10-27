@@ -1,4 +1,4 @@
-{% load shop_tags %}
+{% load i18n shop_tags static %}
 <section class="popular">
   {% if block.title %}<h2>{{ block.title }}</h2>{% endif %}
   <div class="pop-rail">
@@ -16,7 +16,45 @@
       </a>
     {% endfor %}
   </div>
+  {% if pop_nav %}
+    <div class="about-picks" data-about-pop>
+      <a class="about-pick about-pick--shift" href="{% url 'product' 'boks-rizdvyanyi-shyshky' %}">
+        <span class="about-pick__media">
+          <img src="{% static 'figma/about/m/bfdf6aac-8cff-41e2-b3a3-19b970728ef9.png' %}" alt="" width="200" height="226">
+        </span>
+        <span class="about-pick__meta">
+          <span class="about-pick__name">Бокс «Різдвяний Шишки»</span>
+          <span class="about-pick__price">8 990 UAH</span>
+        </span>
+      </a>
+      <a class="about-pick about-pick--cover" href="{% url 'product' 'velykodnii-ukrainskyi' %}">
+        <span class="about-pick__media">
+          <img src="{% static 'figma/about/m/1742e033-b97d-4401-9130-0bb28c2e9e4a.png' %}" alt="" width="200" height="226">
+        </span>
+        <span class="about-pick__meta">
+          <span class="about-pick__name">Бокс Великодній «Украіньсикй»</span>
+          <span class="about-pick__price">8 990 UAH</span>
+        </span>
+      </a>
+    </div>
+  {% endif %}
   {% if block.cta %}
-    <a class="figma-btn figma-btn--brown" href="{% url 'catalog' %}">{{ block.cta }}</a>
+    {% if pop_nav %}
+      <div class="pop-actions">
+        <a class="figma-btn figma-btn--brown" href="{% url 'catalog' %}">{{ block.cta }}</a>
+        <button class="pop-nav__btn" type="button" data-about-pop-prev aria-label="{% trans 'Попередні товари' %}">
+          <span class="pop-nav__turn">
+            <img src="{% static 'figma/about/m/0bb23f7c-e2ab-4658-a731-ca841f4df6c2.svg' %}" width="15" height="15" alt="">
+          </span>
+        </button>
+        <button class="pop-nav__btn pop-nav__btn--next" type="button" data-about-pop-next aria-label="{% trans 'Наступні товари' %}">
+          <span class="pop-nav__turn">
+            <img src="{% static 'figma/about/m/0bb23f7c-e2ab-4658-a731-ca841f4df6c2.svg' %}" width="15" height="15" alt="">
+          </span>
+        </button>
+      </div>
+    {% else %}
+      <a class="figma-btn figma-btn--brown" href="{% url 'catalog' %}">{{ block.cta }}</a>
+    {% endif %}
   {% endif %}
 </section>

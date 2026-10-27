@@ -1,6 +1,8 @@
 from decimal import Decimal
 
 from django import template
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 from src.core.utils import format_money
 
@@ -27,6 +29,11 @@ def product_price(context, product):
 @register.filter
 def figma_nbsp(value):
     return str(value).replace(" ", "\u00a0")
+
+
+@register.filter(is_safe=True)
+def figma_lines(value):
+    return mark_safe(escape(str(value)).replace(" ", "\u00a0<wbr>"))
 
 
 @register.simple_tag(takes_context=True)

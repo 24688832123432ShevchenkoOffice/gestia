@@ -55,11 +55,12 @@
     height: 545px;
   }
 
-  .about-gallery__item img {
+  .about-gallery__item img.about-gallery__desk {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    max-width: none;
     aspect-ratio: auto;
     object-fit: cover;
   }
@@ -89,17 +90,14 @@
     opacity: 1;
   }
 
-  .page-about .vbanner__ico--desk {
-    width: 218px;
-    height: 155px;
-  }
-
   .page-about .reviews {
     padding: 0 0 0 69px;
   }
 
-  .page-about .popular .figma-btn {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
+  .about-play--desk {
+    left: 582px;
+    top: 297px;
+    transform: none;
   }
+
 }

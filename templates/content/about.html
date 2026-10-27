@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="{% static 'css/figma/home-desk.css' %}">
   <link rel="stylesheet" href="{% static 'css/figma/home-desk-1440.css' %}">
   <link rel="stylesheet" href="{% static 'css/pages/about.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/about-2.css' %}">
   <link rel="stylesheet" href="{% static 'css/pages/about-1440.css' %}">
 {% endblock %}
 
@@ -16,20 +17,29 @@
   <div class="about-frame">
     <p class="about-crumb"><a href="{% url 'home' %}">{% trans "Головна" %}</a>/<span aria-current="page">{% trans "Про нас" %}</span></p>
 
-    <section class="about-lead about-lead--intro">
-      <h1>Про нас</h1>
-      <p class="about-lead__copy">{{ "GESTIA HOME — український бренд декору, флористики, текстилю та одягу для дому. Ми створюємо речі, що допомагають розкривати красу повсякденності та формувати особливу атмосферу домашнього затишку"|figma_nbsp }}</p>
-    </section>
+    <div class="about-intro">
+      <section class="about-lead about-lead--intro">
+        <h1>Про нас</h1>
+        <div class="about-lead__copy about-lead__copy--mob">
+          <p>{{ "GESTIA HOME — український бренд декору, "|figma_nbsp }}</p>
+          <p>{{ "флористики, текстилю та одягу для дому. "|figma_nbsp }}</p>
+          <p>{{ "Ми створюємо речі, що допомагають розкривати красу повсякденності та формувати особливу атмосферу домашнього затишку"|figma_nbsp }}</p>
+        </div>
+        <p class="about-lead__copy about-lead__copy--desk">{{ "GESTIA HOME — український бренд декору, флористики, текстилю та одягу для дому. Ми створюємо речі, що допомагають розкривати красу повсякденності та формувати особливу атмосферу домашнього затишку"|figma_lines }}</p>
+      </section>
 
-    <div class="about-gallery">
-      <div class="about-gallery__item">
-        <img src="{% static 'figma/about/imgGalleryImage.png' %}" alt="" width="414" height="547">
-      </div>
-      <div class="about-gallery__item">
-        <img src="{% static 'figma/about/imgGalleryImage1.png' %}" alt="" width="414" height="543">
-      </div>
-      <div class="about-gallery__item">
-        <img src="{% static 'figma/about/imgGalleryImage2.png' %}" alt="" width="414" height="545">
+      <div class="about-gallery">
+        <div class="about-gallery__item about-gallery__item--a">
+          <img class="about-gallery__desk" src="{% static 'figma/about/a2cf0f5d-9c1a-47ff-aaed-2afbac11b22f.png' %}" alt="" width="414" height="547">
+          <img class="about-gallery__mob" src="{% static 'figma/about/m/fccc8521-cf11-462b-85fa-e0d07c703f08.png' %}" alt="" width="174" height="227">
+        </div>
+        <div class="about-gallery__item about-gallery__item--b">
+          <img class="about-gallery__desk" src="{% static 'figma/about/a525d82b-e09d-4310-8f4a-19715ec6c1f5.png' %}" alt="" width="414" height="543">
+          <img class="about-gallery__mob" src="{% static 'figma/about/m/f0ca6cde-a948-49e9-9e4d-9a810a91bbfd.png' %}" alt="" width="174" height="228">
+        </div>
+        <div class="about-gallery__item about-gallery__item--c">
+          <img class="about-gallery__desk" src="{% static 'figma/about/a2ae4add-c09a-41ec-9363-635510bbc5f9.png' %}" alt="" width="414" height="545">
+        </div>
       </div>
     </div>
 
@@ -43,11 +53,25 @@
     </section>
 
     <section class="vbanner vbanner--icon" aria-hidden="true">
-      <img class="vbanner__img" src="{% static 'figma/about/imgVideoBanner.png' %}" alt="" width="1442" height="871">
-      <img class="vbanner__ico vbanner__ico--desk" src="{% static 'figma/about/imgVideoIcon.svg' %}" width="218" height="155" alt="">
+      <img class="vbanner__img vbanner__img--mob" src="{% static 'figma/about/m/1c65c9d9-7443-4409-aeec-78269a2a6038.png' %}" alt="" width="393" height="735">
+      <img class="vbanner__img vbanner__img--desk" src="{% static 'figma/about/e6ffe24a-dab5-4cc2-8155-190e3c001158.png' %}" alt="" width="1442" height="871">
+      <div class="about-play about-play--desk">
+        <img src="{% static 'figma/about/fe172e1f-21be-4583-9078-519fd841cb25.svg' %}" width="218" height="155" alt="">
+      </div>
+      <div class="about-play about-play--mob">
+        <img class="about-play__a" src="{% static 'figma/about/m/65445179-2967-4089-8231-e953ba0592e1.svg' %}" width="76.722" height="73.8628" alt="">
+        <span class="about-play__b">
+          <img src="{% static 'figma/about/m/c820eb40-4dcb-4199-ab7d-c39157133fe5.svg' %}" width="32.8809" height="71.9567" alt="">
+        </span>
+        <img class="about-play__c" src="{% static 'figma/about/m/af24afef-2ba1-428b-9c76-b025696e8175.svg' %}" width="23.3502" height="8.10108" alt="">
+      </div>
     </section>
 
     {% include "partials/home/reviews.html" with block=reviews_block %}
-    {% include "partials/home/popular.html" with block=popular_block %}
+    {% include "partials/home/popular.html" with block=popular_block pop_nav=True %}
   </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/pages/about.js' %}" defer></script>
 {% endblock %}
