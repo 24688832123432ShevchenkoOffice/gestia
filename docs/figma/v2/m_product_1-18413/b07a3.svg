@@ -1,0 +1,27 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="83" height="15" viewBox="0 0 83 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Rating">
+<path id="Star 1" d="M7.5 0L9.18386 5.18237H14.6329L10.2245 8.38525L11.9084 13.5676L7.5 10.3647L3.09161 13.5676L4.77547 8.38525L0.367076 5.18237H5.81614L7.5 0Z" fill="url(#paint0_linear_0_1695)"/>
+<path id="Star 2" d="M24.5 0L26.1839 5.18237H31.6329L27.2245 8.38525L28.9084 13.5676L24.5 10.3647L20.0916 13.5676L21.7755 8.38525L17.3671 5.18237H22.8161L24.5 0Z" fill="url(#paint1_linear_0_1695)"/>
+<path id="Star 3" d="M41.5 0L43.1839 5.18237H48.6329L44.2245 8.38525L45.9084 13.5676L41.5 10.3647L37.0916 13.5676L38.7755 8.38525L34.3671 5.18237H39.8161L41.5 0Z" fill="url(#paint2_linear_0_1695)"/>
+<path id="Star 4" d="M58.5 0L60.1839 5.18237H65.6329L61.2245 8.38525L62.9084 13.5676L58.5 10.3647L54.0916 13.5676L55.7755 8.38525L51.3671 5.18237H56.8161L58.5 0Z" fill="url(#paint3_linear_0_1695)"/>
+<path id="Star 5" d="M75.5 0L77.1839 5.18237H82.6329L78.2245 8.38525L79.9084 13.5676L75.5 10.3647L71.0916 13.5676L72.7755 8.38525L68.3671 5.18237H73.8161L75.5 0Z" fill="#251008" fill-opacity="0.4"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_1695" x1="0" y1="7.5" x2="15" y2="7.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D4B99F"/>
+<stop offset="1" stop-color="#754C28"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_1695" x1="17" y1="7.5" x2="32" y2="7.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D4B99F"/>
+<stop offset="1" stop-color="#754C28"/>
+</linearGradient>
+<linearGradient id="paint2_linear_0_1695" x1="34" y1="7.5" x2="49" y2="7.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D4B99F"/>
+<stop offset="1" stop-color="#754C28"/>
+</linearGradient>
+<linearGradient id="paint3_linear_0_1695" x1="51" y1="7.5" x2="66" y2="7.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D4B99F"/>
+<stop offset="1" stop-color="#754C28"/>
+</linearGradient>
+</defs>
+</svg>

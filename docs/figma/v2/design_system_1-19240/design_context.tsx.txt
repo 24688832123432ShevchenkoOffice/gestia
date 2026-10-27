@@ -1,0 +1,70 @@
+<cursor_untrusted_data_1337 source="CallDynamicTool">
+
+<section id="1:19240" name="Дизайн система" x="7848" y="21091" width="4161" height="2909">
+  <rounded-rectangle id="1:19241" name="Снимок экрана — 2026-10-15 в 10.56.52 1" x="2888" y="720" width="1038" height="706" />
+  <rounded-rectangle id="1:19242" name="Снимок экрана — 2026-10-15 в 10.57.35 1" x="2888" y="1481" width="1038" height="727" />
+  <symbol id="1:19243" name="Footer" x="1417" y="1036" width="1440" height="346" />
+  <frame id="1:19296" name="Frame 60" x="684" y="1475" width="144" height="73">
+    <frame id="1:19297" name="Social Link" x="24.5" y="0" width="95" height="19">
+      <instance id="1:19298" name="Social Icons" x="0" y="2" width="15" height="15" />
+      <text id="1:19299" name="Social Network" x="23" y="0" width="72" height="19" />
+    </frame>
+    <frame id="1:19300" name="Social Link" x="28.5" y="27" width="87" height="19">
+      <instance id="1:19301" name="Social Icons" x="0" y="2" width="15" height="15" />
+      <text id="1:19302" name="Social Network" x="23" y="0" width="64" height="19" />
+    </frame>
+    <frame id="1:19303" name="Phone Link" x="0" y="54" width="144" height="19">
+      <frame id="1:19304" name="Iconly/Sharp/Outline/Call" x="0" y="0.5" width="18" height="18" />
+      <text id="1:19306" name="Phone Number" x="26" y="0" width="118" height="19" />
+    </frame>
+  </frame>
+  <symbol id="1:19307" name="Footer" x="1417" y="1654" width="1440" height="554" />
+  <frame id="1:19358" name="Component 1" x="1417" y="765" width="194" height="97">
+    <symbol id="1:19359" name="Property 1=Інтерєрні композиції" x="20" y="20" width="154" height="19" />
+    <symbol id="1:19361" name="Property 1=Frame 6" x="20" y="57" width="154" height="20" />
+  </frame>
+  <rounded-rectangle id="1:19364" name="Color Swatch" x="2888" y="455" width="397" height="210" />
+  <rounded-rectangle id="1:19365" name="Color Swatch" x="3340" y="455" width="397" height="210" />
+  <rounded-rectangle id="1:19366" name="Color Swatch" x="2888" y="218" width="849" height="210" />
+  <frame id="1:19367" name="Component 3" x="1640" y="720" width="175" height="142">
+    <symbol id="1:19368" name="Property 1=Frame 4" x="20" y="20" width="135" height="44" />
+    <symbol id="1:19370" name="Property 1=Frame 60" x="20" y="78" width="135" height="44" />
+  </frame>
+  <frame id="1:19372" name="Card" x="242" y="2309" width="700" height="412">
+    <symbol id="1:19373" name="Property 1=Default" x="20" y="21" width="303" height="371" />
+    <symbol id="1:19376" name="Property 1=Default" x="377" y="20" width="303" height="372" />
+  </frame>
+  <frame id="1:19381" name="Card" x="973" y="2308" width="723" height="412">
+    <symbol id="1:19382" name="Property 1=Default" x="20" y="21" width="303" height="371" />
+    <symbol id="1:19385" name="Property 1=Default" x="400" y="20" width="303" height="372" />
+  </frame>
+  <frame id="1:19390" name="Card" x="1727" y="2308" width="723" height="412">
+    <symbol id="1:19391" name="Property 1=Default" x="20" y="21" width="303" height="371" />
+    <symbol id="1:19396" name="Property 1=Default" x="400" y="20" width="303" height="372" />
+  </frame>
+  <frame id="1:19401" name="Card" x="2481" y="2310" width="703" height="411">
+    <symbol id="1:19402" name="Property 1=Default" x="20" y="20" width="303" height="371" />
+    <symbol id="1:19407" name="Property 1=Default" x="380" y="20" width="303" height="371" />
+  </frame>
+  <frame id="1:19412" name="Card" x="3223" y="2310" width="703" height="411">
+    <symbol id="1:19413" name="Property 1=Default" x="20" y="20" width="303" height="371" />
+    <symbol id="1:19418" name="Property 1=Default" x="380" y="20" width="303" height="371" />
+  </frame>
+  <frame id="1:19423" name="Card" x="235" y="1845" width="714" height="411">
+    <symbol id="1:19424" name="Property 1=Default" x="20" y="20" width="303" height="371" />
+    <symbol id="1:19427" name="Property 1=Default" x="391" y="20" width="303" height="372" />
+  </frame>
+  <frame id="1:19431" name="Header" x="1377" y="378" width="1480" height="202.21060180664062">
+    <symbol id="1:19432" name="Property 1=Default" x="20" y="20" width="1440" height="69.21060180664062" />
+    <symbol id="1:19458" name="Property 1=Default" x="20" y="113" width="1440" height="69.21060180664062" />
+  </frame>
+  <frame id="1:19485" name="Пошук" x="1377" y="188" width="214" height="139">
+    <symbol id="1:19486" name="Property 1=Default" x="20" y="93" width="174" height="26" />
+    <symbol id="1:19489" name="Property 1=Default" x="20" y="20" width="22" height="22" />
+  </frame>
+  <symbol id="1:19492" name="Footer" x="973" y="895" width="393" height="832" />
+  <symbol id="1:19545" name="Header" x="942" y="491" width="393" height="69" />
+</section>
+IMPORTANT: The user has selected a section node, so you have received a sparse metadata response. You MUST call get_design_context on the nodes or their sublayers individually based on their IDs to implement the design.
+
+</cursor_untrusted_data_1337>
