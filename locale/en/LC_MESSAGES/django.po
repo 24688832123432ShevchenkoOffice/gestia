@@ -176,3 +176,66 @@ msgstr "Order %(number)s"
 
 msgid "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами. Номер: %(number)s"
 msgstr "Thank you for the order. A consultant will contact you shortly. Number: %(number)s"
+
+msgid "Ім’я"
+msgstr "Name"
+
+msgid "Контактні данні"
+msgstr "Contact details"
+
+msgid "Номер телефону"
+msgstr "Phone number"
+
+msgid "Нова пошта (відділення)"
+msgstr "Nova Poshta (branch)"
+
+msgid "Нова пошта (поштамат)"
+msgstr "Nova Poshta (parcel locker)"
+
+msgid "Курєрська доставка"
+msgstr "Courier delivery"
+
+msgid "Місто"
+msgstr "City"
+
+msgid "Відділення"
+msgstr "Branch"
+
+msgid "Онлайн карткою на сайті"
+msgstr "Card online on the website"
+
+msgid "При отриманні (інший погоджений спосіб)"
+msgstr "On delivery (another agreed method)"
+
+msgid "Погоджуюсь на обробку персональних даних згідно з"
+msgstr "I agree to the processing of personal data according to"
+
+msgid "Політикою конфіденційності"
+msgstr "the Privacy policy"
+
+msgid "Перейти до оформлення"
+msgstr "Proceed to checkout"
+
+msgid "Продовжити покупки"
+msgstr "Continue shopping"
+
+msgid "Загальна ціна:"
+msgstr "Total price:"
+
+msgid "Ваше замовлення"
+msgstr "Your order"
+
+msgid "Доставка: за тарифом перевізника"
+msgstr "Delivery: at the carrier's rate"
+
+msgid "Разом:"
+msgstr "Total:"
+
+msgid "Збільшити кількість"
+msgstr "Increase quantity"
+
+msgid "Зменшити кількість"
+msgstr "Decrease quantity"
+
+msgid "Видалити з кошика"
+msgstr "Remove from basket"

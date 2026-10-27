@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="{% url 'theme_css' %}">
   {% block extra_css %}{% endblock %}
 </head>
-<body class="{% if request.resolver_match.url_name == 'home' %}page-home{% elif request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}page-catalog{% endif %}">
+<body class="{% if request.resolver_match.url_name == 'home' %}page-home{% elif request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}page-catalog{% elif request.resolver_match.url_name == 'cart' %}page-cart{% elif request.resolver_match.url_name == 'checkout' %}page-checkout{% endif %}">
   {% include "partials/header.html" %}
   <main id="main">
     {% block content %}{% endblock %}

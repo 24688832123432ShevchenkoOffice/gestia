@@ -1,41 +1,121 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load i18n static shop_tags %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/pages/cart.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/checkout.css' %}">
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/pages/checkout.js' %}" defer></script>
 {% endblock %}
 {% block title %}{% trans "Оформлення замовлення" %}{% endblock %}
 
 {% block content %}
-  <div class="container checkout">
-    <header class="page-header">
-      <h1>{% trans "Оформлення замовлення" %}</h1>
-    </header>
-    <div class="checkout__grid">
-      <form method="post" action="{% url 'checkout' %}">
-        {% csrf_token %}
-        {% if form.non_field_errors %}<p class="field__error">{{ form.non_field_errors }}</p>{% endif %}
-        {% include "commerce/_field.html" with field=form.name %}
-        {% include "commerce/_field.html" with field=form.phone %}
-        {% include "commerce/_field.html" with field=form.email %}
-        {% include "commerce/_field.html" with field=form.delivery_method %}
-        {% include "commerce/_field.html" with field=form.address %}
-        {% include "commerce/_field.html" with field=form.payment_method %}
-        <label class="check">
-          {{ form.consent }}
-          <span><a href="{% url 'privacy' %}">{% trans "Погоджуюсь на обробку персональних даних" %}</a></span>
-        </label>
-        {% if form.consent.errors %}<p class="field__error">{{ form.consent.errors }}</p>{% endif %}
-        <button class="btn" type="submit">{% trans "Підтвердити замовлення" %}</button>
-      </form>
-      <aside class="checkout__sum">
-        <ul>
-          {% for row in rows %}
-            <li>{{ row.product.name }} × {{ row.qty }} — {{ row.line_label }}</li>
-          {% endfor %}
-        </ul>
-        <p>{% trans "Разом" %} {{ total_label }}</p>
+  <div class="checkout-page">
+    {% trans "Кошик" as cart_label %}
+    {% trans "Оформлення замовлення" as checkout_label %}
+    {% url 'cart' as cart_url %}
+    {% include "partials/crumbs.html" with crumb_link_url=cart_url crumb_link_label=cart_label crumb_current=checkout_label %}
+    <form class="checkout-layout" method="post" action="{% url 'checkout' %}" novalidate>
+      {% csrf_token %}
+      <div class="checkout-form">
+        <h1>{% trans "Оформлення замовлення" %}</h1>
+        <div class="checkout-details">
+          {% if form.non_field_errors %}
+            <p class="co-error">{{ form.non_field_errors|striptags }}</p>
+          {% endif %}
+          <section class="co-sec">
+            <h2 class="co-h">{% trans "Контактні данні" %}</h2>
+            <div class="co-fields">
+              <label class="co-field">
+                <img class="co-ico" src="{% static 'figma/checkout/3858d14e-7578-4ce2-8c54-aabd04bfff9f.svg' %}" width="22" height="22" alt="">
+                <input name="name" type="text" maxlength="120" autocomplete="name" placeholder="{% trans 'Ім’я' %}" value="{{ form.name.value|default_if_none:'' }}">
+              </label>
+              {% if form.name.errors %}<p class="co-error">{{ form.name.errors|striptags }}</p>{% endif %}
+              <label class="co-field">
+                <img class="co-ico" src="{% static 'figma/checkout/24baed88-aa5f-4c39-88b2-cb26acd9a8f5.svg' %}" width="22" height="22" alt="">
+                <input name="phone" type="tel" inputmode="tel" maxlength="32" autocomplete="tel" placeholder="{% trans 'Номер телефону' %}" value="{{ form.phone.value|default_if_none:'' }}">
+              </label>
+              {% if form.phone.errors %}<p class="co-error">{{ form.phone.errors|striptags }}</p>{% endif %}
+              <label class="co-field">
+                <img class="co-ico" src="{% static 'figma/checkout/2318dda8-3064-4d05-855d-aa0321c9bbfd.svg' %}" width="22" height="22" alt="">
+                <input name="email" type="email" inputmode="email" maxlength="254" autocomplete="email" placeholder="{% trans 'Email' %}" value="{{ form.email.value|default_if_none:'' }}">
+              </label>
+              {% if form.email.errors %}<p class="co-error">{{ form.email.errors|striptags }}</p>{% endif %}
+            </div>
+          </section>
+          <section class="co-sec">
+            <h2 class="co-h" id="ship-label">{% trans "Доставка" %}</h2>
+            <div class="ship-tabs" role="radiogroup" aria-labelledby="ship-label">
+              {% for value, label in form.delivery_method.field.choices %}
+                <label class="ship-tab">
+                  <input type="radio" name="delivery_method" value="{{ value }}" data-ship {% if form.delivery_method.value == value %}checked{% endif %}>
+                  <span>{{ label }}</span>
+                </label>
+              {% endfor %}
+            </div>
+            {% if form.delivery_method.errors %}<p class="co-error">{{ form.delivery_method.errors|striptags }}</p>{% endif %}
+            <div class="co-fields">
+              <label class="co-field">
+                <img class="co-ico" src="{% static 'figma/checkout/a6cfae51-d224-4303-8a57-ef3c65ad5db9.svg' %}" width="22" height="22" alt="">
+                <input name="city" type="text" maxlength="120" autocomplete="address-level2" placeholder="{% trans 'Місто' %}" value="{{ form.city.value|default_if_none:'' }}">
+              </label>
+              {% if form.city.errors %}<p class="co-error">{{ form.city.errors|striptags }}</p>{% endif %}
+              <label class="co-field co-field--plain">
+                <input name="branch" type="text" maxlength="120" autocomplete="off" placeholder="{% trans 'Відділення' %}" value="{{ form.branch.value|default_if_none:'' }}">
+                <img class="co-arrow" src="{% static 'figma/checkout/ef8b2949-5e35-4987-b356-507e5c04e922.svg' %}" width="15" height="15" alt="">
+              </label>
+              {% if form.branch.errors %}<p class="co-error">{{ form.branch.errors|striptags }}</p>{% endif %}
+              {% if form.address.errors %}<p class="co-error">{{ form.address.errors|striptags }}</p>{% endif %}
+            </div>
+          </section>
+          <section class="co-sec">
+            <div class="pay__block">
+              <h2 class="co-h" id="pay-label">{% trans "Оплата" %}</h2>
+              <div class="pay__list" role="radiogroup" aria-labelledby="pay-label">
+                {% for value, label in form.payment_method.field.choices %}
+                  <label class="pay__opt">
+                    <input type="radio" name="payment_method" value="{{ value }}" {% if form.payment_method.value == value %}checked{% endif %}>
+                    <span class="pay__dot">
+                      <img class="pay__off" src="{% static 'figma/checkout/8faa76b3-6abd-41ea-b7f2-3bd14a4a106f.svg' %}" width="14" height="14" alt="">
+                      <img class="pay__on" src="{% static 'figma/checkout/ee187a44-fa45-41e5-9a29-7172be70d21b.svg' %}" width="14" height="14" alt="">
+                    </span>
+                    <span>{{ label }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+            {% if form.payment_method.errors %}<p class="co-error">{{ form.payment_method.errors|striptags }}</p>{% endif %}
+            <div class="co-rule" aria-hidden="true">
+              <img src="{% static 'figma/checkout/2202114d-934e-4538-a1cb-21d85f94634c.svg' %}" width="32" height="32" alt="">
+            </div>
+            <label class="co-consent">
+              <input type="checkbox" name="consent" {% if form.consent.value %}checked{% endif %}>
+              <img src="{% static 'figma/checkout/ce660dc3-a654-4abc-88e8-bb5169c88969.svg' %}" width="9" height="9" alt="">
+              <span>{% trans "Погоджуюсь на обробку персональних даних згідно з" %} <a href="{% url 'privacy' %}">{% trans "Політикою конфіденційності" %}</a></span>
+            </label>
+            {% if form.consent.errors %}<p class="co-error">{{ form.consent.errors|striptags }}</p>{% endif %}
+          </section>
+        </div>
+      </div>
+      <aside class="co-card">
+        <div class="co-card__head">
+          <h2 class="co-card__title">{% trans "Ваше замовлення" %}</h2>
+          <div class="co-lines">
+            {% for row in rows %}
+              <div class="co-line">
+                <p>{{ row.product.name }}</p>
+                <p>х{{ row.qty }}</p>
+              </div>
+            {% endfor %}
+            <p class="co-ship">{% trans "Доставка: за тарифом перевізника" %}</p>
+          </div>
+        </div>
+        <div class="co-total">
+          <p>{% trans "Разом:" %}</p>
+          <p>{% sum_uah total %}</p>
+        </div>
+        <button class="co-go" type="submit">{% trans "Перейти до оформлення" %}</button>
       </aside>
-    </div>
+    </form>
   </div>
 {% endblock %}

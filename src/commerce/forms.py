@@ -50,15 +50,46 @@ class BuyNowForm(ConsentForm):
 
 
 class CheckoutForm(ConsentForm):
-    name = forms.CharField(label=_("Ім'я"), max_length=120)
-    phone = forms.CharField(label=_("Телефон"), max_length=32)
+    LOCKER = "np_locker"
+
+    name = forms.CharField(label=_("Ім’я"), max_length=120)
+    phone = forms.CharField(label=_("Номер телефону"), max_length=32)
     email = forms.EmailField(label=_("Email"))
-    delivery_method = forms.ChoiceField(label=_("Доставка"), choices=Order.Delivery.choices)
-    address = forms.CharField(label=_("Адреса доставки"), max_length=255)
-    payment_method = forms.ChoiceField(label=_("Оплата"), choices=Order.Payment.choices)
+    delivery_method = forms.ChoiceField(
+        label=_("Доставка"),
+        choices=[
+            (Order.Delivery.BRANCH, _("Нова пошта (відділення)")),
+            (LOCKER, _("Нова пошта (поштамат)")),
+            (Order.Delivery.COURIER, _("Курєрська доставка")),
+        ],
+        initial=Order.Delivery.BRANCH,
+    )
+    city = forms.CharField(label=_("Місто"), max_length=120, required=False)
+    branch = forms.CharField(label=_("Відділення"), max_length=120, required=False)
+    address = forms.CharField(label=_("Адреса доставки"), max_length=255, required=False)
+    payment_method = forms.ChoiceField(
+        label=_("Оплата"),
+        choices=[
+            (Order.Payment.CARD, _("Онлайн карткою на сайті")),
+            (Order.Payment.ON_DELIVERY, _("При отриманні (інший погоджений спосіб)")),
+        ],
+        initial=Order.Payment.ON_DELIVERY,
+    )
 
     def clean_phone(self):
         return clean_phone_value(self.cleaned_data["phone"])
+
+    def clean(self):
+        cleaned = super().clean()
+        address = (cleaned.get("address") or "").strip()
+        if not address:
+            city = (cleaned.get("city") or "").strip()
+            branch = (cleaned.get("branch") or "").strip()
+            address = ", ".join(part for part in (city, branch) if part)
+        if not address:
+            self.add_error("city", self.fields["city"].error_messages["required"])
+        cleaned["address"] = address
+        return cleaned
 
 
 def style_form(form):

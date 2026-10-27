@@ -15,5 +15,12 @@
     {% if product %}
       <li><span aria-current="page">{{ product.name }}</span></li>
     {% endif %}
+    {% if crumb_link_url %}
+      <li>
+        <a href="{{ crumb_link_url }}">{{ crumb_link_label }}</a>{% if crumb_current %}<span class="crumbs__more">/<span aria-current="page">{{ crumb_current }}</span></span>{% endif %}
+      </li>
+    {% elif crumb_current %}
+      <li><span aria-current="page">{{ crumb_current }}</span></li>
+    {% endif %}
   </ol>
 </nav>
