@@ -69,6 +69,7 @@
   }
 
   .about-lead--philosophy,
+  .about-lead--story,
   .page-about .reviews,
   .page-about .popular {
     width: min(362px, calc(100% - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
@@ -86,7 +87,8 @@
     overflow-wrap: normal;
   }
 
-  .about-lead--philosophy {
+  .about-lead--philosophy,
+  .about-lead--story {
     margin-top: 80px;
   }
 

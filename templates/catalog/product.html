@@ -57,13 +57,13 @@
               {% csrf_token %}
               <input type="hidden" name="sku" value="{{ product.sku }}">
               <div class="pdp-qty">
-                <button type="button" data-qty-inc aria-label="{% trans 'Більше' %}">
-                  <img src="{% static 'figma/v2/product/e183e.svg' %}" width="9" height="8" alt="">
+                <button type="button" data-qty-dec aria-label="{% trans 'Менше' %}">
+                  <img src="{% static 'figma/v2/product/796c7.svg' %}" width="9" height="2" alt="">
                 </button>
                 <span data-qty-label>1</span>
                 <input name="qty" data-qty type="hidden" value="1">
-                <button type="button" data-qty-dec aria-label="{% trans 'Менше' %}">
-                  <img src="{% static 'figma/v2/product/796c7.svg' %}" width="9" height="2" alt="">
+                <button type="button" data-qty-inc aria-label="{% trans 'Більше' %}">
+                  <img src="{% static 'figma/v2/product/e183e.svg' %}" width="9" height="8" alt="">
                 </button>
               </div>
               <button class="pdp-cart" type="submit">

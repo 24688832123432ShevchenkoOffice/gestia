@@ -21,15 +21,15 @@
                   {% csrf_token %}
                   <input type="hidden" name="sku" value="{{ row.sku }}">
                   <div class="qty">
-                    <button class="qty__btn" type="button" data-qty-step="1" aria-label="{% trans 'Збільшити кількість' %}">
-                      <img class="qty__ico qty__ico--mob" src="{% static 'figma/cart/696fdddf-66fb-4286-9381-425b0d60c695.svg' %}" width="9" height="8" alt="">
-                      <img class="qty__ico qty__ico--desk" src="{% static 'figma/cart/84034769-eda3-4db0-8f34-b03cdccb6bc8.svg' %}" width="9" height="8" alt="">
-                    </button>
-                    <label class="visually-hidden" for="qty-{{ row.sku }}">{% trans "Кількість" %}</label>
-                    <input id="qty-{{ row.sku }}" data-qty-input name="qty" type="number" min="0" max="99" inputmode="numeric" value="{{ row.qty }}">
                     <button class="qty__btn" type="button" data-qty-step="-1" aria-label="{% trans 'Зменшити кількість' %}">
                       <img class="qty__ico qty__ico--mob" src="{% static 'figma/cart/bb5f09f7-c721-451c-876e-84339e5e49a4.svg' %}" width="9" height="2" alt="">
                       <img class="qty__ico qty__ico--desk" src="{% static 'figma/cart/ecbe8065-ed1b-4914-8f81-46aaf04ee155.svg' %}" width="9" height="2" alt="">
+                    </button>
+                    <label class="visually-hidden" for="qty-{{ row.sku }}">{% trans "Кількість" %}</label>
+                    <input id="qty-{{ row.sku }}" data-qty-input name="qty" type="number" min="0" max="99" inputmode="numeric" value="{{ row.qty }}">
+                    <button class="qty__btn" type="button" data-qty-step="1" aria-label="{% trans 'Збільшити кількість' %}">
+                      <img class="qty__ico qty__ico--mob" src="{% static 'figma/cart/696fdddf-66fb-4286-9381-425b0d60c695.svg' %}" width="9" height="8" alt="">
+                      <img class="qty__ico qty__ico--desk" src="{% static 'figma/cart/84034769-eda3-4db0-8f34-b03cdccb6bc8.svg' %}" width="9" height="8" alt="">
                     </button>
                   </div>
                   <button class="cart-remove" type="button" data-qty-set="0" aria-label="{% trans 'Видалити з кошика' %}">

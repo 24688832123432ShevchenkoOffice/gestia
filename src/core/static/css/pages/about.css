@@ -109,6 +109,33 @@
   -webkit-hyphens: manual;
 }
 
+.about-lead--story {
+  text-align: left;
+}
+
+.about-lead--story .about-lead__text {
+  max-width: 708px;
+  margin-inline: auto;
+}
+
+.about-lead__list {
+  width: 100%;
+  margin: 0;
+  padding: 0 0 0 1.15em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85em;
+  text-align: left;
+  list-style: disc;
+}
+
+.about-lead__list li {
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+  letter-spacing: -0.48px;
+}
+
 .about-gallery {
   display: flex;
   align-items: center;
@@ -166,7 +193,8 @@
   aspect-ratio: 414 / 545;
 }
 
-.about-lead--philosophy {
+.about-lead--philosophy,
+.about-lead--story {
   margin-top: 40px;
 }
 
@@ -448,6 +476,7 @@
   }
 
   .about-lead--philosophy,
+  .about-lead--story,
   .page-about .vbanner {
     margin-top: 80px;
   }
