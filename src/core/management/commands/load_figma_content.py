@@ -384,10 +384,11 @@ class Command(BaseCommand):
             ("category", "Сервірування", "category", "serviruvannia", False, 4),
             ("info", "Про нас", "about", "", False, 1),
             ("info", "Контакти", "anchor", "callback", False, 2),
-            ("info", "Доставка та оплата", "", "", False, 3),
+            ("info", "Доставка та оплата", "shipping", "", False, 3),
             ("legal", "Публічний договір (оферта)", "offer", "", False, 1),
             ("legal", "Політика конфіденційності", "privacy", "", False, 2),
             ("legal", "Політика cookies", "cookies", "", False, 3),
+            ("legal", "Доставка та оплата", "shipping", "", False, 4),
         )
         for column, label, url_name, url_arg, underlined, sort in rows:
             FooterLink.objects.create(

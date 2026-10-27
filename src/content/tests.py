@@ -16,6 +16,7 @@ class PublicPageTests(TestCase):
             "/polityka-konfidentsiynosti/",
             "/publichnyi-dogovir/",
             "/polityka-cookies/",
+            "/dostavka-ta-oplata/",
         ):
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200, url)
@@ -33,6 +34,10 @@ class PublicPageTests(TestCase):
         cookies = self.client.get("/polityka-cookies/")
         self.assertContains(cookies, "Політика cookies")
         self.assertContains(cookies, "Як керувати cookies")
+        shipping = self.client.get("/dostavka-ta-oplata/")
+        self.assertContains(shipping, "Доставка та оплата")
+        self.assertContains(shipping, "Нова пошта")
+        self.assertContains(shipping, "Онлайн карткою")
 
     def test_about_frame_copy(self):
         translation.activate("uk")

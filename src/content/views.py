@@ -88,3 +88,7 @@ def offer(request):
 
 def cookies(request):
     return legal_page(request, "cookies")
+
+
+def shipping(request):
+    return legal_page(request, "shipping")

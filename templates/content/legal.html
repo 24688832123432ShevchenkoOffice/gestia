@@ -30,6 +30,7 @@
       {% endfor %}
       <nav class="legal-nav" aria-label="{% trans 'Юридичні документи' %}">
         <a href="{% url 'offer' %}"{% if doc.slug == 'offer' %} class="is-current" aria-current="page"{% endif %}>{% trans "Оферта" %}</a>
+        <a href="{% url 'shipping' %}"{% if doc.slug == 'shipping' %} class="is-current" aria-current="page"{% endif %}>{% trans "Доставка та оплата" %}</a>
         <a href="{% url 'privacy' %}"{% if doc.slug == 'privacy' %} class="is-current" aria-current="page"{% endif %}>{% trans "Конфіденційність" %}</a>
         <a href="{% url 'cookies' %}"{% if doc.slug == 'cookies' %} class="is-current" aria-current="page"{% endif %}>{% trans "Cookies" %}</a>
       </nav>
