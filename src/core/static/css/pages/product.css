@@ -325,3 +325,23 @@
   white-space: nowrap;
 }
 
+@media (max-width: 767px) {
+  .pdp-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+
+  .pdp-chip span {
+    display: block;
+    line-height: normal;
+  }
+
+  .pdp-desc,
+  .pdp-price,
+  .pdp-note div {
+    line-height: 19px;
+  }
+}
+
