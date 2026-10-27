@@ -2,6 +2,12 @@
   font-weight: 500;
 }
 
+@media (max-width: 767px) {
+  .page-product .site-footer {
+    height: calc(830px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 .pdp {
   position: relative;
   padding-top: 40px;
