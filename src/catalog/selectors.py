@@ -1,8 +1,8 @@
 from urllib.parse import urlencode
 
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 
-from src.catalog.models import CatalogCell, Category, Product, ProductAttributeGroup
+from src.catalog.models import CatalogCell, Category, Product, ProductAttributeGroup, ProductImage
 
 ATTRIBUTE_FILTER_KEYS = (
     ProductAttributeGroup.Slug.STYLE,
@@ -10,11 +10,15 @@ ATTRIBUTE_FILTER_KEYS = (
 )
 
 
+def _ordered_images():
+    return Prefetch("images", queryset=ProductImage.objects.order_by("sort", "id"))
+
+
 def base_products():
     return (
         Product.objects.filter(is_active=True)
         .select_related("category", "category__parent", "product_set")
-        .prefetch_related("images", "filter_attrs__group")
+        .prefetch_related(_ordered_images(), "filter_attrs__group")
     )
 
 
@@ -143,9 +147,14 @@ def pdp_set_products(product):
 
 
 def pdp_related(product):
-    manual = list(product.related_manual.filter(is_active=True).order_by("sort", "id"))
-    if manual:
-        return manual
+    manual_ids = list(
+        product.related_manual.filter(is_active=True).order_by("sort", "id").values_list("pk", flat=True)
+    )
+    if manual_ids:
+        order = {pk: index for index, pk in enumerate(manual_ids)}
+        rows = list(base_products().filter(pk__in=manual_ids))
+        rows.sort(key=lambda item: order.get(item.pk, 0))
+        return rows
     return related_products(product)
 
 

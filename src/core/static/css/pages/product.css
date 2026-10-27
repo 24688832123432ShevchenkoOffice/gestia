@@ -64,6 +64,19 @@
   align-items: stretch;
 }
 
+.pdp-side,
+.pdp-buy {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+.pdp-side {
+  gap: 80px;
+}
+
 .pdp-notes {
   gap: 50px;
 }
@@ -89,9 +102,10 @@
 .pdp-shot img {
   position: absolute;
   left: 0;
+  top: calc(var(--pdp-shot-t, 0) * 1%);
   width: 100%;
   max-width: none;
-  height: auto;
+  height: calc(var(--pdp-shot-h, 100) * 1%);
 }
 
 .pdp-gallery__nav {
@@ -158,8 +172,10 @@
 
 .pdp h1 {
   width: min(347px, 100%);
+  max-width: 100%;
   font-size: 38px;
   letter-spacing: -2.66px;
+  overflow-wrap: break-word;
 }
 
 .pdp-chips {
@@ -190,8 +206,10 @@
 .pdp-desc {
   gap: 10px;
   width: 100%;
+  min-width: 0;
   font-size: 16px;
   letter-spacing: -0.48px;
+  overflow-wrap: break-word;
 }
 
 .pdp-desc p,
@@ -298,6 +316,8 @@
 .pdp-note {
   gap: 20px;
   width: 100%;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .pdp-note h2 {

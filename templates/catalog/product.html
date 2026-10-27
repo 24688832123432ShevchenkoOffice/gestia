@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n shop_tags static %}
+{% load i18n l10n shop_tags static %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/pages/catalog.css' %}">
@@ -14,7 +14,7 @@
 {% block description %}{{ product.seo_description }}{% endblock %}
 
 {% block content %}
-  <article class="pdp{% if pdp_mobile %} is-frame{% endif %}" data-pdp>
+  <article class="pdp" data-pdp>
     <p class="pdp-crumb">
       <a href="{% url 'home' %}">{% trans "Головна" %}</a>/<a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>/{{ product.name }}
     </p>
@@ -23,7 +23,7 @@
         <div class="pdp-gallery" data-pdp-gallery>
           {% for image in product.images.all %}
             <div class="pdp-shot{% if forloop.first %} is-current{% endif %}" data-shot>
-              <img src="{{ image.image.url }}" alt="{% if forloop.first %}{{ product.name }}{% endif %}" width="636" height="770" style="height: {{ image.frame_height }}%; top: {{ image.frame_top }}%;">
+              <img src="{{ image.image.url }}" alt="{% if forloop.first %}{{ product.name }}{% endif %}" width="636" height="770"{% if forloop.first %} fetchpriority="high"{% endif %}{% localize off %} style="--pdp-shot-h: {{ image.frame_height }}; --pdp-shot-t: {{ image.frame_top }};"{% endlocalize %}>
             </div>
           {% endfor %}
           <div class="pdp-gallery__nav">
@@ -35,6 +35,7 @@
             </button>
           </div>
         </div>
+        <div class="pdp-side">
         <div class="pdp-buy">
           <div class="pdp-info">
             <h1>{{ product.name }}</h1>
@@ -75,7 +76,6 @@
             </form>
           </div>
         </div>
-      </div>
 
       {% if ship_block or pay_block %}
         <div class="pdp-notes">
@@ -101,15 +101,17 @@
           {% endif %}
         </div>
       {% endif %}
+        </div>
+      </div>
 
       {% trans "Товари з цього ж сету" as set_title %}
       {% trans "Товари з цього сету" as set_mobile_title %}
       {% trans "Схожі товари" as related_title %}
       {% trans "Перейти до каталогу" as catalog_cta %}
-      {% if set_products or pdp_mobile %}
+      {% if set_products %}
         {% include "catalog/_pdp_band.html" with band_class="pdp-set" title=set_block.title|default:set_title mobile_title=set_block.text_mobile|default:set_mobile_title products=set_products cta=set_block.cta|default:catalog_cta %}
       {% endif %}
-      {% if related or pdp_mobile %}
+      {% if related %}
         {% include "catalog/_pdp_band.html" with band_class="pdp-related" title=related_block.title|default:related_title mobile_title=related_block.title|default:related_title products=related cta=related_block.cta|default:catalog_cta %}
       {% endif %}
 

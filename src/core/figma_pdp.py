@@ -1,3 +1,4 @@
+import hashlib
 from decimal import Decimal
 from pathlib import Path
 
@@ -7,7 +8,7 @@ from django.core.files import File
 from src.catalog.models import CatalogCell, ProductAttribute, ProductImage, ProductSet
 from src.content.models import HomeBlock
 
-PDP = Path(settings.BASE_DIR) / "docs" / "figma" / "v2" / "d_product_1-16424"
+PDP = Path(settings.BASE_DIR) / "docs" / "figma" / "v3" / "d_product_1-8837"
 CATALOG = Path(settings.BASE_DIR) / "docs" / "figma" / "catalog"
 DESC = (
     "Великодній бокс «Гніздо» — святкова композиція для атмосферного оформлення великоднього столу\n"
@@ -23,6 +24,13 @@ PAY = (
     "Онлайн-оплата банківською карткою Visa або Mastercard\n"
     "Оплата за реквізитами банківського рахунку\n"
     "Підтвердження замовлення та деталі оплати надсилаються після оформлення"
+)
+
+
+GALLERY = (
+    ("70ca3.png", "103.04"),
+    ("e43aa.png", "101.59"),
+    ("c5d0f.png", "100.31"),
 )
 
 
@@ -54,9 +62,9 @@ def seed_pdp(products):
         products["GH-04"],
     )
     for sort, filename, height in (
-        (1, "646f0.png", "103.04"),
-        (2, "52b96.png", "101.59"),
-        (3, "479da.png", "100.31"),
+        (1, "70ca3.png", "103.04"),
+        (2, "e43aa.png", "101.59"),
+        (3, "c5d0f.png", "100.31"),
     ):
         shot = ProductImage(
             product=product,
@@ -65,6 +73,8 @@ def seed_pdp(products):
             frame_top=Decimal("0"),
         )
         _save(shot, "image", PDP / filename, f"pdp-{filename}")
+    for key in ("GH-01", "GH-02", "GH-04"):
+        _add_gallery(products[key])
     rows = (
         (1, "GH-02", "", "shysh", "db3d5.png"),
         (2, "GH-06", "Бокс Великодній «Украіньсикй»", "cover", "729be.png"),
@@ -84,6 +94,39 @@ def seed_pdp(products):
             name_width=95,
         )
         _save(cell, "image", CATALOG / image, f"pdp-mobile-{sort}-{image}")
+
+
+def _digest(path):
+    return hashlib.md5(path.read_bytes()).hexdigest()
+
+
+def _stored_digest(image):
+    if not image.image:
+        return ""
+    image.image.open("rb")
+    try:
+        return hashlib.md5(image.image.read()).hexdigest()
+    finally:
+        image.image.close()
+
+
+def _add_gallery(product):
+    have = {_stored_digest(image) for image in product.images.all()}
+    sort = product.images.order_by("-sort").values_list("sort", flat=True).first() or 0
+    for filename, height in GALLERY:
+        path = PDP / filename
+        digest = _digest(path)
+        if digest in have:
+            continue
+        sort += 1
+        shot = ProductImage(
+            product=product,
+            sort=sort,
+            frame_height=Decimal(height),
+            frame_top=Decimal("0"),
+        )
+        _save(shot, "image", path, f"{product.slug}-{filename}")
+        have.add(digest)
 
 
 def pdp_blocks():

@@ -3,7 +3,9 @@
   align-items: flex-start;
   gap: 14px;
   width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -232,17 +234,19 @@
 
 @media (min-width: 768px) {
   .pdp {
-    padding-top: 24px;
+    padding-top: 0;
   }
 
   .pdp-crumb {
     position: static;
-    margin: 0 0 24px;
+    width: min(1302px, calc(100% - 48px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+    margin: 0 auto 26px;
     font-size: 12px;
+    line-height: normal;
   }
 
   .pdp-stack {
-    gap: 48px;
+    gap: 120px;
     width: min(1302px, calc(100% - 48px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
     margin-inline: auto;
   }
@@ -250,21 +254,46 @@
   .pdp-top {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 30px;
-    align-items: start;
+    column-gap: 30px;
+    align-items: stretch;
   }
 
   .pdp-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-self: start;
+    width: 100%;
     height: auto;
     overflow: visible;
   }
 
-  .pdp-shot {
+  .pdp-gallery .pdp-shot {
     display: block;
     position: relative;
     inset: auto;
+    flex: 0 0 auto;
     width: 100%;
+    height: auto;
+    margin: 0;
+    overflow: hidden;
     aspect-ratio: 636 / 770;
+  }
+
+  .pdp-gallery .pdp-shot::before {
+    content: "";
+    display: block;
+    padding-top: 121.06918239%;
+  }
+
+  .pdp-gallery .pdp-shot img {
+    position: absolute;
+    inset: auto;
+    left: 0;
+    top: calc(var(--pdp-shot-t, 0) * 1%);
+    width: 100%;
+    max-width: none;
+    height: calc(var(--pdp-shot-h, 100) * 1%);
   }
 
   .pdp-gallery__nav,
@@ -275,9 +304,33 @@
     display: none;
   }
 
+  .pdp-side {
+    gap: 50px;
+    align-self: stretch;
+    min-width: 0;
+  }
+
+  .pdp-buy {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: min-content;
+  }
+
   .pdp-info {
-    position: static;
+    position: sticky;
+    top: var(--header-h);
+    flex: 0 0 auto;
     gap: 40px;
+    width: 100%;
+    height: auto;
+    justify-content: flex-start;
+    background: #fff;
+    z-index: 2;
+  }
+
+  .pdp-notes {
+    flex: 0 0 auto;
+    width: min(553px, 100%);
   }
 
   .pdp h1 {
@@ -322,7 +375,7 @@
   }
 
   .pdp-band {
-    align-items: flex-start;
+    align-items: center;
     gap: 40px;
   }
 

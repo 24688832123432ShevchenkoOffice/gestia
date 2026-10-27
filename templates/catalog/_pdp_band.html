@@ -12,15 +12,9 @@
     </div>
   {% endif %}
   <div class="pdp-rail pdp-rail--mob">
-    {% if pdp_mobile %}
-      {% for cell in pdp_mobile %}
-        {% include "catalog/_cell.html" with cell=cell %}
-      {% endfor %}
-    {% else %}
-      {% for item in products %}
-        {% include "catalog/_pdp_card.html" with item=item %}
-      {% endfor %}
-    {% endif %}
+    {% for item in products %}
+      {% include "catalog/_pdp_card.html" with item=item %}
+    {% endfor %}
   </div>
   {% if cta %}
     <div class="pdp-more" data-pdp-more>

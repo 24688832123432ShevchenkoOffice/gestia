@@ -13,7 +13,6 @@ from src.catalog.selectors import (
     filters_reset_url,
     mobile_frame_groups,
     parse_catalog_filters,
-    pdp_mobile_cards,
     pdp_related,
     pdp_set_products,
 )
@@ -96,7 +95,6 @@ def product_detail(request, slug):
             "attrs": attrs,
             "set_products": pdp_set_products(product),
             "related": pdp_related(product),
-            "pdp_mobile": pdp_mobile_cards() if product.slug == "velykodnii-hnizdo" else [],
             "ship_block": blocks.get("pdp_ship"),
             "pay_block": blocks.get("pdp_pay"),
             "set_block": blocks.get("pdp_set"),
