@@ -1,0 +1,107 @@
+from decimal import Decimal
+from pathlib import Path
+
+from django.conf import settings
+from django.core.files import File
+
+from src.catalog.models import CatalogCell, ProductAttribute, ProductImage, ProductSet
+from src.content.models import HomeBlock
+
+PDP = Path(settings.BASE_DIR) / "docs" / "figma" / "v2" / "d_product_1-16424"
+CATALOG = Path(settings.BASE_DIR) / "docs" / "figma" / "catalog"
+DESC = (
+    "Великодній бокс «Гніздо» — святкова композиція для атмосферного оформлення великоднього столу\n"
+    "До боксу входять декоративні великодні яйця, свічники у формі квітів та елементи для створення святкової композиції"
+)
+SHIP = (
+    "Доставка «Новою поштою» по Україні — у відділення, поштомат або кур\u2019єром\n"
+    "Термін доставки — орієнтовно 1–3 робочі дні після відправлення\n"
+    "Вартість доставки розраховується за тарифами перевізника\n"
+    "Після відправлення ви отримаєте номер накладної для відстеження замовлення"
+)
+PAY = (
+    "Онлайн-оплата банківською карткою Visa або Mastercard\n"
+    "Оплата за реквізитами банківського рахунку\n"
+    "Підтвердження замовлення та деталі оплати надсилаються після оформлення"
+)
+
+
+def _save(instance, field, path, name):
+    current = getattr(instance, field)
+    if getattr(current, "name", ""):
+        current.delete(save=False)
+    with path.open("rb") as handle:
+        current.save(name or path.name, File(handle), save=True)
+
+
+def seed_pdp(products):
+    product = products["GH-03"]
+    product.description_uk = DESC
+    product.save(update_fields=["description_uk"])
+    product.filter_attrs.add(
+        ProductAttribute.objects.get(slug="scandi"),
+        ProductAttribute.objects.get(slug="white"),
+    )
+    bundle = ProductSet.objects.create(slug="velykodni", name_uk="Великодній")
+    for key in ("GH-01", "GH-02", "GH-03", "GH-04"):
+        item = products[key]
+        item.product_set = bundle
+        item.save(update_fields=["product_set"])
+    product.related_manual.add(
+        products["GH-01"],
+        products["GH-02"],
+        products["GH-03"],
+        products["GH-04"],
+    )
+    for sort, filename, height in (
+        (1, "646f0.png", "103.04"),
+        (2, "52b96.png", "101.59"),
+        (3, "479da.png", "100.31"),
+    ):
+        shot = ProductImage(
+            product=product,
+            sort=sort,
+            frame_height=Decimal(height),
+            frame_top=Decimal("0"),
+        )
+        _save(shot, "image", PDP / filename, f"pdp-{filename}")
+    rows = (
+        (1, "GH-02", "", "shysh", "db3d5.png"),
+        (2, "GH-06", "Бокс Великодній «Украіньсикй»", "cover", "729be.png"),
+    )
+    for sort, sku, label, crop, image in rows:
+        cell = CatalogCell.objects.create(
+            product=products[sku],
+            band=0,
+            layout=CatalogCell.Layout.ROW,
+            role=CatalogCell.Role.GRID,
+            surface=CatalogCell.Surface.PDP_MOBILE,
+            slot=CatalogCell.Slot.TILE,
+            label_uk=label,
+            sort=sort,
+            price_uah=Decimal("8990.00"),
+            crop=crop,
+            name_width=95,
+        )
+        _save(cell, "image", CATALOG / image, f"pdp-mobile-{sort}-{image}")
+
+
+def pdp_blocks():
+    return (
+        ("pdp_ship", 11, "Доставка", SHIP, "", ""),
+        ("pdp_pay", 12, "Оплата", PAY, "", ""),
+        ("pdp_set", 13, "Товари з цього ж сету", "", "Товари з цього сету", "Перейти до каталогу"),
+        ("pdp_related", 14, "Схожі товари", "", "", "Перейти до каталогу"),
+    )
+
+
+def save_pdp_blocks():
+    for key, sort, title, text, mobile, cta in pdp_blocks():
+        HomeBlock.objects.create(
+            key=key,
+            sort=sort,
+            title_uk=title,
+            text_uk=text,
+            text_mobile_uk=mobile,
+            cta_uk=cta,
+        )

@@ -81,6 +81,14 @@ class FacetTests(TestCase):
         self.assertContains(page, 'data-catalog-sheet')
         self.assertContains(page, 'data-sheet-open')
 
+    def test_product_page_shows_figma_purchase(self):
+        page = self.client.get("/tovar/a/")
+        self.assertContains(page, "Додати в кошик")
+        self.assertContains(page, "Замовити одразу")
+        self.assertContains(page, 'name="qty"')
+        self.assertContains(page, "data-qty-label")
+        self.assertContains(page, "Арт. A")
+
     def test_search_keeps_name(self):
         query = QueryDict(mutable=True)
         query["q"] = "A"

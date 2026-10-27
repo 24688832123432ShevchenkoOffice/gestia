@@ -1,7 +1,7 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
-from src.catalog.models import Category, Product
+from src.catalog.models import Category
 from src.catalog.selectors import (
     base_products,
     catalog_bands,
@@ -13,11 +13,12 @@ from src.catalog.selectors import (
     filters_reset_url,
     mobile_frame_groups,
     parse_catalog_filters,
-    related_products,
-    same_set,
+    pdp_mobile_cards,
+    pdp_related,
+    pdp_set_products,
 )
 from src.commerce.forms import BuyNowForm, CallbackForm, style_form
-from src.content.models import HomeBlock
+from src.content.models import HomeBlock, Review
 
 
 def _filters_active(parsed):
@@ -78,16 +79,30 @@ def product_detail(request, slug):
     product = get_object_or_404(base_products(), slug=slug)
     if not product.is_active:
         raise Http404
-    attrs = [attr for attr in product.filter_attrs.all() if attr.show_on_pdp]
+    order = {"style": 0, "color": 1}
+    attrs = sorted(
+        (attr for attr in product.filter_attrs.all() if attr.show_on_pdp),
+        key=lambda attr: (order.get(attr.group.slug, 9), attr.sort),
+    )
+    blocks = {
+        block.key: block
+        for block in HomeBlock.objects.filter(key__in=["pdp_ship", "pdp_pay", "pdp_set", "pdp_related", "reviews"])
+    }
     return render(
         request,
         "catalog/product.html",
         {
             "product": product,
             "attrs": attrs,
-            "set_products": same_set(product),
-            "related": related_products(product),
-            "crumbs": product.category.chain(),
+            "set_products": pdp_set_products(product),
+            "related": pdp_related(product),
+            "pdp_mobile": pdp_mobile_cards() if product.slug == "velykodnii-hnizdo" else [],
+            "ship_block": blocks.get("pdp_ship"),
+            "pay_block": blocks.get("pdp_pay"),
+            "set_block": blocks.get("pdp_set"),
+            "related_block": blocks.get("pdp_related"),
+            "reviews_block": blocks.get("reviews"),
+            "reviews": Review.objects.all(),
             "callback_form": style_form(CallbackForm(initial={"sku": product.sku})),
             "buy_form": style_form(BuyNowForm(initial={"sku": product.sku})),
         },

@@ -2,75 +2,140 @@
 {% load i18n shop_tags static %}
 
 {% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/catalog.css' %}">
   <link rel="stylesheet" href="{% static 'css/pages/product.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/product-rails.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/product-1440.css' %}">
 {% endblock %}
 {% block extra_js %}
-  <script src="{% static 'js/pages/gallery.js' %}" defer></script>
+  <script src="{% static 'js/pages/product.js' %}" defer></script>
 {% endblock %}
 {% block title %}{{ product.seo_title }}{% endblock %}
 {% block description %}{{ product.seo_description }}{% endblock %}
 
 {% block content %}
-  <article class="container product">
-    {% include "partials/crumbs.html" %}
-    <div class="product__grid">
-      <div class="gallery" data-gallery>
-        {% with cover=product.images.all|first %}
-          {% if cover %}
-            <img class="gallery__main" data-gallery-main src="{{ cover.image.url }}" alt="{{ product.name }}" width="900" height="1120">
-          {% endif %}
-        {% endwith %}
-        {% if product.images.all|length > 1 %}
-          <div class="gallery__thumbs">
-            <button type="button" data-gallery-prev aria-label="{% trans 'Попереднє фото' %}">‹</button>
-            {% for image in product.images.all %}
-              <button type="button" data-gallery-thumb data-full="{{ image.image.url }}">
-                <img src="{{ image.image.url }}" alt="" width="120" height="150">
-              </button>
-            {% endfor %}
-            <button type="button" data-gallery-next aria-label="{% trans 'Наступне фото' %}">›</button>
+  <article class="pdp{% if pdp_mobile %} is-frame{% endif %}" data-pdp>
+    <p class="pdp-crumb">
+      <a href="{% url 'home' %}">{% trans "Головна" %}</a>/<a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>/{{ product.name }}
+    </p>
+    <div class="pdp-stack">
+      <div class="pdp-top">
+        <div class="pdp-gallery" data-pdp-gallery>
+          {% for image in product.images.all %}
+            <div class="pdp-shot{% if forloop.first %} is-current{% endif %}" data-shot>
+              <img src="{{ image.image.url }}" alt="{% if forloop.first %}{{ product.name }}{% endif %}" width="636" height="770" style="height: {{ image.frame_height }}%; top: {{ image.frame_top }}%;">
+            </div>
+          {% endfor %}
+          <div class="pdp-gallery__nav">
+            <button type="button" data-pdp-prev aria-label="{% trans 'Попереднє фото' %}">
+              <img src="{% static 'figma/v2/product/dc9f6.svg' %}" width="15" height="15" alt="">
+            </button>
+            <button type="button" data-pdp-next aria-label="{% trans 'Наступне фото' %}">
+              <img class="is-next" src="{% static 'figma/v2/product/dc9f6.svg' %}" width="15" height="15" alt="">
+            </button>
           </div>
-        {% endif %}
-      </div>
-      <div class="product__info">
-        <h1>{{ product.name }}</h1>
-        <p class="product__sku">{% trans "Артикул" %} {{ product.sku }}</p>
-        <p class="product__price">{% product_price product %}</p>
-        <p class="product__stock">{{ product.get_stock_status_display }}</p>
-        {% if attrs %}
-          <ul class="product__attrs">
-            {% for attr in attrs %}
-              <li>{{ attr.group.name }} — {{ attr.name }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-        <div class="prose">{{ product.description|linebreaks }}</div>
-        {% if product.stock_status != "out" %}
-          <form data-qa="cart-add" method="post" action="{% url 'cart_add' %}" hx-post="{% url 'cart_add' %}" hx-target="#cart-count" hx-swap="outerHTML">
-            {% csrf_token %}
-            <input type="hidden" name="sku" value="{{ product.sku }}">
-            <button class="btn" type="submit">{% trans "Додати в кошик" %}</button>
-          </form>
-        {% endif %}
-        <div class="product__actions">
-          <button class="btn btn--ghost" type="button" data-open-dialog="buy-dialog"{% if product.stock_status == "out" %} disabled{% endif %}>{% trans "Замовити одразу" %}</button>
-          <button class="btn btn--ghost" type="button" data-open-dialog="callback-dialog">{% trans "Замовити" %}</button>
+        </div>
+        <div class="pdp-buy">
+          <div class="pdp-info">
+            <h1>{{ product.name }}</h1>
+            <div class="pdp-chips">
+              {% for attr in attrs %}
+                <p class="pdp-chip"><span>{{ attr.group.name }}: {{ attr.name }}</span></p>
+              {% endfor %}
+              <p class="pdp-chip"><span>{% trans "Арт." %} {{ product.sku }}</span></p>
+            </div>
+            {% if product.description %}
+              <div class="pdp-desc">
+                {% for line in product.description.splitlines %}
+                  {% if line %}<p>{{ line }}</p>{% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+            <p class="pdp-price">{% home_price product %}</p>
+            <form class="pdp-controls" method="post" action="{% url 'cart_add' %}" hx-post="{% url 'cart_add' %}" hx-target="#cart-count" hx-swap="outerHTML">
+              {% csrf_token %}
+              <input type="hidden" name="sku" value="{{ product.sku }}">
+              <div class="pdp-qty">
+                <button type="button" data-qty-inc aria-label="{% trans 'Більше' %}">
+                  <img src="{% static 'figma/v2/product/e183e.svg' %}" width="9" height="8" alt="">
+                </button>
+                <span data-qty-label>1</span>
+                <input name="qty" data-qty type="hidden" value="1">
+                <button type="button" data-qty-dec aria-label="{% trans 'Менше' %}">
+                  <img src="{% static 'figma/v2/product/796c7.svg' %}" width="9" height="2" alt="">
+                </button>
+              </div>
+              <button class="pdp-cart" type="submit">
+                <span>{% trans "Додати в кошик" %}</span>
+                <img src="{% static 'figma/v2/product/adb22.svg' %}" width="14" height="14" alt="">
+              </button>
+              <button class="pdp-now" type="button" data-open-dialog="buy-dialog">
+                <span>{% trans "Замовити одразу" %}</span>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
 
-    {% if set_products %}
-      <section class="product__more">
-        <h2>{% trans "Товари з цього ж сету" %}</h2>
-        {% include "catalog/_grid.html" with products=set_products %}
-      </section>
-    {% endif %}
-    {% if related %}
-      <section class="product__more">
-        <h2>{% trans "Схожі товари" %}</h2>
-        {% include "catalog/_grid.html" with products=related %}
-      </section>
-    {% endif %}
+      {% if ship_block or pay_block %}
+        <div class="pdp-notes">
+          {% if ship_block %}
+            <section class="pdp-note">
+              <h2>{{ ship_block.title }}</h2>
+              <div>
+                {% for line in ship_block.text.splitlines %}
+                  {% if line %}<p>{{ line }}</p>{% endif %}
+                {% endfor %}
+              </div>
+            </section>
+          {% endif %}
+          {% if pay_block %}
+            <section class="pdp-note">
+              <h2>{{ pay_block.title }}</h2>
+              <div>
+                {% for line in pay_block.text.splitlines %}
+                  {% if line %}<p>{{ line }}</p>{% endif %}
+                {% endfor %}
+              </div>
+            </section>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% trans "Товари з цього ж сету" as set_title %}
+      {% trans "Товари з цього сету" as set_mobile_title %}
+      {% trans "Схожі товари" as related_title %}
+      {% trans "Перейти до каталогу" as catalog_cta %}
+      {% if set_products or pdp_mobile %}
+        {% include "catalog/_pdp_band.html" with band_class="pdp-set" title=set_block.title|default:set_title mobile_title=set_block.text_mobile|default:set_mobile_title products=set_products cta=set_block.cta|default:catalog_cta %}
+      {% endif %}
+      {% if related or pdp_mobile %}
+        {% include "catalog/_pdp_band.html" with band_class="pdp-related" title=related_block.title|default:related_title mobile_title=related_block.title|default:related_title products=related cta=related_block.cta|default:catalog_cta %}
+      {% endif %}
+
+      {% if reviews %}
+        <section class="pdp-reviews">
+          <h2>{% if reviews_block %}{{ reviews_block.title }}{% else %}{% trans "Відгуки" %}{% endif %}</h2>
+          <div class="pdp-review-rail">
+            {% for review in reviews %}
+              <article class="pdp-review">
+                <header>
+                  <h3>{{ review.author }}</h3>
+                  {% if review.rating_kind == "black5" %}
+                    <img class="rating rating--desk" src="{% static 'figma/desktop/37153.svg' %}" width="98" height="18" alt="">
+                    <img class="rating rating--mob" src="{% static 'figma/mobile/1796c.svg' %}" width="83" height="15" alt="">
+                  {% else %}
+                    <img class="rating rating--desk" src="{% static 'figma/desktop/93b89.svg' %}" width="98" height="18" alt="">
+                    <img class="rating rating--mob" src="{% static 'figma/mobile/b07a3.svg' %}" width="83" height="15" alt="">
+                  {% endif %}
+                </header>
+                <p><span class="pdp-only-mob">{{ review.text }}</span><span class="pdp-only-desk">{{ review.text|figma_nbsp }}</span></p>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+    </div>
   </article>
 
   <dialog class="sheet" id="callback-dialog">

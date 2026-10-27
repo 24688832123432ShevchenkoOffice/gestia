@@ -1,0 +1,107 @@
+@media (min-width: 1440px) {
+  .page-product main {
+    overflow-x: clip;
+  }
+
+  .pdp {
+    width: 1440px;
+    min-height: calc(4844px - 69.211px - 346px);
+    margin: 0;
+    padding: 0;
+  }
+
+  .pdp-stack,
+  .pdp-top {
+    display: contents;
+  }
+
+  .pdp-crumb {
+    position: absolute;
+    left: 69px;
+    top: -0.211px;
+    margin: 0;
+    font-size: 12px;
+  }
+
+  .pdp-gallery {
+    position: absolute;
+    left: 69px;
+    top: 40.789px;
+    width: 636px;
+    height: auto;
+  }
+
+  .pdp-buy {
+    position: absolute;
+    left: 735px;
+    top: 40.789px;
+    width: 636px;
+    height: 1782px;
+    overflow: clip;
+  }
+
+  .pdp-info {
+    position: sticky;
+    top: 0;
+    justify-content: flex-end;
+    gap: 40px;
+    width: 636px;
+    height: 457px;
+  }
+
+  .pdp-controls {
+    overflow: visible;
+  }
+
+  .pdp-notes {
+    position: absolute;
+    left: 735px;
+    top: 1882.789px;
+    width: 553px;
+  }
+
+  .pdp-set,
+  .pdp-related {
+    position: absolute;
+    left: 69px;
+    width: calc(1440px - 69px);
+  }
+
+  .pdp-set {
+    top: 2470.789px;
+  }
+
+  .pdp-related {
+    top: 3220.789px;
+  }
+
+  .pdp-band h2 {
+    width: 1302px;
+  }
+
+  .pdp-rail--desk {
+    width: 100%;
+  }
+
+  .pdp-reviews {
+    position: absolute;
+    left: 69px;
+    top: 3970.789px;
+    width: calc(1440px - 69px);
+    align-items: flex-start;
+  }
+
+  .pdp-reviews h2 {
+    width: 1301px;
+  }
+
+  .pdp-review-rail {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .pdp.is-frame {
+    min-height: calc(2842px - var(--header-h));
+  }
+}

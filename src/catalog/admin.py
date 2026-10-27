@@ -14,6 +14,7 @@ from src.catalog.models import (
 
 class ProductImageInline(TabularInline):
     model = ProductImage
+    fields = ("image", "sort", "frame_height", "frame_top")
     extra = 1
 
 

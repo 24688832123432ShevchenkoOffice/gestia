@@ -185,6 +185,25 @@ class Product(TimeStampedModel):
     is_popular = models.BooleanField("Популярний на головній", default=False)
     menu_name_uk = models.CharField("Назва в меню", max_length=200, blank=True)
     price_weight = models.PositiveSmallIntegerField("Насиченість ціни на головній", default=400)
+    card_crop = models.CharField(
+        "Кадр картки",
+        max_length=16,
+        choices=[
+            ("ukr", "107.6%"),
+            ("cover", "cover"),
+            ("shysh", "114.41%"),
+            ("hnizdo", "114.99%"),
+            ("wide", "115.8%"),
+        ],
+        default="cover",
+    )
+    name_width = models.PositiveSmallIntegerField("Ширина назви на картці", default=127)
+    card_image = models.ImageField(
+        "Фото картки",
+        upload_to="products/cards/",
+        blank=True,
+        validators=[IMAGE_VALIDATOR],
+    )
     sort = models.PositiveIntegerField("Порядок", default=0)
     filter_attrs = models.ManyToManyField(
         ProductAttribute,
@@ -254,6 +273,15 @@ class Product(TimeStampedModel):
             return images[0] if images else None
         return self.images.order_by("sort", "id").first()
 
+    @property
+    def card_photo_url(self):
+        if self.card_image:
+            return self.card_image.url
+        cover = self.cover
+        if cover:
+            return cover.image.url
+        return ""
+
 
 class CatalogCell(models.Model):
     class Layout(models.TextChoices):
@@ -276,6 +304,7 @@ class CatalogCell(models.Model):
         MOSAIC = "mosaic", "Мозаїка"
         FILTERS = "filters", "Фільтри"
         MOBILE = "mobile", "Мобільний"
+        PDP_MOBILE = "pdp_mobile", "Картки товару"
 
     class Slot(models.TextChoices):
         FEATURE = "feature", "На всю ширину"
@@ -347,6 +376,8 @@ class ProductImage(models.Model):
     )
     image = models.ImageField("Фото", upload_to="products/", validators=[IMAGE_VALIDATOR])
     sort = models.PositiveIntegerField("Порядок", default=0)
+    frame_height = models.DecimalField("Висота кадру, %", max_digits=6, decimal_places=2, default=Decimal("100"))
+    frame_top = models.DecimalField("Зсув кадру, %", max_digits=6, decimal_places=2, default=Decimal("0"))
 
     class Meta:
         ordering = ["sort", "id"]

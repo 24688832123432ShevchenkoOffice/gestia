@@ -100,6 +100,10 @@ class HomeBlock(models.Model):
         LOCALE = "locale", "Країна та мова"
         MEGA = "mega", "Мегаменю"
         CATALOG = "catalog", "Каталог"
+        PDP_SHIP = "pdp_ship", "Доставка товару"
+        PDP_PAY = "pdp_pay", "Оплата товару"
+        PDP_SET = "pdp_set", "Товари сету"
+        PDP_RELATED = "pdp_related", "Схожі товари"
 
     key = models.CharField("Ключ", max_length=32, choices=Key.choices, unique=True)
     title_uk = models.CharField("Заголовок", max_length=200, blank=True)

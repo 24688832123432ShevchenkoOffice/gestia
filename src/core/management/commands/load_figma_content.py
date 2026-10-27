@@ -23,6 +23,7 @@ from src.content.models import (
     Review,
     SiteSettings,
 )
+from src.core.figma_pdp import save_pdp_blocks, seed_pdp
 
 DESKTOP = Path(settings.BASE_DIR) / "docs" / "figma" / "desktop"
 MOBILE = Path(settings.BASE_DIR) / "docs" / "figma" / "mobile"
@@ -60,7 +61,9 @@ class Command(BaseCommand):
         self._cells(products)
         self._filter_cells(products)
         self._mobile_cells(products)
+        seed_pdp(products)
         self._blocks()
+        save_pdp_blocks()
         self._advantages()
         self._reviews()
         self._footer()
@@ -78,6 +81,9 @@ class Command(BaseCommand):
         CatalogCell.objects.all().delete()
         for image in ProductImage.objects.all():
             image.image.delete(save=False)
+        for product in Product.objects.all():
+            if product.card_image:
+                product.card_image.delete(save=False)
         Product.objects.all().delete()
         for category in Category.objects.all():
             if category.image:
@@ -160,15 +166,15 @@ class Command(BaseCommand):
 
     def _products(self, categories):
         specs = (
-            ("GH-01", "velykodnii-ukrainskyi", "Бокс Великодній «Украіньсикй»", DESKTOP / "479da.png", "8990.00", 400, 1, "podarunkovi-sety", True),
-            ("GH-02", "boks-rizdvyanyi-shyshky", "Бокс «Різдвяний Шишки»", DESKTOP / "db3d5.png", "4980.00", 400, 2, "rizdvyani-boksy", True),
-            ("GH-03", "velykodnii-hnizdo", "Бокс Великодній «Гніздо»", DESKTOP / "14fec.png", "2450.00", 400, 3, "podarunkovi-sety", True),
-            ("GH-04", "vesilnyi", "Бокс «Весільний»", DESKTOP / "72b4d.png", "14980.00", 500, 4, "podarunkovi-sety", True),
-            ("GH-05", "vesnianyi", "Бокс «Весняний»", CATALOG / "2dcde.png", "2450.00", 400, 5, "rizdvyani-boksy", False),
-            ("GH-06", "gazetnyi", "Бокс «Газетний»", CATALOG / "729be.png", "5130.00", 400, 6, "rizdvyani-boksy", False),
+            ("GH-01", "GH-01", "velykodnii-ukrainskyi", "Бокс Великодній «Украіньсикй»", DESKTOP / "479da.png", "8990.00", 400, 1, "podarunkovi-sety", True, "ukr", 127),
+            ("GH-02", "GH-02", "boks-rizdvyanyi-shyshky", "Бокс «Різдвяний Шишки»", DESKTOP / "db3d5.png", "4980.00", 400, 2, "rizdvyani-boksy", True, "shysh", 127),
+            ("GH-03", "TL-0012", "velykodnii-hnizdo", "Бокс Великодній «Гніздо»", DESKTOP / "14fec.png", "2450.00", 400, 3, "podarunkovi-sety", True, "hnizdo", 126),
+            ("GH-04", "GH-04", "vesilnyi", "Бокс «Весільний»", DESKTOP / "72b4d.png", "14980.00", 500, 4, "podarunkovi-sety", True, "cover", 119),
+            ("GH-05", "GH-05", "vesnianyi", "Бокс «Весняний»", CATALOG / "2dcde.png", "2450.00", 400, 5, "rizdvyani-boksy", False, "cover", 143),
+            ("GH-06", "GH-06", "gazetnyi", "Бокс «Газетний»", CATALOG / "729be.png", "5130.00", 400, 6, "rizdvyani-boksy", False, "cover", 127),
         )
         made = {}
-        for sku, slug, name, image, price, weight, sort, category_slug, popular in specs:
+        for key, sku, slug, name, image, price, weight, sort, category_slug, popular, crop, name_width in specs:
             product = Product.objects.create(
                 category=categories[category_slug],
                 sku=sku,
@@ -178,13 +184,17 @@ class Command(BaseCommand):
                 price_uah=Decimal(price),
                 price_eur=ZERO,
                 price_weight=weight,
+                card_crop=crop,
+                name_width=name_width,
                 is_popular=popular,
                 is_active=True,
                 sort=sort,
             )
-            shot = ProductImage(product=product, sort=1)
-            _save(shot, "image", image, f"{slug}.png")
-            made[sku] = product
+            _save(product, "card_image", image, f"card-{slug}.png")
+            if key != "GH-03":
+                shot = ProductImage(product=product, sort=1)
+                _save(shot, "image", image, f"{slug}.png")
+            made[key] = product
         return made
 
     def _cells(self, products):

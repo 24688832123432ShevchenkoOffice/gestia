@@ -53,3 +53,8 @@ class CheckoutTests(TestCase):
         order = Order.objects.get()
         self.assertEqual(order.total, Decimal("200"))
         self.assertEqual(order.items.get().qty, 2)
+
+    def test_cart_add_reads_qty(self):
+        response = self.client.post("/koshik/dodaty/", {"sku": "SNIH", "qty": "3"})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.client.session["cart"]["SNIH"], 3)

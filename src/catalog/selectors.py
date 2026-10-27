@@ -136,6 +136,27 @@ def filters_reset_url(request):
     return request.path
 
 
+def pdp_set_products(product):
+    if not product.product_set_id:
+        return []
+    return list(base_products().filter(product_set_id=product.product_set_id).order_by("sort", "id"))
+
+
+def pdp_related(product):
+    manual = list(product.related_manual.filter(is_active=True).order_by("sort", "id"))
+    if manual:
+        return manual
+    return related_products(product)
+
+
+def pdp_mobile_cards():
+    return list(
+        CatalogCell.objects.filter(surface=CatalogCell.Surface.PDP_MOBILE)
+        .select_related("product")
+        .order_by("sort", "id")
+    )
+
+
 def same_set(product, limit=4):
     if not product.product_set_id:
         return Product.objects.none()

@@ -83,7 +83,11 @@ def cart_add(request):
     product = get_object_or_404(Product, sku=request.POST.get("sku", ""), is_active=True)
     if product.stock_status == Product.Stock.OUT:
         return HttpResponse(status=422)
-    add(request, product.sku, 1)
+    try:
+        qty = int(request.POST.get("qty", "1"))
+    except (TypeError, ValueError):
+        qty = 1
+    add(request, product.sku, qty)
     if _hx(request):
         return render(request, "partials/cart_count.html", {"cart_count": sum_count(request)})
     return HttpResponseRedirect(product.get_absolute_url())
