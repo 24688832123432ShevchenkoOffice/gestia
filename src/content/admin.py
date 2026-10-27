@@ -17,7 +17,7 @@ class SiteSettingsAdmin(SingletonAdmin):
     fieldsets = (
         ("Контакти", {"fields": ("phone", "email", "instagram_url", "pinterest_url", "logo")}),
         ("Адреса", {"fields": ("address_uk", "address_ru", "address_en")}),
-        ("Мови", {"fields": ("ru_enabled", "en_enabled")}),
+        ("Мови", {"fields": ("en_enabled",)}),
         ("Сповіщення", {"fields": ("telegram_notify_orders", "telegram_notify_leads")}),
         ("Кольори", {"fields": ("color_ink", "color_paper", "color_accent")}),
         (

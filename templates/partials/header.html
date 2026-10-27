@@ -21,22 +21,7 @@
     {% include "partials/brand.html" with kind="header" %}
 
     <div class="head-actions">
-      <button class="lang-btn" type="button" data-locale-open aria-expanded="false" aria-controls="locale-panel">
-        <span class="lang-btn__ua">UA</span><span class="lang-btn__en">/EN</span>
-      </button>
-      <div class="cur-switch">
-        <form action="{% url 'set_currency' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <button class="cur-switch__uah" type="submit" name="currency" value="uah">₴</button>
-        </form>
-        <span class="cur-switch__slash">/</span>
-        <form action="{% url 'set_currency' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <button class="cur-switch__eur" type="submit" name="currency" value="eur">€</button>
-        </form>
-      </div>
+      {% include "partials/lang_currency_switch.html" with prefix="desk" %}
       {% if site_settings.phone %}
         <a class="icon-btn" href="tel:{{ site_settings.phone|cut:' ' }}" aria-label="{% trans 'Зателефонувати' %}">
           <img src="{% static 'figma/desktop/f6cbe.svg' %}" width="24" height="24" alt="">
@@ -107,24 +92,6 @@
     </div>
   </div>
 
-  <div class="locale" id="locale-panel" data-locale hidden>
-    {% if home_blocks.locale %}
-      <p class="locale__title">{{ home_blocks.locale.title }}</p>
-      <img class="locale__rule" src="{% static 'figma/locale_popup/dfae6.svg' %}" width="268" height="1" alt="">
-      <p class="locale__current">
-        <img src="{% static 'figma/locale_popup/e071b.svg' %}" width="21" height="15" alt="">
-        <span>{{ home_blocks.locale.text }}</span>
-      </p>
-      <img class="locale__rule" src="{% static 'figma/locale_popup/dfae6.svg' %}" width="268" height="1" alt="">
-      <button class="figma-btn figma-btn--locale" type="button" data-locale-close>{{ home_blocks.locale.cta }}</button>
-      <form action="{% url 'set_language' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-        <input type="hidden" name="language" value="{% if LANGUAGE_CODE == 'en' %}uk{% else %}en{% endif %}">
-        <button class="locale__change" type="submit">{{ home_blocks.locale.link_label }}</button>
-      </form>
-    {% endif %}
-  </div>
 </header>
 
 <div class="burger" id="burger-panel" data-burger-panel hidden>
@@ -151,22 +118,7 @@
     </div>
     <div class="burger__foot">
       {% include "partials/social_row.html" with tone="dark" %}
-      <button class="lang-btn" type="button" data-locale-open>
-        <span class="lang-btn__ua">UA</span><span class="lang-btn__en">/EN</span>
-      </button>
-      <div class="cur-switch">
-        <form action="{% url 'set_currency' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <button class="cur-switch__uah" type="submit" name="currency" value="uah">₴</button>
-        </form>
-        <span class="cur-switch__slash">/</span>
-        <form action="{% url 'set_currency' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <button class="cur-switch__eur" type="submit" name="currency" value="eur">€</button>
-        </form>
-      </div>
+      {% include "partials/lang_currency_switch.html" with prefix="burger" %}
     </div>
   </div>
 </div>

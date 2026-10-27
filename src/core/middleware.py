@@ -7,6 +7,9 @@ from src.core.i18n import collapse_double_prefix, localize_path
 
 
 def language_enabled(lang: str) -> bool:
+    allowed = {code for code, _label in settings.LANGUAGES}
+    if lang not in allowed:
+        return False
     if lang == settings.LANGUAGE_CODE:
         return True
     try:
@@ -15,8 +18,6 @@ def language_enabled(lang: str) -> bool:
         site = SiteSettings.load()
     except (OperationalError, ProgrammingError):
         return True
-    if lang == "ru":
-        return site.ru_enabled
     if lang == "en":
         return site.en_enabled
     return False

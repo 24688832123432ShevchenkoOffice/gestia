@@ -74,7 +74,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "uk"
 LANGUAGES = [
     ("uk", "Українська"),
-    ("ru", "Русский"),
     ("en", "English"),
 ]
 LOCALE_PATHS = [BASE_DIR / "locale"]

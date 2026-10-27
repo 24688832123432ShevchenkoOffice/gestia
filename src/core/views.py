@@ -55,9 +55,6 @@ def set_language(request):
     lang = request.POST.get("language", "")
     if not check_for_language(lang) or not language_enabled(lang):
         lang = settings.LANGUAGE_CODE
-    currency = request.POST.get("currency", "")
-    if currency in {"uah", "eur"}:
-        request.session["currency"] = currency
     target = collapse_double_prefix(localize_path(_extract_next(request), lang))
     response = HttpResponseRedirect(target)
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
@@ -70,5 +67,6 @@ def set_currency(request):
     if currency not in {"uah", "eur"}:
         currency = "uah"
     request.session["currency"] = currency
+    # Currency only — never touches language cookie / URL prefix.
     target = safe_next(request.POST.get("next") or "/")
     return HttpResponseRedirect(target)

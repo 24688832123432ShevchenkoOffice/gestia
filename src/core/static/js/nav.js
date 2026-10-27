@@ -6,8 +6,6 @@
   var burger = document.querySelector("[data-burger-panel]");
   var catalogBtn = header.querySelector("[data-catalog]");
   var mega = header.querySelector("[data-mega]");
-  var locale = header.querySelector("[data-locale]");
-  var localeOpeners = document.querySelectorAll("[data-locale-open]");
   var scrollY = 0;
 
   function flag(node, open) {
@@ -41,23 +39,38 @@
     if (catalogBtn) catalogBtn.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
-  function setLocale(open) {
-    flag(locale, open);
-    document.body.classList.toggle("is-locale", open);
-    localeOpeners.forEach(function (button) {
-      button.setAttribute("aria-expanded", open ? "true" : "false");
+  function closeSwitches(except) {
+    document.querySelectorAll("[data-switch]").forEach(function (root) {
+      if (except && root === except) return;
+      var menu = root.querySelector("[data-switch-menu]");
+      var trigger = root.querySelector("[data-switch-open]");
+      if (menu) menu.hidden = true;
+      root.classList.remove("is-open");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
     });
+  }
+
+  function toggleSwitch(root) {
+    var menu = root.querySelector("[data-switch-menu]");
+    var trigger = root.querySelector("[data-switch-open]");
+    if (!menu || !trigger) return;
+    var open = menu.hidden;
+    closeSwitches(root);
+    menu.hidden = !open;
+    root.classList.toggle("is-open", open);
+    trigger.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
   if (burgerBtn) {
     burgerBtn.addEventListener("click", function () {
+      closeSwitches();
       setBurger(burger.hidden);
     });
   }
 
   if (catalogBtn) {
     catalogBtn.addEventListener("click", function () {
-      setLocale(false);
+      closeSwitches();
       setMega(mega.hidden);
     });
   }
@@ -68,23 +81,23 @@
     });
   });
 
-  localeOpeners.forEach(function (button) {
-    button.addEventListener("click", function () {
+  document.addEventListener("click", function (event) {
+    var opener = event.target.closest("[data-switch-open]");
+    if (opener) {
+      event.preventDefault();
       setMega(false);
-      setLocale(locale.hidden);
-    });
-  });
-
-  header.querySelectorAll("[data-locale-close]").forEach(function (node) {
-    node.addEventListener("click", function () {
-      setLocale(false);
-    });
+      toggleSwitch(opener.closest("[data-switch]"));
+      return;
+    }
+    if (!event.target.closest("[data-switch]")) {
+      closeSwitches();
+    }
   });
 
   document.addEventListener("keydown", function (event) {
     if (event.key !== "Escape") return;
     setMega(false);
-    setLocale(false);
+    closeSwitches();
     if (burger && !burger.hidden) setBurger(false);
   });
 

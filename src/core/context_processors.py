@@ -41,7 +41,6 @@ def shop(request):
     switch = {
         code: localize_path(full, code)
         for code, _label in settings.LANGUAGES
-        if language_enabled(code)
     }
     return {
         "site_settings": site,
@@ -53,5 +52,8 @@ def shop(request):
         "currency": currency,
         "cart_count": cart_count,
         "lang_switch_urls": switch,
+        "lang_enabled": {
+            code: language_enabled(code) for code, _label in settings.LANGUAGES
+        },
         "contact_form": style_form(ContactForm()),
     }

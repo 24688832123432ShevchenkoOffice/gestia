@@ -1,0 +1,61 @@
+{% load i18n %}
+{# Independent language + currency dropdowns. Pass prefix to keep unique ids. #}
+<div class="switch-pair">
+  <div class="switch" data-switch>
+    <button
+      class="switch__trigger lang-btn"
+      type="button"
+      data-switch-open
+      aria-expanded="false"
+      aria-haspopup="listbox"
+      aria-controls="lang-menu-{{ prefix }}"
+    >
+      <span class="switch__opt{% if LANGUAGE_CODE == 'uk' %} is-current{% endif %}">UA</span><span class="switch__slash">/</span><span class="switch__opt{% if LANGUAGE_CODE == 'en' %} is-current{% endif %}">EN</span>
+    </button>
+    <div class="switch__menu" id="lang-menu-{{ prefix }}" data-switch-menu hidden role="listbox" aria-label="{% trans 'Мова' %}">
+      {% if lang_enabled.uk|default:True %}
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ lang_switch_urls.uk }}">
+        <input type="hidden" name="language" value="uk">
+        <button type="submit" role="option" aria-selected="{% if LANGUAGE_CODE == 'uk' %}true{% else %}false{% endif %}"{% if LANGUAGE_CODE == 'uk' %} class="is-current"{% endif %}>UA · {% trans "Українська" %}</button>
+      </form>
+      {% endif %}
+      {% if lang_enabled.en|default:True %}
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ lang_switch_urls.en }}">
+        <input type="hidden" name="language" value="en">
+        <button type="submit" role="option" aria-selected="{% if LANGUAGE_CODE == 'en' %}true{% else %}false{% endif %}"{% if LANGUAGE_CODE == 'en' %} class="is-current"{% endif %}>EN · English</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="switch" data-switch>
+    <button
+      class="switch__trigger cur-btn"
+      type="button"
+      data-switch-open
+      aria-expanded="false"
+      aria-haspopup="listbox"
+      aria-controls="cur-menu-{{ prefix }}"
+    >
+      <span class="switch__opt{% if currency == 'uah' %} is-current{% endif %}">₴</span><span class="switch__slash">/</span><span class="switch__opt{% if currency == 'eur' %} is-current{% endif %}">€</span>
+    </button>
+    <div class="switch__menu" id="cur-menu-{{ prefix }}" data-switch-menu hidden role="listbox" aria-label="{% trans 'Валюта' %}">
+      <form action="{% url 'set_currency' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <input type="hidden" name="currency" value="uah">
+        <button type="submit" role="option" aria-selected="{% if currency == 'uah' %}true{% else %}false{% endif %}"{% if currency == 'uah' %} class="is-current"{% endif %}>₴ · UAH</button>
+      </form>
+      <form action="{% url 'set_currency' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <input type="hidden" name="currency" value="eur">
+        <button type="submit" role="option" aria-selected="{% if currency == 'eur' %}true{% else %}false{% endif %}"{% if currency == 'eur' %} class="is-current"{% endif %}>€ · EUR</button>
+      </form>
+    </div>
+  </div>
+</div>
