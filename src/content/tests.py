@@ -1,3 +1,6 @@
+from pathlib import Path
+
+from django.conf import settings
 from django.test import TestCase
 from django.utils import translation
 
@@ -14,9 +17,21 @@ class PublicPageTests(TestCase):
         response = self.client.get("/pro-nas/")
         body = response.content.decode()
         self.assertIn(">Головна</a>/<span", body)
-        self.assertContains(response, "Наша\u00a0філософія")
-        self.assertContains(response, "и\u00a0прагнемо")
-        self.assertIn("&#8203;", body)
+        self.assertContains(response, "Наша філософія")
+        self.assertContains(response, "українських традицій")
+        self.assertContains(response, "нас оточують")
+        self.assertContains(response, "творчість та усвідомлене")
+        self.assertContains(response, "декору, флористики, текстилю")
+        self.assertContains(response, "для дому. Ми створюємо")
+        self.assertContains(response, "и прагнемо зробити декорування")
+        self.assertNotContains(response, "Наша\u00a0філософія")
+        self.assertNotContains(response, "и\u00a0прагнемо")
+        self.assertNotIn("&#8203;", body)
+        self.assertNotIn("<wbr", body)
+        self.assertNotIn("about-lead__copy--mob", body)
+        self.assertNotIn("about-lead__copy--desk", body)
+        self.assertIn("data-reviews-track", body)
+        self.assertIn("js/pages/about.js", body)
         self.assertIn("figma/about/e6ffe24a-dab5-4cc2-8155-190e3c001158.png", body)
         self.assertIn("figma/about/fe172e1f-21be-4583-9078-519fd841cb25.svg", body)
         self.assertIn("figma/about/a525d82b-e09d-4310-8f4a-19715ec6c1f5.png", body)
@@ -28,3 +43,20 @@ class PublicPageTests(TestCase):
         self.assertIn("Inter:wght@100;400;500", body)
         self.assertIn("флористики", body)
         self.assertNotIn("figma.com/api/mcp/asset", body)
+        css_dir = Path(settings.BASE_DIR) / "src" / "core" / "static" / "css" / "pages"
+        sheets = "".join((css_dir / name).read_text(encoding="utf-8") for name in ("about.css", "about-2.css", "about-1440.css"))
+        self.assertNotIn("font-weight: 100", sheets)
+        self.assertNotIn("overflow-wrap: anywhere", sheets)
+        self.assertNotIn("word-break: break-word", sheets)
+        self.assertIn("word-break: normal", sheets)
+        self.assertIn("overflow-wrap: normal", sheets)
+        self.assertIn("font-family: var(--font)", sheets)
+        self.assertIn("max-width: 708px", sheets)
+        self.assertIn("overflow-x: auto", sheets)
+        self.assertIn("scroll-snap-type: x mandatory", sheets)
+        self.assertIn("touch-action: pan-x", sheets)
+        script = (Path(settings.BASE_DIR) / "src" / "core" / "static" / "js" / "pages" / "about.js").read_text(encoding="utf-8")
+        self.assertIn("addEventListener", script)
+        self.assertIn("scrollBy", script)
+        self.assertIn("[data-reviews-track]", script)
+        self.assertIn(".disabled", script)

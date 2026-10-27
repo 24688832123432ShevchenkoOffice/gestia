@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n shop_tags static %}
+{% load i18n static %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/figma/home.css' %}">
@@ -19,13 +19,8 @@
 
     <div class="about-intro">
       <section class="about-lead about-lead--intro">
-        <h1>Про нас</h1>
-        <div class="about-lead__copy about-lead__copy--mob">
-          <p>{{ "GESTIA HOME — український бренд декору, "|figma_nbsp }}</p>
-          <p>{{ "флористики, текстилю та одягу для дому. "|figma_nbsp }}</p>
-          <p>{{ "Ми створюємо речі, що допомагають розкривати красу повсякденності та формувати особливу атмосферу домашнього затишку"|figma_nbsp }}</p>
-        </div>
-        <p class="about-lead__copy about-lead__copy--desk">{{ "GESTIA HOME — український бренд декору, флористики, текстилю та одягу для дому. Ми створюємо речі, що допомагають розкривати красу повсякденності та формувати особливу атмосферу домашнього затишку"|figma_lines }}</p>
+        <h1>{% trans "Про нас" %}</h1>
+        <p class="about-lead__copy">{% trans "GESTIA HOME — український бренд декору, флористики, текстилю та одягу для дому. Ми створюємо речі, що допомагають розкривати красу повсякденності та формувати особливу атмосферу домашнього затишку" %}</p>
       </section>
 
       <div class="about-gallery">
@@ -44,11 +39,10 @@
     </div>
 
     <section class="about-lead about-lead--philosophy">
-      <h2>{{ "Наша філософія"|figma_nbsp }}</h2>
+      <h2>{% trans "Наша філософія" %}</h2>
       <div class="about-lead__text">
-        <p>{{ "Наша філософія — поєднання сучасної естетики, природності та поваги до українських традицій. Ми віримо, що краса не потребує досконалості, адже вона вже є в речах, які нас оточують"|figma_nbsp }}</p>
-        <p>&#8203;</p>
-        <p>{{ "и прагнемо зробити декорування дому зрозумілим і доступним, надихаючи на творчість та усвідомлене ставлення до простору"|figma_nbsp }}</p>
+        <p>{% trans "Наша філософія — поєднання сучасної естетики, природності та поваги до українських традицій. Ми віримо, що краса не потребує досконалості, адже вона вже є в речах, які нас оточують" %}</p>
+        <p>{% trans "и прагнемо зробити декорування дому зрозумілим і доступним, надихаючи на творчість та усвідомлене ставлення до простору" %}</p>
       </div>
     </section>
 
@@ -67,7 +61,26 @@
       </div>
     </section>
 
-    {% include "partials/home/reviews.html" with block=reviews_block %}
+    <section class="reviews">
+      {% if reviews_block.title %}<h2>{{ reviews_block.title }}</h2>{% endif %}
+      <div class="review-rail" data-reviews-track>
+        {% for review in reviews %}
+          <article class="review-card">
+            <header>
+              <h3>{{ review.author }}</h3>
+              {% if review.rating_kind == "black5" %}
+                <img class="rating rating--desk" src="{% static 'figma/desktop/37153.svg' %}" width="98" height="18" alt="">
+                <img class="rating rating--mob" src="{% static 'figma/mobile/1796c.svg' %}" width="83" height="15" alt="">
+              {% else %}
+                <img class="rating rating--desk" src="{% static 'figma/desktop/93b89.svg' %}" width="98" height="18" alt="">
+                <img class="rating rating--mob" src="{% static 'figma/mobile/b07a3.svg' %}" width="83" height="15" alt="">
+              {% endif %}
+            </header>
+            <p>{{ review.text }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
     {% include "partials/home/popular.html" with block=popular_block pop_nav=True %}
   </div>
 {% endblock %}

@@ -9,6 +9,7 @@
   width: 100%;
   margin-bottom: 80px;
   background: #fff;
+  font-family: var(--font);
 }
 
 .about-crumb {
@@ -53,7 +54,8 @@
   width: min(1302px, calc(100% - 32px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
   margin-inline: auto;
   text-align: center;
-  word-break: break-word;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .about-lead--intro {
@@ -73,43 +75,38 @@
 
 .about-lead__copy,
 .about-lead__text {
-  width: min(708px, 100%);
+  width: 100%;
+  max-width: 708px;
   margin: 0;
   color: #000;
+  font-family: var(--font);
   font-size: 16px;
   font-weight: 400;
+  line-height: normal;
   letter-spacing: -0.48px;
-  overflow-wrap: anywhere;
-}
-
-.about-lead__copy {
-  line-height: normal;
-  white-space: pre-wrap;
-}
-
-.about-lead__copy--desk {
-  display: none;
-}
-
-.about-lead__copy--mob {
-  line-height: 0;
-}
-
-.about-lead__copy--mob p {
-  margin: 0;
-  line-height: normal;
-  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: normal;
+  hyphens: manual;
+  -webkit-hyphens: manual;
 }
 
 .about-lead__text {
-  line-height: 0;
-  white-space: pre-wrap;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.2em;
 }
 
 .about-lead__text p {
+  width: 100%;
   margin: 0;
   line-height: normal;
-  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: normal;
+  hyphens: manual;
+  -webkit-hyphens: manual;
 }
 
 .about-gallery {
@@ -272,6 +269,45 @@
   overscroll-behavior-x: contain;
 }
 
+.page-about .reviews {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.page-about .review-rail {
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.page-about .review-rail::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.page-about .review-card {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+.page-about .review-card p {
+  line-height: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+
 .page-about .popular .figma-btn {
   text-box-trim: trim-both;
   text-box-edge: cap alphabetic;
@@ -320,15 +356,11 @@
   max-width: none;
 }
 
-@media (min-width: 768px) {
-  .page-about .head-nav__catalog,
-  .page-about .head-nav__about,
-  .page-about .lang-btn,
-  .page-about .cur-switch,
-  .page-about .cur-switch button {
-    font-weight: 100;
-  }
+.pop-nav__btn:disabled {
+  opacity: 0.35;
+}
 
+@media (min-width: 768px) {
   .about-crumb,
   .about-lead {
     width: min(1302px, calc(100% - 48px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
@@ -339,13 +371,15 @@
     margin-top: 24px;
     margin-left: auto;
     margin-right: auto;
+    font-family: var(--font);
     font-size: 12px;
-    font-weight: 100;
+    font-weight: 400;
   }
 
   .about-crumb a,
   .about-crumb span {
-    font-weight: 100;
+    font-family: var(--font);
+    font-weight: 400;
   }
 
   .about-crumb a::after {
@@ -356,35 +390,29 @@
   .about-lead h2,
   .about-lead__copy,
   .about-lead__text,
-  .about-lead__text p,
-  .about-lead__copy--desk {
-    font-weight: 100;
+  .about-lead__text p {
+    font-family: var(--font);
+    font-weight: 400;
   }
 
   .about-lead h1,
   .about-lead h2 {
     font-size: 42px;
+    line-height: 1;
     letter-spacing: -2.94px;
   }
 
   .about-lead__copy,
   .about-lead__text {
-    width: min(708px, 100%);
+    width: 100%;
+    max-width: 708px;
     font-size: 18px;
+    line-height: normal;
     letter-spacing: -0.54px;
   }
 
-  .about-lead__copy--mob {
-    display: none;
-  }
-
-  .about-lead__copy--desk {
-    display: block;
-  }
-
-  .about-lead__copy--desk,
   .about-lead__text p {
-    line-height: 22px;
+    line-height: normal;
   }
 
   .about-gallery__item img.about-gallery__desk,
@@ -435,7 +463,8 @@
   .page-about .popular h2,
   .page-about .pop-card__meta,
   .page-about .popular .figma-btn {
-    font-weight: 100;
+    font-family: var(--font);
+    font-weight: 400;
   }
 
   .page-about .pop-card__price.is-medium {
