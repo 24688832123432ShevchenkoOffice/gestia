@@ -1,0 +1,8 @@
+# Бриф v4: «Про нас» (/pro-nas/, content.views.about) — ЗАМІНЮЄ BRIEF_ABOUT.md
+Figma dVjiuXFknESrOGvKPX4Wh4.
+- DESKTOP 1440 (головний): фрейм 1:9199. Спека ~/Sites/Gestia/docs/figma/v3/d_about_1-9199/design_context.tsx.txt (копія: docs/figma/about/design_context_1-9199.tsx.txt). Асети лежать у ~/Sites/Gestia/docs/figma/v3/d_about_1-9199/ (імена = <id>.<ext> з URL figma.com/api/mcp/asset/<id...>). Ціль: docs/figma/about/figma_desktop_1-9199.png. Фрейм 1:9111 — НЕ використовувати.
+  Шрифти: у 1:9199 є Inter Thin (100) — відтворити 1:1 як у спеці (підключи вагу 100 до наявного підключення Inter, мінімально).
+- MOBILE 390/393: фрейм 1:10987 (секція «Мобільна правкі 3»). Спека docs/figma/about/design_context_mobile_1-10987.tsx.txt. Асети в ній — тимчасові URL https://www.figma.com/api/mcp/asset/... : завантаж їх curl-ом у src/core/static/figma/about/m/ (ім'я = id.ext) і посилайся через {% static %}. Жодних figma URL у коді.
+- Вже є попередня WIP-верстка (templates/content/about.html, css/pages/about.css, about-1440.css, views.py) за 1:9111 — переробити під 1:9199 + мобільний 1:10987.
+Правила: Django-шаблон + vanilla CSS, абсолютні позиції перевести у flow зі збереженням позицій/відступів. Шапка/футер/відгуки/популярні товари — перевикористати наявні partials/CSS (вони щойно оновлені з design/figma-home), спільні файли міняти мінімально. border-radius 0, без тіней, контейнер 1302. SVG не перемальовувати, width/height не перебивати. Тексти точно з макета; помилки макета не виправляти — дописати в docs/figma/OPEN_QUESTIONS.md розділ «Про нас (v4)». Без inline style/onclick/!important.
+Перевір: python manage.py check і тести (env уже в оточенні). НЕ комітити, НЕ пушити, .env не читати/не виводити.

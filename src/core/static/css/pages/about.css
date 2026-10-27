@@ -1,0 +1,237 @@
+.page-about {
+  background: #fff;
+  color: #000;
+}
+
+.about-frame {
+  width: 100%;
+  margin-bottom: 80px;
+  background: #fff;
+}
+
+.about-crumb {
+  width: min(1302px, calc(100% - 32px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+  margin: 16px auto 0;
+  color: #000;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.about-crumb a,
+.about-crumb span {
+  color: #000;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.about-crumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block: -14px;
+  padding-block: 14px;
+  touch-action: manipulation;
+}
+
+.about-lead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: min(1302px, calc(100% - 32px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+  margin-inline: auto;
+  text-align: center;
+  word-break: break-word;
+}
+
+.about-lead--intro {
+  margin-top: 12px;
+}
+
+.about-lead h1,
+.about-lead h2 {
+  width: 100%;
+  margin: 0;
+  color: #000;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -2.66px;
+}
+
+.about-lead__copy,
+.about-lead__text {
+  width: min(708px, 100%);
+  margin: 0;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.48px;
+}
+
+.about-lead__copy {
+  line-height: normal;
+  white-space: pre-wrap;
+}
+
+.about-lead__text {
+  line-height: 0;
+  white-space: pre-wrap;
+}
+
+.about-lead__text p {
+  margin: 0;
+  line-height: normal;
+  white-space: pre-wrap;
+}
+
+.about-gallery {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.about-gallery::-webkit-scrollbar {
+  display: none;
+  height: 0;
+}
+
+.about-gallery__item {
+  flex: 0 0 min(78vw, 414px);
+  width: min(78vw, 414px);
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.about-gallery__item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  object-fit: cover;
+}
+
+.about-gallery__item:nth-child(1) img {
+  aspect-ratio: 414 / 547;
+}
+
+.about-gallery__item:nth-child(2) img {
+  aspect-ratio: 414 / 543;
+}
+
+.about-gallery__item:nth-child(3) img {
+  aspect-ratio: 414 / 545;
+}
+
+.about-lead--philosophy {
+  margin-top: 40px;
+}
+
+.page-about .vbanner {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1442 / 871;
+  margin-top: 40px;
+  margin-left: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.page-about .vbanner__img {
+  opacity: 1;
+  object-fit: cover;
+  object-position: bottom;
+}
+
+.page-about .vbanner__ico--desk {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(218 / 1440 * 100%);
+  height: auto;
+  max-width: none;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.page-about .review-rail,
+.page-about .pop-rail {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+@media (min-width: 768px) {
+  .page-about .head-nav__catalog {
+    font-weight: 500;
+  }
+
+  .about-crumb,
+  .about-lead {
+    width: min(1302px, calc(100% - 48px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+  }
+
+  .about-crumb {
+    margin-top: 24px;
+  }
+
+  .about-crumb a {
+    min-height: 0;
+    margin-block: 0;
+    padding-block: 0;
+  }
+
+  .about-lead h1,
+  .about-lead h2 {
+    font-size: 42px;
+    letter-spacing: -2.94px;
+  }
+
+  .about-lead__copy,
+  .about-lead__text {
+    font-size: 18px;
+    letter-spacing: -0.54px;
+  }
+
+  .about-lead__copy,
+  .about-lead__text p {
+    line-height: 22px;
+  }
+
+  .about-gallery {
+    gap: 30px;
+    width: min(1302px, calc(100% - 48px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+    margin-top: 80px;
+    margin-inline: auto;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .about-gallery__item {
+    flex: 1 1 0;
+    width: auto;
+  }
+
+  .about-lead--philosophy,
+  .page-about .vbanner {
+    margin-top: 80px;
+  }
+
+  .page-about .popular .figma-btn {
+    font-weight: 500;
+  }
+}
