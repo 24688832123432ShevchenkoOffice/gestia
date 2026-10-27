@@ -305,27 +305,31 @@
   }
 
   .pdp-side {
-    gap: 50px;
-    align-self: stretch;
+    position: sticky;
+    top: var(--header-h);
+    align-self: start;
+    justify-content: flex-start;
+    gap: 40px;
     min-width: 0;
+    height: auto;
+    background: #fff;
+    z-index: 2;
   }
 
   .pdp-buy {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
-    min-height: min-content;
   }
 
   .pdp-info {
-    position: sticky;
-    top: var(--header-h);
+    position: static;
+    top: auto;
     flex: 0 0 auto;
     gap: 40px;
     width: 100%;
     height: auto;
     justify-content: flex-start;
     background: #fff;
-    z-index: 2;
   }
 
   .pdp-notes {
