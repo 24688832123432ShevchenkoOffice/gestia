@@ -1,0 +1,58 @@
+{% load i18n static shop_tags %}
+{% if rows %}
+  <div class="wish-layout">
+    <div class="wish-main">
+      <div class="wish-head">
+        <h1>{% trans "Обране" %} ({{ wishlist_count }})</h1>
+        <div class="wish-items" role="list">
+          {% for row in rows %}
+            <article class="wish-item" role="listitem">
+              <a class="wish-item__photo" href="{{ row.product.get_absolute_url }}">
+                {% if row.product.cover %}
+                  <img src="{{ row.product.cover.image.url }}" alt="">
+                {% endif %}
+              </a>
+              <div class="wish-item__body">
+                <div class="wish-item__top">
+                  <a class="wish-item__name" href="{{ row.product.get_absolute_url }}">{{ row.product.name }}</a>
+                  <p class="wish-item__price">{% line_uah row.unit %}</p>
+                </div>
+                <div class="wish-item__actions">
+                  <form method="post" action="{% url 'cart_add' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="sku" value="{{ row.sku }}">
+                    <input type="hidden" name="qty" value="1">
+                    <button class="wish-cart" type="submit">{% trans "До кошика" %}</button>
+                  </form>
+                  <form
+                    method="post"
+                    action="{% url 'wishlist_remove' %}"
+                    hx-post="{% url 'wishlist_remove' %}"
+                    hx-target="#wish-body"
+                    hx-swap="innerHTML"
+                  >
+                    {% csrf_token %}
+                    <input type="hidden" name="sku" value="{{ row.sku }}">
+                    <button class="wish-remove" type="submit" aria-label="{% trans 'Прибрати з обраного' %}">
+                      <img src="{% static 'figma/cart/d10fca64-fbb5-441c-bdd0-7a6260fe440f.svg' %}" width="22" height="25" alt="">
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </article>
+            {% if not forloop.last %}
+              <hr class="wish-rule">
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <a class="wish-continue" href="{% url 'catalog' %}">{% trans "Продовжити покупки" %}</a>
+    </div>
+  </div>
+{% else %}
+  <div class="wish-main">
+    <h1>{% trans "Обране" %} (0)</h1>
+    <p class="wish-empty">{% trans "У обраному поки порожньо." %}</p>
+    <a class="wish-continue" href="{% url 'catalog' %}">{% trans "До каталогу" %}</a>
+  </div>
+{% endif %}

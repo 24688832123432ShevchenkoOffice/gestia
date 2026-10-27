@@ -2,6 +2,7 @@ import re
 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.i18n import check_for_language
@@ -15,6 +16,10 @@ HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 def healthz(request):
     return HttpResponse("ok")
+
+
+def page_not_found(request, exception):
+    return render(request, "404.html", status=404)
 
 
 def robots_txt(request):

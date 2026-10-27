@@ -17,10 +17,12 @@ def shop(request):
     menu_cards = []
     footer_columns = {"category": [], "info": [], "legal": []}
     cart_count = 0
+    wishlist_count = 0
     try:
         from src.catalog.models import Category, Product
         from src.catalog.selectors import nav_categories as load_nav
         from src.commerce.cart import item_count
+        from src.commerce.wishlist import item_count as wish_count
         from src.content.models import FooterLink, HomeBlock, SiteSettings
 
         site = SiteSettings.load()
@@ -35,6 +37,7 @@ def shop(request):
         for link in FooterLink.objects.all():
             footer_columns.setdefault(link.column, []).append(link)
         cart_count = item_count(request)
+        wishlist_count = wish_count(request)
     except (OperationalError, ProgrammingError):
         pass
     full = request.get_full_path()
@@ -51,6 +54,7 @@ def shop(request):
         "footer_columns": footer_columns,
         "currency": currency,
         "cart_count": cart_count,
+        "wishlist_count": wishlist_count,
         "lang_switch_urls": switch,
         "lang_enabled": {
             code: language_enabled(code) for code, _label in settings.LANGUAGES

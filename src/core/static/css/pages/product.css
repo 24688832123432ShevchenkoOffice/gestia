@@ -307,10 +307,10 @@
 
 .pdp-now {
   justify-content: center;
-  border: 0;
-  background: #feedda;
+  border: 1px solid #251008;
+  background: #fff;
   color: #251008;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .pdp-note {

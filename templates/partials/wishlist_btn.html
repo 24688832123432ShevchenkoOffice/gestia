@@ -1,0 +1,21 @@
+{% load i18n static %}
+<form
+  class="wish-toggle"
+  method="post"
+  action="{% url 'wishlist_toggle' %}"
+  hx-post="{% url 'wishlist_toggle' %}"
+  hx-target="this"
+  hx-swap="outerHTML"
+>
+  {% csrf_token %}
+  <input type="hidden" name="sku" value="{{ product.sku }}">
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  <button
+    class="wish-toggle__btn{% if in_wishlist %} is-on{% endif %}"
+    type="submit"
+    aria-pressed="{% if in_wishlist %}true{% else %}false{% endif %}"
+    aria-label="{% if in_wishlist %}{% trans 'Прибрати з обраного' %}{% else %}{% trans 'Додати в обране' %}{% endif %}"
+  >
+    <img src="{% static 'figma/desktop/dba9b.svg' %}" width="21" height="21" alt="">
+  </button>
+</form>

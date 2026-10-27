@@ -1,0 +1,8 @@
+{
+  "git.postCommitCommand": "sync",
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "git.fetchOnPull": true,
+  "git.branchProtection": [],
+  "git.pullBeforeCheckout": true
+}

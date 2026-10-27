@@ -27,9 +27,9 @@
           <img src="{% static 'figma/desktop/f6cbe.svg' %}" width="24" height="24" alt="">
         </a>
       {% endif %}
-      <button class="icon-btn" type="button" aria-label="{% trans 'Обране' %}">
+      <a class="icon-btn" href="{% url 'wishlist' %}" aria-label="{% trans 'Обране' %}">
         <img src="{% static 'figma/desktop/dba9b.svg' %}" width="21" height="21" alt="">
-      </button>
+      </a>
       <a class="icon-btn head-bag" href="{% url 'cart' %}" aria-label="{% trans 'Кошик' %}">
         <img src="{% static 'figma/desktop/38908.svg' %}" width="17.5213" height="18.7918" alt="">
         <span class="visually-hidden">{% include "partials/cart_count.html" %}</span>

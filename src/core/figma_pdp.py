@@ -77,7 +77,7 @@ def seed_pdp(products):
         _add_gallery(products[key])
     rows = (
         (1, "GH-02", "", "shysh", "db3d5.png"),
-        (2, "GH-06", "Бокс Великодній «Украіньсикй»", "cover", "729be.png"),
+        (2, "GH-06", "Бокс Великодній «Український»", "cover", "729be.png"),
     )
     for sort, sku, label, crop, image in rows:
         cell = CatalogCell.objects.create(

@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 
 from src.catalog.models import Product
 from src.commerce.cart import add, clear, lines, set_qty
+from src.commerce import wishlist as wish
 from src.commerce.forms import BuyNowForm, CallbackForm, CheckoutForm, ContactForm, style_form
 from src.commerce.models import Inquiry, Order
 from src.commerce.services import create_inquiry, create_order, row_from_product
@@ -76,6 +77,65 @@ def thanks(request):
         "commerce/thanks.html",
         {"kind": kind, "number": request.GET.get("number", "")},
     )
+
+
+def wishlist_page(request):
+    currency = _currency(request)
+    items = wish.products(request)
+    rows = [
+        {
+            "product": product,
+            "sku": product.sku,
+            "unit": product.amount(currency),
+            "unit_label": format_money(product.amount(currency), currency),
+            "in_wishlist": True,
+        }
+        for product in items
+    ]
+    return render(
+        request,
+        "commerce/wishlist.html",
+        {"rows": rows, "wishlist_count": len(rows)},
+    )
+
+
+@require_POST
+def wishlist_toggle(request):
+    product = get_object_or_404(Product, sku=request.POST.get("sku", ""), is_active=True)
+    active = wish.toggle(request, product.sku)
+    if _hx(request):
+        return render(
+            request,
+            "partials/wishlist_btn.html",
+            {"product": product, "in_wishlist": active},
+        )
+    next_url = request.POST.get("next") or product.get_absolute_url()
+    return HttpResponseRedirect(next_url)
+
+
+@require_POST
+def wishlist_remove(request):
+    sku = request.POST.get("sku", "")
+    wish.remove(request, sku)
+    if _hx(request):
+        currency = _currency(request)
+        items = wish.products(request)
+        rows = [
+            {
+                "product": product,
+                "sku": product.sku,
+                "unit": product.amount(currency),
+                "unit_label": format_money(product.amount(currency), currency),
+                "in_wishlist": True,
+            }
+            for product in items
+        ]
+        return render(
+            request,
+            "commerce/_wishlist_body.html",
+            {"rows": rows, "wishlist_count": len(rows)},
+        )
+    return HttpResponseRedirect(reverse("wishlist"))
 
 
 @require_POST

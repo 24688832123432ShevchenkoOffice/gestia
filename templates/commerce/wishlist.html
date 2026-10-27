@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Обране" %}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/wishlist.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="wish-page" data-qa="wishlist-page">
+    {% trans "Обране" as wish_label %}
+    {% include "partials/crumbs.html" with crumb_current=wish_label %}
+    <div id="wish-body">
+      {% include "commerce/_wishlist_body.html" %}
+    </div>
+  </div>
+{% endblock %}

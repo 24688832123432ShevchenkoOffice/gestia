@@ -187,3 +187,47 @@ class CheckoutTests(TestCase):
         self.assertContains(english, "Courier delivery")
         ukrainian = self.client.get("/zamovlennia/")
         self.assertContains(ukrainian, "Контактні дані")
+
+    def test_wishlist_session_flow(self):
+        empty = self.client.get("/obrane/")
+        self.assertEqual(empty.status_code, 200)
+        self.assertContains(empty, "У обраному поки порожньо.")
+        self.assertContains(empty, "css/pages/wishlist.css")
+        added = self.client.post("/obrane/toggle/", {"sku": "SNIH"})
+        self.assertEqual(added.status_code, 302)
+        self.assertEqual(self.client.session["wishlist"], ["SNIH"])
+        page = self.client.get("/obrane/")
+        self.assertContains(page, "Сніг")
+        self.assertContains(page, "Обране (1)")
+        removed = self.client.post("/obrane/prybraty/", {"sku": "SNIH"})
+        self.assertEqual(removed.status_code, 302)
+        self.assertEqual(self.client.session.get("wishlist"), [])
+
+    def test_thank_you_page(self):
+        page = self.client.get("/thank-you/?kind=order&number=G-100")
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, "Дякуємо за замовлення")
+        self.assertContains(page, "G-100")
+        self.assertContains(page, "До каталогу")
+        self.assertContains(page, "css/pages/utility.css")
+        legacy = self.client.get("/diakuiemo/?kind=order&number=G-100")
+        self.assertEqual(legacy.status_code, 200)
+
+    def test_checkout_redirects_to_thank_you(self):
+        session = self.client.session
+        session["cart"] = {"SNIH": 1}
+        session.save()
+        response = self.client.post(
+            "/zamovlennia/",
+            {
+                "name": "Оля",
+                "phone": "+380671112233",
+                "email": "olya@example.com",
+                "delivery_method": Order.Delivery.COURIER,
+                "address": "Київ",
+                "payment_method": Order.Payment.ON_DELIVERY,
+                "consent": "on",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/thank-you/", response["Location"])

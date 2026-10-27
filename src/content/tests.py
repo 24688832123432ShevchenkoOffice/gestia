@@ -23,7 +23,7 @@ class PublicPageTests(TestCase):
         self.assertContains(response, "творчість та усвідомлене")
         self.assertContains(response, "декору, флористики, текстилю")
         self.assertContains(response, "для дому. Ми створюємо")
-        self.assertContains(response, "и прагнемо зробити декорування")
+        self.assertContains(response, "Ми прагнемо зробити декорування")
         self.assertNotContains(response, "Наша\u00a0філософія")
         self.assertNotContains(response, "и\u00a0прагнемо")
         self.assertNotIn("&#8203;", body)

@@ -105,7 +105,7 @@ class Command(BaseCommand):
     def _categories(self):
         specs = (
             ("rizdvyani-boksy", "Різдвяні бокси", "db3d5.png", 1, 1, True),
-            ("interierni-kompozytsii", "Інтерєрні композиції", "dd136.png", 2, 2, False),
+            ("interierni-kompozytsii", "Інтер'єрні композиції", "dd136.png", 2, 2, False),
             ("serviruvannia", "Сервірування", "fed6d.png", 3, 3, False),
             ("novorichnyi-dekor", "Новорічний декор", "", 4, None, False),
             ("vazy-ta-kashpo", "Вази та кашпо", "6fbc8.png", 5, 4, False),
@@ -166,7 +166,7 @@ class Command(BaseCommand):
 
     def _products(self, categories):
         specs = (
-            ("GH-01", "GH-01", "velykodnii-ukrainskyi", "Бокс Великодній «Украіньсикй»", DESKTOP / "479da.png", "8990.00", 400, 1, "podarunkovi-sety", True, "ukr", 127),
+            ("GH-01", "GH-01", "velykodnii-ukrainskyi", "Бокс Великодній «Український»", DESKTOP / "479da.png", "8990.00", 400, 1, "podarunkovi-sety", True, "ukr", 127),
             ("GH-02", "GH-02", "boks-rizdvyanyi-shyshky", "Бокс «Різдвяний Шишки»", DESKTOP / "db3d5.png", "4980.00", 400, 2, "rizdvyani-boksy", True, "shysh", 127),
             ("GH-03", "TL-0012", "velykodnii-hnizdo", "Бокс Великодній «Гніздо»", DESKTOP / "14fec.png", "2450.00", 400, 3, "podarunkovi-sety", True, "hnizdo", 126),
             ("GH-04", "GH-04", "vesilnyi", "Бокс «Весільний»", DESKTOP / "72b4d.png", "14980.00", 500, 4, "podarunkovi-sety", True, "cover", 119),
@@ -257,7 +257,7 @@ class Command(BaseCommand):
             _save(cell, "image", CATALOG / image, f"filter-{sort}-{image}")
 
     def _mobile_cells(self, products):
-        stamped = "Бокс Великодній «Украіньсикй»"
+        stamped = "Бокс Великодній «Український»"
         rows = (
             (1, "GH-01", "feature", "", "8990.00", "ukr", "479da.png"),
             (2, "GH-02", "tile", "", "8990.00", "shysh", "db3d5.png"),
@@ -294,7 +294,7 @@ class Command(BaseCommand):
             "Декор для дому, флористика, текстиль та одяг для дому українського виробництва"
         )
         advantage_mobile = (
-            "Декор для дому, флористика, текстиль \nта одяг для дому українського виробнитва"
+            "Декор для дому, флористика, текстиль \nта одяг для дому українського виробництва"
         )
         callback_text = "Залиште свій номер телефону, і ми зв’яжемося з вами найближчим часом"
         callback_mobile = (
@@ -380,13 +380,13 @@ class Command(BaseCommand):
         rows = (
             ("category", "Усі товари", "catalog", "", False, 1),
             ("category", "Різдвяні бокси", "category", "rizdvyani-boksy", True, 2),
-            ("category", "Інтерєрні композиції", "category", "interierni-kompozytsii", False, 3),
+            ("category", "Інтер'єрні композиції", "category", "interierni-kompozytsii", False, 3),
             ("category", "Сервірування", "category", "serviruvannia", False, 4),
             ("info", "Про нас", "about", "", False, 1),
             ("info", "Контакти", "anchor", "callback", False, 2),
             ("info", "Доставка та оплата", "", "", False, 3),
-            ("legal", "Публічний договір (офферта)", "", "", False, 1),
-            ("legal", "Політика конфедиційності", "privacy", "", False, 2),
+            ("legal", "Публічний договір (оферта)", "", "", False, 1),
+            ("legal", "Політика конфіденційності", "privacy", "", False, 2),
             ("legal", "Політика cookies", "", "", False, 3),
         )
         for column, label, url_name, url_arg, underlined, sort in rows:

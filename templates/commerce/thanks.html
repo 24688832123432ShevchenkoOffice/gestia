@@ -1,18 +1,36 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Дякуємо" %}{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/utility.css' %}">
+{% endblock %}
+
 {% block content %}
-  <div class="container page-copy">
-    <header class="page-header">
+  <section class="util-page" data-qa="thanks-page">
+    <div class="util-page__inner">
+      <a class="util-page__logo" href="{% url 'home' %}" aria-label="Gestia">
+        <img src="{% static 'figma/desktop/5493c.png' %}" width="113" height="43" alt="Gestia">
+      </a>
       {% if kind == "contact" %}
         <h1 data-qa="lead-success">{% trans "Дякуємо" %}</h1>
+        <p class="util-page__text">{% trans "Ми отримали ваше повідомлення і незабаром відповімо." %}</p>
       {% else %}
-        <h1 data-qa="lead-success">{% trans "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами" %}</h1>
-        {% if number %}<p>{% trans "Номер" %} {{ number }}</p>{% endif %}
+        <h1 data-qa="lead-success">{% trans "Дякуємо за замовлення" %}</h1>
+        <p class="util-page__text">
+          {% trans "Найближчим часом наш консультант зв'яжеться з вами." %}
+        </p>
+        {% if number %}
+          <p class="util-page__meta" data-qa="order-number">
+            {% trans "Номер замовлення" %}: <strong>{{ number }}</strong>
+          </p>
+        {% endif %}
       {% endif %}
-    </header>
-    <a class="btn" href="{% url 'home' %}">{% trans "На головну" %}</a>
-  </div>
+      <div class="util-page__actions">
+        <a class="figma-btn figma-btn--ink" href="{% url 'catalog' %}">{% trans "До каталогу" %}</a>
+        <a class="util-page__link" href="{% url 'home' %}">{% trans "На головну" %}</a>
+      </div>
+    </div>
+  </section>
 {% endblock %}

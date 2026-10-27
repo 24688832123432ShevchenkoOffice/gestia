@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from src.core.views import healthz, robots_txt, set_currency, set_language, theme_css
+from src.core.views import healthz, page_not_found, robots_txt, set_currency, set_language, theme_css
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -19,6 +19,8 @@ urlpatterns += i18n_patterns(
     path("", include("src.core.urls")),
     prefix_default_language=False,
 )
+
+handler404 = "src.core.views.page_not_found"
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils import translation
 
 from src.content.models import SiteSettings
@@ -48,3 +48,13 @@ class LanguageTests(TestCase):
         response = self.client.get("/en/")
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response["Location"], "/")
+
+
+class NotFoundTests(TestCase):
+    @override_settings(DEBUG=False)
+    def test_custom_404_page(self):
+        response = self.client.get("/no-such-gestia-page/")
+        self.assertEqual(response.status_code, 404)
+        self.assertContains(response, "Сторінку не знайдено", status_code=404)
+        self.assertContains(response, "На головну", status_code=404)
+        self.assertContains(response, "css/pages/utility.css", status_code=404)

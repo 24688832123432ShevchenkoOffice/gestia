@@ -1,9 +1,27 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% block title %}{% trans "Сторінку не знайдено" %}{% endblock %}
+{% load i18n static %}
+
+{% block title %}404 · {% trans "Сторінку не знайдено" %}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/utility.css' %}">
+{% endblock %}
+
 {% block content %}
-  <div class="container page-copy">
-    <h1>{% trans "Сторінку не знайдено" %}</h1>
-    <a class="btn" href="{% url 'home' %}">{% trans "На головну" %}</a>
-  </div>
+  <section class="util-page util-page--error" data-qa="not-found-page">
+    <div class="util-page__inner">
+      <a class="util-page__logo" href="{% url 'home' %}" aria-label="Gestia">
+        <img src="{% static 'figma/desktop/5493c.png' %}" width="113" height="43" alt="Gestia">
+      </a>
+      <p class="util-page__code" aria-hidden="true">404</p>
+      <h1>{% trans "Сторінку не знайдено" %}</h1>
+      <p class="util-page__text">
+        {% trans "Схоже, цієї сторінки вже немає або адресу змінено." %}
+      </p>
+      <div class="util-page__actions">
+        <a class="figma-btn figma-btn--ink" href="{% url 'home' %}">{% trans "На головну" %}</a>
+        <a class="util-page__link" href="{% url 'catalog' %}">{% trans "До каталогу" %}</a>
+      </div>
+    </div>
+  </section>
 {% endblock %}
