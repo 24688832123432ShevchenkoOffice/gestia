@@ -24,7 +24,7 @@
             <p class="co-error">{{ form.non_field_errors|striptags }}</p>
           {% endif %}
           <section class="co-sec">
-            <h2 class="co-h">{% trans "Контактні данні" %}</h2>
+            <h2 class="co-h">{% trans "Контактні дані" %}</h2>
             <div class="co-fields">
               <label class="co-field">
                 <img class="co-ico" src="{% static 'figma/checkout/3858d14e-7578-4ce2-8c54-aabd04bfff9f.svg' %}" width="22" height="22" alt="">
@@ -61,9 +61,11 @@
               </label>
               {% if form.city.errors %}<p class="co-error">{{ form.city.errors|striptags }}</p>{% endif %}
               <label class="co-field co-field--plain">
-                <input name="branch" type="text" maxlength="120" autocomplete="off" placeholder="{% trans 'Відділення' %}" value="{{ form.branch.value|default_if_none:'' }}">
+                <input name="branch" type="text" maxlength="120" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="np-branch-listbox" autocomplete="off" data-autocomplete-min="2" data-autocomplete-endpoint="" placeholder="{% trans 'Відділення' %}" value="{{ form.branch.value|default_if_none:'' }}">
                 <img class="co-arrow" src="{% static 'figma/checkout/ef8b2949-5e35-4987-b356-507e5c04e922.svg' %}" width="15" height="15" alt="">
               </label>
+              <!-- hx-get="" hx-trigger="keyup changed delay:300ms" hx-target="#np-branch-listbox" hx-swap="innerHTML" -->
+              <ul id="np-branch-listbox" class="co-branch-list" role="listbox" hidden></ul>
               {% if form.branch.errors %}<p class="co-error">{{ form.branch.errors|striptags }}</p>{% endif %}
               {% if form.address.errors %}<p class="co-error">{{ form.address.errors|striptags }}</p>{% endif %}
             </div>

@@ -180,7 +180,7 @@ msgstr "Thank you for the order. A consultant will contact you shortly. Number: 
 msgid "Ім’я"
 msgstr "Name"
 
-msgid "Контактні данні"
+msgid "Контактні дані"
 msgstr "Contact details"
 
 msgid "Номер телефону"
@@ -192,7 +192,7 @@ msgstr "Nova Poshta (branch)"
 msgid "Нова пошта (поштамат)"
 msgstr "Nova Poshta (parcel locker)"
 
-msgid "Курєрська доставка"
+msgid "Кур’єрська доставка"
 msgstr "Courier delivery"
 
 msgid "Місто"

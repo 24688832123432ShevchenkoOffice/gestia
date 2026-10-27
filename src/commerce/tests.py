@@ -72,12 +72,31 @@ class CheckoutTests(TestCase):
         self.assertNotContains(page, "figma.com")
         checkout = self.client.get("/zamovlennia/")
         self.assertEqual(checkout.status_code, 200)
-        self.assertContains(checkout, "Контактні данні")
-        self.assertContains(checkout, "Курєрська доставка")
+        self.assertContains(checkout, "Контактні дані")
+        self.assertContains(checkout, "Кур\u2019єрська доставка")
+        self.assertNotContains(checkout, "Контактні данні")
+        self.assertNotContains(checkout, "Курєрська доставка")
         self.assertContains(checkout, "Ваше замовлення")
         self.assertContains(checkout, "х2")
         self.assertContains(checkout, "css/pages/checkout.css")
         self.assertNotContains(checkout, "figma.com")
+        html = checkout.content.decode()
+        field_at = html.find('name="branch"')
+        field = html[html.rfind("<input", 0, field_at):html.find(">", field_at)]
+        self.assertIn('role="combobox"', field)
+        self.assertIn('aria-autocomplete="list"', field)
+        self.assertIn('aria-expanded="false"', field)
+        self.assertIn('aria-controls="np-branch-listbox"', field)
+        self.assertIn('autocomplete="off"', field)
+        self.assertIn('data-autocomplete-min="2"', field)
+        self.assertIn('data-autocomplete-endpoint=""', field)
+        self.assertNotIn("hx-", field)
+        self.assertIn(
+            '<ul id="np-branch-listbox" class="co-branch-list" role="listbox" hidden>',
+            html,
+        )
+        self.assertIn("<!-- hx-get=", html)
+        self.assertNotIn("novaposhta", html.lower())
 
     def test_checkout_joins_city_and_branch(self):
         session = self.client.session
@@ -117,3 +136,50 @@ class CheckoutTests(TestCase):
         self.assertEqual(cleared.status_code, 200)
         self.assertContains(cleared, "Кошик порожній.")
         self.assertNotIn("SNIH", self.client.session.get("cart", {}))
+
+    def test_two_products_totals_match_price_times_qty(self):
+        lamp = Product.objects.create(
+            category=self.product.category,
+            sku="LAMP",
+            slug="lampa",
+            name_uk="Лампа",
+            price_uah=Decimal("1500"),
+            price_eur=Decimal("30"),
+        )
+        snow_qty, lamp_qty = 2, 3
+        session = self.client.session
+        session["cart"] = {"SNIH": snow_qty, "LAMP": lamp_qty}
+        session["currency"] = "uah"
+        session.save()
+        total = self.product.price_uah * snow_qty + lamp.price_uah * lamp_qty
+        self.assertEqual(total, Decimal("4700"))
+        label = f"₴ {int(total):,}".replace(",", " ") + " грн"
+        cart = self.client.get("/koshik/")
+        checkout = self.client.get("/zamovlennia/")
+        self.assertContains(cart, "Сніг")
+        self.assertContains(cart, "Лампа")
+        self.assertContains(cart, "100 UAH")
+        self.assertContains(cart, "1 500 UAH")
+        self.assertContains(cart, 'value="2"')
+        self.assertContains(cart, 'value="3"')
+        self.assertContains(cart, label)
+        self.assertContains(checkout, "Сніг")
+        self.assertContains(checkout, "Лампа")
+        self.assertContains(checkout, "х2")
+        self.assertContains(checkout, "х3")
+        self.assertContains(checkout, label)
+        self.assertNotContains(cart, "₴ 2300 грн")
+        self.assertNotContains(checkout, "₴ 2300 грн")
+        self.assertNotContains(cart, "2 450 UAH")
+        self.assertNotContains(checkout, "2 450 UAH")
+
+    def test_checkout_copy_translates(self):
+        session = self.client.session
+        session["cart"] = {"SNIH": 1}
+        session.save()
+        english = self.client.get("/en/zamovlennia/")
+        self.assertContains(english, "Contact details")
+        self.assertContains(english, "Courier delivery")
+        russian = self.client.get("/ru/zamovlennia/")
+        self.assertContains(russian, "Контактные данные")
+        self.assertContains(russian, "Курьерская доставка")

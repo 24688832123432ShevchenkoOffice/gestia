@@ -134,6 +134,10 @@ img.co-arrow {
   pointer-events: none;
 }
 
+.co-branch-list[hidden] {
+  display: none;
+}
+
 .co-field input {
   flex: 1 1 auto;
   width: auto;
@@ -308,12 +312,14 @@ img.co-arrow {
 }
 
 .co-card {
-  display: none;
+  display: flex;
   box-sizing: border-box;
-  width: 633px;
+  width: 100%;
   max-width: 100%;
+  margin-top: 40px;
   padding: 29px;
   border: 1px solid #000;
+  border-radius: 0;
   gap: 40px;
 }
 
@@ -336,6 +342,7 @@ img.co-arrow {
 .co-line p:first-child,
 .co-total p:first-child {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .co-line p:last-child,
@@ -458,7 +465,13 @@ img.co-arrow {
     white-space: nowrap;
   }
 
+  .co-line p:first-child {
+    overflow-wrap: normal;
+  }
+
   .co-card {
     display: flex;
+    width: 633px;
+    margin-top: 0;
   }
 }

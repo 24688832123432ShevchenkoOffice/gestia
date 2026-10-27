@@ -60,7 +60,7 @@ class CheckoutForm(ConsentForm):
         choices=[
             (Order.Delivery.BRANCH, _("Нова пошта (відділення)")),
             (LOCKER, _("Нова пошта (поштамат)")),
-            (Order.Delivery.COURIER, _("Курєрська доставка")),
+            (Order.Delivery.COURIER, _("Кур’єрська доставка")),
         ],
         initial=Order.Delivery.BRANCH,
     )
