@@ -1,0 +1,226 @@
+@media (max-width: 767px) {
+  .about-frame {
+    display: flow-root;
+    margin-bottom: 90.4px;
+  }
+
+  .about-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: min(362px, calc(100% - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+    margin-top: 51.789px;
+    margin-left: max(16px, env(safe-area-inset-left, 0px));
+    margin-right: auto;
+  }
+
+  .about-intro .about-lead--intro,
+  .about-intro .about-gallery,
+  .about-lead__copy,
+  .about-lead__text {
+    width: 100%;
+    margin: 0;
+  }
+
+  .about-intro .about-gallery {
+    gap: 14px;
+    padding: 0;
+    align-items: center;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .about-gallery__item--a,
+  .about-gallery__item--b {
+    position: relative;
+    flex: 1 1 0;
+    width: calc((100% - 14px) / 2);
+    max-width: 174px;
+    min-width: 0;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .about-gallery__item--a {
+    aspect-ratio: 174 / 227;
+  }
+
+  .about-gallery__item--b {
+    aspect-ratio: 174 / 228;
+  }
+
+  .about-gallery__item--a img.about-gallery__mob {
+    position: absolute;
+    left: 0;
+    top: -0.62%;
+    width: 100%;
+    height: 101.24%;
+    max-width: none;
+    object-fit: fill;
+  }
+
+  .about-gallery__item--b img.about-gallery__mob {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+
+  .about-lead--philosophy,
+  .page-about .reviews,
+  .page-about .popular {
+    width: min(362px, calc(100% - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+    margin-left: max(16px, env(safe-area-inset-left, 0px));
+    margin-right: auto;
+  }
+
+  .about-lead__copy--mob p,
+  .about-lead__text p {
+    line-height: 19px;
+    letter-spacing: -0.48px;
+    word-break: break-word;
+  }
+
+  .about-lead--philosophy {
+    margin-top: 80px;
+  }
+
+  .about-lead--philosophy h2,
+  .page-about .reviews h2,
+  .page-about .popular h2 {
+    white-space: nowrap;
+  }
+
+  .page-about .reviews {
+    padding-inline: 0;
+    box-sizing: border-box;
+  }
+
+  .page-about .popular {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-top: 80px;
+    padding: 0;
+  }
+
+  .page-about .pop-rail {
+    display: none;
+  }
+
+  .page-about .about-picks {
+    display: flex;
+    gap: 14px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .page-about .about-picks::-webkit-scrollbar {
+    display: none;
+    height: 0;
+  }
+
+  .page-about .about-pick {
+    flex: 0 0 calc((100% - 14px) / 2);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: calc((100% - 14px) / 2);
+    max-width: 174px;
+    min-width: 0;
+    color: #000;
+    text-decoration: none;
+    scroll-snap-align: start;
+  }
+
+  .page-about .about-pick__media {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 200 / 226;
+    overflow: hidden;
+  }
+
+  .page-about .about-pick__media img {
+    position: absolute;
+    max-width: none;
+  }
+
+  .page-about .about-pick--shift img {
+    left: 0;
+    top: -7.21%;
+    width: 100%;
+    height: 114.41%;
+    object-fit: fill;
+  }
+
+  .page-about .about-pick--cover img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .page-about .about-pick__meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.36px;
+  }
+
+  .page-about .about-pick__name {
+    width: 95px;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .page-about .about-pick__price {
+    white-space: nowrap;
+  }
+
+  .page-about .pop-actions {
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .page-about .pop-nav__btn {
+    display: flex;
+  }
+
+  .page-about .popular .figma-btn {
+    width: min(257px, calc(100% - 104px));
+    flex: 0 1 257px;
+    min-width: 0;
+    font-weight: 400;
+  }
+}
+
+@media (max-width: 359px) {
+  .about-lead--philosophy h2,
+  .page-about .reviews h2,
+  .page-about .popular h2 {
+    white-space: normal;
+  }
+
+  .page-about .popular .figma-btn {
+    width: auto;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}

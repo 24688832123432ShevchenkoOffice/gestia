@@ -1,0 +1,346 @@
+<cursor_untrusted_data_1337 source="CallDynamicTool">
+
+const imgBrandImage = "https://www.figma.com/api/mcp/asset/00f113b8-f54a-4b87-bd5a-4f4b7e6cb362.png";
+const imgBrandShape = "https://www.figma.com/api/mcp/asset/48b49b64-d005-4d1b-b5e2-8ab637e3b2ea.png";
+const imgRectangle75 = "https://www.figma.com/api/mcp/asset/dc557935-9fe9-4a77-a01f-076c00e5e52e.svg";
+const imgVector1 = "https://www.figma.com/api/mcp/asset/9250f438-da11-48d4-aed6-7d6690da57ed.svg";
+const imgSocialIcons = "https://www.figma.com/api/mcp/asset/241a49e3-a3dd-437b-9631-3bdc2cc8b732.svg";
+const imgSocialIcons1 = "https://www.figma.com/api/mcp/asset/bd0bccd2-9f75-4ea0-966d-c054782a63a9.svg";
+const imgIconlySharpOutlineCall = "https://www.figma.com/api/mcp/asset/6c6d733b-dd91-4e55-a66f-00af3cce19d2.svg";
+const imgVector2 = "https://www.figma.com/api/mcp/asset/4d015d6d-02c4-40af-8d36-da2215245b0c.svg";
+const imgBrandShape1 = "https://www.figma.com/api/mcp/asset/eff27c03-34a2-49dd-b63b-9750ae0d559e.png";
+const imgGalleryImage = "https://www.figma.com/api/mcp/asset/96623b96-5919-4399-ac24-db9306356a9e.png";
+const imgGalleryImage1 = "https://www.figma.com/api/mcp/asset/321bb849-4eb9-4b7f-a619-ba0dc9fee3e3.png";
+const imgBrandVideoImage = "https://www.figma.com/api/mcp/asset/361e59c2-a1e1-4929-9e83-037b38cbc10e.png";
+const imgProductImage = "https://www.figma.com/api/mcp/asset/d8f4bea4-d873-48c8-851a-1b29938dec15.png";
+const imgProductImage1 = "https://www.figma.com/api/mcp/asset/3fe3c135-2fc8-4a37-8173-96ab777b755c.png";
+const img = "https://www.figma.com/api/mcp/asset/1dad1415-894f-40e0-8aaf-1cec728ac365.svg";
+const imgContactIcon = "https://www.figma.com/api/mcp/asset/44c0d9f9-9cea-4b31-a2d1-ca2412c6a7e2.svg";
+const imgMenuIcon = "https://www.figma.com/api/mcp/asset/ba47f1ea-dfe8-4c8b-80f8-115715c9ff6a.svg";
+const img1 = "https://www.figma.com/api/mcp/asset/b80ec11f-8756-43b0-a28f-4533eea81324.svg";
+const img2 = "https://www.figma.com/api/mcp/asset/3b8eea04-20a7-4d07-8510-4ea67410ca56.svg";
+const img3 = "https://www.figma.com/api/mcp/asset/ceadf06a-417a-49f5-9b96-004bc88a4d04.svg";
+const imgIconlySharpOutlineArrowDown3 = "https://www.figma.com/api/mcp/asset/b1c92152-6209-459d-8605-1b780ddb883f.svg";
+const imgRating = "https://www.figma.com/api/mcp/asset/f61c3f5f-5659-445e-af1e-461db811557d.svg";
+const imgRating1 = "https://www.figma.com/api/mcp/asset/146ca6ea-1ed6-473a-b186-d4035481ecb4.svg";
+
+function Footer({ className }: { className?: string }) {
+  return (
+    <div className={className || "bg-[#251008] content-stretch flex h-[832px] items-start pb-[41px] pl-[16px] pr-[15px] pt-[20px] relative w-[393px]"} data-node-id="1:4727" data-name="Footer">
+      <div className="content-stretch flex flex-col gap-[40px] items-center justify-end relative shrink-0 w-[362px]" data-node-id="1:4728" data-name="Footer Content">
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0" data-node-id="1:4729">
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-0 mt-0 place-items-start relative row-1" data-node-id="1:4730" data-name="Brand Content">
+            <div className="col-1 h-[73.202px] ml-0 mt-0 relative row-1 w-[191px]" data-node-id="1:4731" data-name="Brand Image">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <img alt="" className="absolute h-[133.62%] left-[-15.83%] max-w-none top-[-17.92%] w-[131.39%]" src={imgBrandImage} />
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[75.54px] mt-0 place-items-start relative row-1" data-node-id="1:4732" data-name="Mask group">
+              <div className="bg-gradient-to-r col-1 from-[#d4b99f] h-[68.211px] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[23.292px_0px] mask-size-[46.583px_64.884px] ml-[-23.29px] mt-0 relative row-1 to-[#754c28] w-[78.193px]" data-node-id="1:4736" style={{ maskImage: `url("${imgBrandShape}")` }} data-name="Brand Shape" />
+            </div>
+          </div>
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-0 mt-0 place-items-start relative row-1" data-node-id="1:4737" data-name="Mask group">
+            <div className="bg-[#feedda] col-1 h-[33.882px] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[30.493px_-47.434px] mask-size-[191px_73.202px] ml-[-30.49px] mt-[47.43px] relative row-1 w-[118.585px]" data-node-id="1:4745" style={{ maskImage: `url("${imgRectangle75}")` }} />
+            <div className="bg-[#feedda] col-1 h-[93px] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[46px_12px] mask-size-[191px_73.202px] ml-[-46px] mt-[-12px] relative row-1 w-[278px]" data-node-id="1:4746" style={{ maskImage: `url("${imgRectangle75}")` }} />
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[40px] items-center justify-center relative shrink-0 w-full" data-node-id="1:4747" data-name="Footer Links">
+          <div className="content-stretch flex flex-col gap-[14px] items-center justify-center relative shrink-0" data-node-id="1:4748" data-name="Product Categories">
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] min-w-full not-italic relative shrink-0 text-[18px] text-[rgba(254,237,218,0.5)] text-center tracking-[-0.54px] w-[min-content]" data-node-id="1:4749">
+              Усі товари
+            </p>
+            <div className="content-stretch flex flex-col gap-px items-start relative shrink-0" data-node-id="1:4750" data-name="Featured Category">
+              <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[18px] text-[rgba(254,237,218,0.5)] tracking-[-0.54px] w-[122px]" data-node-id="1:4751">
+                Різдвяні бокси
+              </p>
+              <div className="h-0 relative shrink-0 w-full" data-node-id="1:4752">
+                <div className="absolute inset-[-0.5px_0]">
+                  <img alt="" className="block max-w-none size-full" src={imgVector1} />
+                </div>
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[18px] text-[rgba(254,237,218,0.5)] tracking-[-0.54px] w-[173px]" data-node-id="1:4753">
+              Інтерєрні композиції
+            </p>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[18px] text-[rgba(254,237,218,0.5)] tracking-[-0.54px] w-[117px]" data-node-id="1:4754">
+              Сервірування
+            </p>
+          </div>
+          <div className="[word-break:break-word] content-stretch flex flex-col font-['Inter:Medium'] font-medium gap-[14px] items-center justify-center leading-[normal] not-italic relative shrink-0 text-[18px] text-[rgba(254,237,218,0.5)] tracking-[-0.54px] whitespace-nowrap" data-node-id="1:4755" data-name="Information Links">
+            <p className="relative shrink-0" data-node-id="1:4756">
+              Про нас
+            </p>
+            <p className="relative shrink-0" data-node-id="1:4757">
+              Контакти
+            </p>
+            <p className="relative shrink-0" data-node-id="1:4758">
+              Доставка та оплата
+            </p>
+          </div>
+          <div className="[word-break:break-word] content-stretch flex flex-col font-['Inter:Medium'] font-medium gap-[14px] items-center justify-center leading-[normal] not-italic relative shrink-0 text-[18px] text-[rgba(254,237,218,0.5)] tracking-[-0.54px] w-full whitespace-nowrap" data-node-id="1:4759" data-name="Legal Links">
+            <p className="relative shrink-0" data-node-id="1:4760">
+              Публічний договір (офферта)
+            </p>
+            <p className="relative shrink-0" data-node-id="1:4761">
+              Політика конфедиційності
+            </p>
+            <p className="relative shrink-0" data-node-id="1:4762">
+              Політика cookies
+            </p>
+          </div>
+          <div className="content-stretch flex items-center relative shrink-0" data-node-id="1:4763" data-name="Social Link">
+            <div className="content-stretch flex flex-col gap-[8px] items-center justify-center relative shrink-0" data-node-id="1:4764">
+              <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-node-id="1:4765" data-name="Social Link">
+                <div className="relative shrink-0 size-[15px]" data-node-id="1:4766" data-name="Social Icons">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSocialIcons} />
+                </div>
+                <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#feedda] text-[16px] tracking-[-0.48px] whitespace-nowrap" data-node-id="1:4767">
+                  Instagram
+                </p>
+              </div>
+              <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-node-id="1:4768" data-name="Social Link">
+                <div className="relative shrink-0 size-[15px]" data-node-id="1:4769" data-name="Social Icons">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSocialIcons1} />
+                </div>
+                <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#feedda] text-[16px] tracking-[-0.48px] whitespace-nowrap" data-node-id="1:4770">
+                  Pinterest
+                </p>
+              </div>
+              <div className="content-stretch flex gap-[8px] items-center relative shrink-0 w-full" data-node-id="1:4771" data-name="Phone Link">
+                <div className="relative shrink-0 size-[18px]" data-node-id="1:4772" data-name="Iconly/Sharp/Outline/Call">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconlySharpOutlineCall} />
+                </div>
+                <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#feedda] text-[16px] tracking-[-0.48px] whitespace-nowrap" data-node-id="1:4774">
+                  +380 000 00 00
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="1:4775" data-name="Copyright">
+          <div className="content-stretch flex flex-col gap-[20px] items-center relative shrink-0 w-full" data-node-id="1:4776" data-name="Copyright Content">
+            <div className="h-0 relative shrink-0 w-full" data-node-id="1:4777">
+              <div className="absolute inset-[-0.5px_0]">
+                <img alt="" className="block max-w-none size-full" src={imgVector2} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[0] min-w-full not-italic relative shrink-0 text-[0px] text-[rgba(254,237,218,0.5)] text-center tracking-[-0.36px] uppercase w-[min-content]" data-node-id="1:4778">
+              <span className="leading-[normal] text-[12px]">© Gestia Home 2026. У</span>
+              <span className="leading-[normal] lowercase text-[12px]">сі права захищені.</span>
+            </p>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[12px] text-[rgba(254,237,218,0.5)] text-center tracking-[-0.36px] whitespace-nowrap" data-node-id="1:4779">
+              Розроблено PrometeyLabs
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Component() {
+  return (
+    <div className="bg-white relative size-full" data-node-id="1:10987" data-name="Сторінка товару">
+      <div className="absolute bottom-0 h-[3382px] left-1/2 pointer-events-none top-0" data-node-id="1:10988">
+        <div className="-translate-x-1/2 bg-white h-[69px] pointer-events-auto sticky top-0 w-[393px]" data-name="Header">
+          <div className="-translate-x-1/2 absolute contents left-[calc(50%-0.5px)] top-[13px]" data-node-id="I1:10988;55:4264" data-name="Header Content">
+            <div className="absolute content-stretch flex gap-[14px] h-[23.867px] items-end left-[316.33px] top-[22.94px] w-[59.669px]" data-node-id="I1:10988;55:4253" data-name="Contact Actions">
+              <button className="block cursor-pointer relative shrink-0 size-[22px]" data-node-id="I1:10988;55:4244" data-name="Пошук">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={img} />
+              </button>
+              <div className="relative shrink-0 size-[24px]" data-node-id="I1:10988;55:4247" data-name="Iconly/Sharp/Outline/Call">
+                <div className="absolute inset-[12.5%_14.49%_9.2%_12.5%]" data-node-id="I1:10988;55:4248" data-name="Contact Icon">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgContactIcon} />
+                </div>
+              </div>
+            </div>
+            <div className="absolute h-[12px] left-[16px] top-[28.9px] w-[35.801px]" data-node-id="I1:10988;55:4263" data-name="Menu Icon">
+              <div className="absolute inset-[-4.17%_-0.56%_-4.17%_0]">
+                <img alt="" className="block max-w-none size-full" src={imgMenuIcon} />
+              </div>
+            </div>
+            <div className="-translate-x-1/2 absolute contents left-[calc(50%-1.62px)] top-[13px]" data-node-id="I1:10988;55:4254" data-name="Brand Mark">
+              <div className="-translate-x-1/2 absolute h-[42.972px] left-[calc(50%-1.62px)] top-[13px] w-[112.123px]" data-node-id="I1:10988;55:4255" data-name="Brand Image">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  <img alt="" className="absolute h-[133.62%] left-[-15.83%] max-w-none top-[-17.92%] w-[131.39%]" src={imgBrandImage} />
+                </div>
+              </div>
+              <div className="absolute contents left-[183.58px] top-[13px]" data-node-id="I1:10988;55:4256" data-name="Mask group">
+                <div className="absolute bg-gradient-to-r from-[#d4b99f] h-[39.972px] left-[169.93px] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[13.649px_0px] mask-size-[27.298px_38.022px] to-[#754c28] top-[13px] w-[45.821px]" data-node-id="I1:10988;55:4260" style={{ maskImage: `url("${imgBrandShape1}")` }} data-name="Brand Shape" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal leading-[normal] left-[16px] not-italic text-[10px] text-black top-[69px] w-[260px]" data-node-id="1:10989">
+        Головна/Про нас
+      </p>
+      <div className="absolute content-stretch flex flex-col gap-[40px] items-start left-[16px] top-[121px] w-[362px]" data-node-id="1:10990" data-name="About Section">
+        <div className="[word-break:break-word] content-stretch flex flex-col font-['Inter:Regular'] font-normal gap-[20px] items-center not-italic relative shrink-0 text-black text-center w-full" data-node-id="1:10991" data-name="Про нас">
+          <p className="leading-none min-w-full relative shrink-0 text-[38px] tracking-[-2.66px] w-[min-content]" data-node-id="1:10992">
+            Про нас
+          </p>
+          <div className="leading-[0] relative shrink-0 text-[16px] tracking-[-0.48px] w-[362px] whitespace-pre-wrap" data-node-id="1:10993">
+            <p className="leading-[normal] mb-0">{`GESTIA HOME — український бренд декору, `}</p>
+            <p className="leading-[normal] mb-0">{`флористики, текстилю та одягу для дому. `}</p>
+            <p className="leading-[normal]">Ми створюємо речі, що допомагають розкривати красу повсякденності та формувати особливу атмосферу домашнього затишку</p>
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[14px] items-center relative shrink-0 w-full" data-node-id="1:10994" data-name="About Gallery">
+          <div className="h-[227px] relative shrink-0 w-[174px]" data-node-id="1:10995" data-name="Gallery Image">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <img alt="" className="absolute h-[101.24%] left-0 max-w-none top-[-0.62%] w-full" src={imgGalleryImage} />
+            </div>
+          </div>
+          <div className="h-[228px] relative shrink-0 w-[174px]" data-node-id="1:10996" data-name="Gallery Image">
+            <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgGalleryImage1} />
+          </div>
+        </div>
+      </div>
+      <div className="-translate-x-1/2 [word-break:break-word] absolute content-stretch flex flex-col font-['Inter:Regular'] font-normal gap-[20px] items-center left-[calc(50%+0.5px)] not-italic text-black text-center top-[622px] w-[362px]" data-node-id="1:10997" data-name="Про нас">
+        <p className="leading-none relative shrink-0 text-[38px] tracking-[-2.66px] whitespace-nowrap" data-node-id="1:10998">
+          Наша філософія
+        </p>
+        <div className="leading-[0] min-w-full relative shrink-0 text-[16px] tracking-[-0.48px] w-[min-content] whitespace-pre-wrap" data-node-id="1:10999">
+          <p className="leading-[normal] mb-0">Наша філософія — поєднання сучасної естетики, природності та поваги до українських традицій. Ми віримо, що краса не потребує досконалості, адже вона вже є в речах, які нас оточують</p>
+          <p className="leading-[normal] mb-0">​</p>
+          <p className="leading-[normal]">и прагнемо зробити декорування дому зрозумілим і доступним, надихаючи на творчість та усвідомлене ставлення до простору</p>
+        </div>
+      </div>
+      <div className="-translate-x-1/2 absolute contents left-1/2 top-[912px]" data-node-id="1:11000" data-name="Brand Video">
+        <div className="absolute h-[735px] left-0 opacity-80 top-[912px] w-[393px]" data-node-id="1:11001" data-name="Brand Video Image">
+          <img alt="" className="absolute inset-0 max-w-none object-bottom pointer-events-none size-full" src={imgBrandVideoImage} />
+        </div>
+        <div className="-translate-x-1/2 absolute bottom-[64.5%] left-[calc(50%+0.5px)] top-[31.84%] w-[132px]" data-node-id="1:11002" data-name="Iconly/Sharp/Outline/Video">
+          <div className="absolute contents left-[14.3px] top-[29.07px]" data-node-id="1:11003" data-name="Video Icon">
+            <div className="absolute h-[73.863px] left-[14.3px] top-[29.07px] w-[76.722px]" data-node-id="1:11004" data-name>
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={img1} />
+            </div>
+            <div className="absolute flex h-[71.957px] items-center justify-center left-[85.3px] top-[30.02px] w-[32.881px]" data-node-id="1:11005">
+              <div className="-scale-y-100 flex-none rotate-180">
+                <div className="h-[71.957px] relative w-[32.881px]" data-name>
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={img2} />
+                </div>
+              </div>
+            </div>
+            <div className="absolute h-[8.101px] left-[49.08px] top-[48.13px] w-[23.35px]" data-node-id="1:11006" data-name>
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={img3} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[30px] items-center justify-center left-[calc(50%+0.5px)] top-[2079px] w-[362px]" data-node-id="1:11007" data-name="Popular Products">
+        <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-none not-italic relative shrink-0 text-[38px] text-black tracking-[-2.66px] whitespace-nowrap" data-node-id="1:11008">
+          Популярні товари
+        </p>
+        <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="1:11009" data-name="Product List">
+          <div className="content-stretch flex flex-col gap-[14px] items-start relative shrink-0 w-[174px]" data-node-id="1:11010" data-name="Product Card">
+            <div className="aspect-[200/226] relative shrink-0 w-full" data-node-id="1:11011" data-name="Product Image">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <img alt="" className="absolute h-[114.41%] left-0 max-w-none top-[-7.21%] w-full" src={imgProductImage} />
+              </div>
+            </div>
+            <div className="[word-break:break-word] content-stretch flex font-['Inter:Regular'] font-normal items-start justify-between leading-[normal] not-italic relative shrink-0 text-[12px] text-black tracking-[-0.36px] w-full" data-node-id="1:11012" data-name="Product Info">
+              <p className="relative shrink-0 w-[95px]" data-node-id="1:11013">
+                Бокс «Різдвяний Шишки»
+              </p>
+              <p className="relative shrink-0 whitespace-nowrap" data-node-id="1:11014">
+                8 990 UAH
+              </p>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-col gap-[14px] items-start relative shrink-0 w-[174px]" data-node-id="1:11015" data-name="Product Card">
+            <div className="aspect-[200/226] relative shrink-0 w-full" data-node-id="1:11016" data-name="Product Image">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgProductImage1} />
+            </div>
+            <div className="[word-break:break-word] content-stretch flex font-['Inter:Regular'] font-normal items-start justify-between leading-[normal] not-italic relative shrink-0 text-[12px] text-black tracking-[-0.36px] w-full" data-node-id="1:11017" data-name="Product Info">
+              <p className="relative shrink-0 w-[95px]" data-node-id="1:11018">
+                Бокс Великодній «Украіньсикй»
+              </p>
+              <p className="relative shrink-0 whitespace-nowrap" data-node-id="1:11019">
+                8 990 UAH
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[8px] items-center relative shrink-0 w-full" data-node-id="1:11020" data-name="Product Navigation">
+          <div className="border border-[#251008] border-solid content-stretch flex h-[44px] items-center justify-center px-[16px] py-[12px] relative shrink-0 w-[257px]" data-node-id="1:11021" data-name="Component 3">
+            <p className="[text-box-edge:cap_alphabetic] [text-box-trim:trim-both] [word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#251008] text-[16px] text-center tracking-[-0.48px] whitespace-nowrap" data-node-id="I1:11021;12:722">
+              Перейти до каталогу
+            </p>
+          </div>
+          <div className="border border-[#251008] border-solid content-stretch flex items-center justify-center px-[16px] py-[12px] relative shrink-0 size-[44px]" data-node-id="1:11022" data-name="Component 3">
+            <div className="flex items-center justify-center relative shrink-0 size-[15px]" data-node-id="1:11023">
+              <div className="flex-none rotate-90">
+                <div className="relative size-[15px]" data-name="Iconly/Sharp/Outline/Arrow - Down 3">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconlySharpOutlineArrowDown3} />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-center relative shrink-0" data-node-id="1:11025">
+            <div className="-scale-y-100 flex-none rotate-180">
+              <div className="border border-[#251008] border-solid content-stretch flex items-center justify-center px-[16px] py-[12px] relative size-[44px]" data-name="Component 4">
+                <div className="flex items-center justify-center relative shrink-0 size-[15px]" data-node-id="1:11026">
+                  <div className="flex-none rotate-90">
+                    <div className="relative size-[15px]" data-name="Iconly/Sharp/Outline/Arrow - Down 3">
+                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconlySharpOutlineArrowDown3} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer className="-translate-x-1/2 absolute bg-[#251008] content-stretch flex h-[832px] items-start left-1/2 pb-[41px] pl-[16px] pr-[15px] pt-[20px] top-[2552px] w-[393px]" />
+      <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[40px] items-center left-[calc(50%+0.5px)] top-[1727px] w-[362px]" data-node-id="1:11029" data-name="Reviews Section">
+        <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-none not-italic relative shrink-0 text-[38px] text-black text-center tracking-[-2.66px] w-full" data-node-id="1:11030">
+          Відгуки
+        </p>
+        <div className="content-stretch flex gap-[20px] items-center relative shrink-0 w-full" data-node-id="1:11031" data-name="Review List">
+          <div className="bg-[rgba(37,16,8,0)] border border-black border-solid content-stretch flex flex-col gap-[30px] items-start p-[20px] relative shrink-0 w-[230px]" data-node-id="1:11032" data-name="Review Card">
+            <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="1:11033" data-name="Review Header">
+              <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-none not-italic relative shrink-0 text-[20px] text-black tracking-[-1.4px] whitespace-nowrap" data-node-id="1:11034">
+                Марія К.
+              </p>
+              <div className="h-[15px] relative shrink-0 w-[83px]" data-node-id="1:11035" data-name="Rating">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRating} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[14px] text-black tracking-[-0.42px] w-full" data-node-id="1:11041">
+              Дуже красивий декор, який повністю відповідає фотографіям. Усе виглядає витончено й гармонійно. Саме такі деталі створюють особливу атмосферу вдома
+            </p>
+          </div>
+          <div className="bg-[rgba(37,16,8,0)] border border-black border-solid content-stretch flex flex-col gap-[30px] items-start p-[20px] relative shrink-0 w-[230px]" data-node-id="1:11042" data-name="Review Card">
+            <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="1:11043" data-name="Review Header">
+              <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-none not-italic relative shrink-0 text-[20px] text-black tracking-[-1.4px] whitespace-nowrap" data-node-id="1:11044">
+                Марія К.
+              </p>
+              <div className="h-[15px] relative shrink-0 w-[83px]" data-node-id="1:11045" data-name="Rating">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRating1} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[14px] text-black tracking-[-0.42px] w-full" data-node-id="1:11051">
+              Дуже красивий декор, який повністю відповідає фотографіям. Усе виглядає витончено й гармонійно. Саме такі деталі створюють особливу атмосферу вдома
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Background/Light: #FFFFFF.
+The generated code contains image and SVG URL constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These URLs are temporary download sources and expire after 7 days. Download each asset into the project with curl -L, then replace its URL in the generated code with a reference to the downloaded asset. Never use the temporary URLs as runtime image sources.
+
+Saved this image to disk at file:///cursor/stores/store-e53b8444-5897-4d24-b111-8248092330df/grok-bot/agents/d8dda5b0-d73c-4811-b1fd-4d2753b8fef8/attachments/2073ea7417564ebf03a494331995025448b3d85aaa1881fd51451e5b83e3ee91.png (119x1024). To show it to the user, pass that path to SendToUser as {"type":"attachment","url":"file:///cursor/stores/store-e53b8444-5897-4d24-b111-8248092330df/grok-bot/agents/d8dda5b0-d73c-4811-b1fd-4d2753b8fef8/attachments/2073ea7417564ebf03a494331995025448b3d85aaa1881fd51451e5b83e3ee91.png"}.
+
+</cursor_untrusted_data_1337>

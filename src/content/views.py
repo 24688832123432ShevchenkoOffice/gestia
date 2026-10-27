@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -6,7 +8,7 @@ from src.catalog.models import Category, Product
 from src.commerce.forms import ContactForm, style_form
 from src.commerce.models import Inquiry
 from src.commerce.services import create_inquiry
-from src.content.models import AboutPage, Advantage, PrivacyPage, Review
+from src.content.models import AboutPage, Advantage, HomeBlock, PrivacyPage, Review
 
 
 @require_http_methods(["GET", "POST"])
@@ -40,9 +42,31 @@ def home(request):
     )
 
 
+def _figma_block(key, title, cta=""):
+    block = HomeBlock.objects.filter(key=key).first()
+    if block is not None:
+        return block
+    return SimpleNamespace(title=title, cta=cta)
+
+
 def about(request):
     page = AboutPage.load()
-    return render(request, "content/about.html", {"page": page})
+    popular = (
+        Product.objects.filter(is_active=True, is_popular=True)
+        .prefetch_related("images")
+        .order_by("sort", "id")
+    )
+    return render(
+        request,
+        "content/about.html",
+        {
+            "page": page,
+            "popular": popular,
+            "reviews": Review.objects.all(),
+            "popular_block": _figma_block("popular", "Популярні товари", "Перейти до каталогу"),
+            "reviews_block": _figma_block("reviews", "Відгуки"),
+        },
+    )
 
 
 def privacy(request):
