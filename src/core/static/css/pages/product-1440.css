@@ -64,7 +64,7 @@
   .pdp-related {
     position: absolute;
     left: 69px;
-    width: calc(1440px - 69px);
+    width: 1302px;
   }
 
   .pdp-set {
@@ -87,8 +87,45 @@
     position: absolute;
     left: 69px;
     top: 3970.789px;
-    width: calc(1440px - 69px);
+    width: 1562px;
     align-items: flex-start;
+  }
+
+  .pdp-rail--desk,
+  .pdp-review-rail {
+    overflow: visible;
+  }
+
+  .pdp-band {
+    align-items: center;
+  }
+
+  .pdp-note h2,
+  .pdp-note p,
+  .pdp-price {
+    width: 100%;
+  }
+
+  .pdp-note div,
+  .pdp-review p {
+    line-height: normal;
+  }
+
+  .pdp-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    white-space: nowrap;
+  }
+
+  .pdp-chip span {
+    display: block;
+    line-height: normal;
+  }
+
+  .pdp-card__meta {
+    gap: 0;
   }
 
   .pdp-reviews h2 {
