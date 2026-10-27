@@ -10,7 +10,7 @@
   }
 
   function stepOf(rail) {
-    var card = rail.querySelector(".review-card, .about-pick, .pop-card");
+    var card = rail.querySelector(".about-pick, .pop-card");
     if (!card) {
       return rail.clientWidth;
     }
@@ -59,11 +59,6 @@
     atEdges();
   }
 
-  bindRail(
-    document.querySelector("[data-reviews-track]"),
-    document.querySelector("[data-about-reviews-prev]"),
-    document.querySelector("[data-about-reviews-next]")
-  );
   bindRail(
     document.querySelector("[data-about-pop]"),
     document.querySelector("[data-about-pop-prev]"),
