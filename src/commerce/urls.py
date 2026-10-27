@@ -12,6 +12,7 @@ urlpatterns = [
     path("zamovlennia/", views.checkout, name="checkout"),
     path("zamovlennia/np/cities/", views.np_cities, name="np_cities"),
     path("zamovlennia/np/warehouses/", views.np_warehouses, name="np_warehouses"),
+    path("zamovlennia/np/streets/", views.np_streets, name="np_streets"),
     path("thank-you/", views.thanks, name="thanks"),
     path("diakuiemo/", views.thanks, name="thanks_legacy"),
     path("zayavka/", views.callback, name="callback"),

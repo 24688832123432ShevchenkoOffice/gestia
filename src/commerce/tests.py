@@ -170,6 +170,16 @@ class CheckoutTests(TestCase):
         self.assertEqual(len(response.json()["items"]), 1)
         mocked.assert_called_once_with("city-ref", kind="branch")
 
+    @override_settings(NOVA_POSHTA_API_KEY="", DEBUG=True)
+    def test_np_streets_demo_mode(self):
+        response = self.client.get(
+            "/zamovlennia/np/streets/",
+            {"city_ref": "demo-kyiv", "q": "кашт"},
+        )
+        self.assertEqual(response.status_code, 200)
+        labels = [item["label"] for item in response.json()["items"]]
+        self.assertTrue(any("Каштанова" in label for label in labels))
+
     def test_cart_update_qty(self):
         session = self.client.session
         session["cart"] = {"SNIH": 1}

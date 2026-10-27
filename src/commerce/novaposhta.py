@@ -59,6 +59,21 @@ DEMO_LOCKERS = {
     ],
 }
 
+DEMO_STREETS = {
+    "demo-kyiv": [
+        {"ref": "demo-s1", "label": "вул. Хрещатик"},
+        {"ref": "demo-s2", "label": "вул. Каштанова"},
+        {"ref": "demo-s3", "label": "вул. Велика Васильківська"},
+        {"ref": "demo-s4", "label": "вул. Саксаганського"},
+        {"ref": "demo-s5", "label": "просп. Перемоги"},
+        {"ref": "demo-s6", "label": "вул. Богдана Хмельницького"},
+    ],
+    "demo-lviv": [
+        {"ref": "demo-s7", "label": "вул. Городоцька"},
+        {"ref": "demo-s8", "label": "пл. Ринок"},
+    ],
+}
+
 
 def _api_key() -> str:
     return (getattr(settings, "NOVA_POSHTA_API_KEY", "") or "").strip()
@@ -82,6 +97,14 @@ def _demo_warehouses(city_ref: str, *, kind: str = "branch") -> list[dict[str, s
     if kind == "locker":
         return list(DEMO_LOCKERS.get(city_ref, []))
     return list(DEMO_WAREHOUSES.get(city_ref, DEMO_WAREHOUSES.get("demo-kyiv", [])))
+
+
+def _demo_streets(city_ref: str, query: str, *, limit: int = 20) -> list[dict[str, str]]:
+    needle = (query or "").casefold()
+    rows = DEMO_STREETS.get(city_ref, DEMO_STREETS.get("demo-kyiv", []))
+    if needle:
+        rows = [row for row in rows if needle in row["label"].casefold()]
+    return rows[:limit]
 
 
 def _post(model: str, method: str, props: dict[str, Any]) -> list[dict[str, Any]]:
@@ -221,3 +244,45 @@ def find_warehouses(query: str, *, kind: str = "branch") -> dict[str, Any]:
     city = cities[0]
     items = warehouses_for_city(city["ref"], kind=kind)
     return {"city": city["name"], "city_ref": city["ref"], "items": items, "cities": cities}
+
+
+def search_streets(city_ref: str, query: str, *, limit: int = 20) -> list[dict[str, str]]:
+    ref = (city_ref or "").strip()
+    q = (query or "").strip()
+    if not ref or len(q) < 2:
+        return []
+    if demo_mode():
+        return _demo_streets(ref, q, limit=limit)
+    if not configured():
+        return []
+
+    cache_key = f"np:streets:{ref}:{q.casefold()}:{limit}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    rows = _post(
+        "Address",
+        "getStreet",
+        {
+            "CityRef": ref,
+            "FindByString": q,
+            "Limit": str(limit),
+        },
+    )
+    items: list[dict[str, str]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        description = (row.get("Description") or "").strip()
+        street_type = (row.get("StreetsType") or row.get("StreetType") or "").strip()
+        street_ref = (row.get("Ref") or "").strip()
+        if not description:
+            continue
+        label = f"{street_type} {description}".strip() if street_type else description
+        items.append({"ref": street_ref, "label": label})
+        if len(items) >= limit:
+            break
+
+    cache.set(cache_key, items, 60 * 30)
+    return items

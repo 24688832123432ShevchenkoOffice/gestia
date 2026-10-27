@@ -107,6 +107,17 @@ def np_warehouses(request):
     return JsonResponse(payload)
 
 
+@require_GET
+def np_streets(request):
+    city_ref = (request.GET.get("city_ref") or "").strip()
+    query = (request.GET.get("q") or "").strip()
+    if len(query) < 2 or not city_ref:
+        return JsonResponse({"items": []})
+    if not novaposhta.configured() and not novaposhta.demo_mode():
+        return JsonResponse({"items": [], "error": "not_configured"}, status=503)
+    return JsonResponse({"items": novaposhta.search_streets(city_ref, query, limit=20)})
+
+
 def thanks(request):
     kind = request.GET.get("kind", "order")
     return render(
