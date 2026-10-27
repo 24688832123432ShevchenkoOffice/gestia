@@ -180,6 +180,39 @@ class CheckoutTests(TestCase):
         labels = [item["label"] for item in response.json()["items"]]
         self.assertTrue(any("Каштанова" in label for label in labels))
 
+    @override_settings(NOVA_POSHTA_API_KEY="", DEBUG=True)
+    def test_np_streets_ignores_house_number(self):
+        response = self.client.get(
+            "/zamovlennia/np/streets/",
+            {"city_ref": "demo-kyiv", "q": "вул. Каштанова 13"},
+        )
+        self.assertEqual(response.status_code, 200)
+        labels = [item["label"] for item in response.json()["items"]]
+        self.assertTrue(any("Каштанова" in label for label in labels))
+
+    def test_checkout_courier_appends_apartment(self):
+        session = self.client.session
+        session["cart"] = {"SNIH": 1}
+        session.save()
+        response = self.client.post(
+            "/zamovlennia/",
+            {
+                "name": "Оля",
+                "phone": "+380671112233",
+                "email": "olya@example.com",
+                "delivery_method": "np_courier",
+                "city": "Київ",
+                "branch": "вул. Каштанова, 13",
+                "apartment": "42",
+                "payment_method": Order.Payment.ON_DELIVERY,
+                "consent": "on",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        order = Order.objects.get()
+        self.assertEqual(order.delivery_method, "np_courier")
+        self.assertEqual(order.delivery_address, "Київ, вул. Каштанова, 13, кв. 42")
+
     def test_cart_update_qty(self):
         session = self.client.session
         session["cart"] = {"SNIH": 1}

@@ -9,6 +9,19 @@
   const delayMs = Number(root.dataset.delayMs || 15000);
   let timerId = 0;
   let lastFocused = null;
+  let scrollY = 0;
+
+  function lockScroll(open) {
+    if (open) {
+      scrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.classList.add("waitlist-modal-open");
+      document.body.style.top = "-" + scrollY + "px";
+      return;
+    }
+    document.body.classList.remove("waitlist-modal-open");
+    document.body.style.top = "";
+    window.scrollTo(0, scrollY);
+  }
 
   function alreadySeen() {
     try {
@@ -47,11 +60,11 @@
     }
     markSeen();
     lastFocused = document.activeElement;
+    lockScroll(true);
     root.hidden = false;
     requestAnimationFrame(() => {
       root.classList.add("is-open");
     });
-    document.body.classList.add("waitlist-modal-open");
     const closeBtn = root.querySelector(".waitlist-modal__close");
     if (closeBtn) {
       closeBtn.focus();
@@ -64,7 +77,7 @@
     }
     markSeen();
     root.classList.remove("is-open");
-    document.body.classList.remove("waitlist-modal-open");
+    lockScroll(false);
     window.setTimeout(() => {
       root.hidden = true;
     }, 280);

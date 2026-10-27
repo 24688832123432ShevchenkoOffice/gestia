@@ -62,6 +62,26 @@ class FacetTests(TestCase):
         self.assertNotContains(filtered, "8 990 UAH")
         self.assertContains(filtered, "data-qa=\"product-grid\"")
 
+    def test_category_page_shows_grid_not_mosaic(self):
+        CatalogCell.objects.create(
+            product=self.a,
+            band=1,
+            layout=CatalogCell.Layout.ROW,
+            role=CatalogCell.Role.GRID,
+            sort=1,
+            price_uah=Decimal("8990"),
+            crop=CatalogCell.Crop.UKR,
+            name_width=127,
+        )
+        other = Category.objects.create(slug="other", name_uk="Інше")
+        self.b.category = other
+        self.b.save(update_fields=["category"])
+        page = self.client.get("/katalog/cat/")
+        self.assertContains(page, 'data-qa="product-grid"')
+        self.assertNotContains(page, "catalog-row")
+        self.assertContains(page, "/tovar/a/")
+        self.assertNotContains(page, "/tovar/b/")
+
     def test_category_narrows_with_style(self):
         other = Category.objects.create(slug="other", name_uk="Інше")
         self.c.category = other

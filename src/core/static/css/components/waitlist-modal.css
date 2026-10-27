@@ -1,8 +1,10 @@
 body.waitlist-modal-open {
-  overflow: hidden;
-  position: relative;
+  position: fixed;
+  inset: 0 auto auto 0;
   width: 100%;
+  overflow: hidden;
   touch-action: none;
+  overscroll-behavior: none;
 }
 
 .waitlist-modal {
@@ -20,6 +22,8 @@ body.waitlist-modal-open {
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.28s ease, visibility 0.28s ease;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .waitlist-modal.is-open {
@@ -32,14 +36,11 @@ body.waitlist-modal-open {
   display: none;
 }
 
-.waitlist-modal.is-open[hidden] {
-  display: flex;
-}
-
 .waitlist-modal__scrim {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(37, 16, 8, 0.5);
+  touch-action: none;
 }
 
 .waitlist-modal__panel {

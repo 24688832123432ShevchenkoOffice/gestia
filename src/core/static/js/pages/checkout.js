@@ -27,6 +27,17 @@ function isCourier() {
   return deliveryMethodValue() === "np_courier";
 }
 
+function splitStreetQuery(query) {
+  const raw = (query || "").trim();
+  const match = raw.match(
+    /^(.+?)(?:,|\s)+(\d+[А-Яа-яA-Za-z]?(?:[/\-]\d+[А-Яа-яA-Za-z]?)?)\s*$/u
+  );
+  if (!match) {
+    return { street: raw, house: "" };
+  }
+  return { street: match[1].trim(), house: match[2].trim() };
+}
+
 function initNpShip() {
   const root = document.querySelector("[data-np-ship]");
   if (!root) {
@@ -35,11 +46,14 @@ function initNpShip() {
 
   const cityInput = root.querySelector("[data-np-city]");
   const branchInput = root.querySelector("[data-np-branch]");
+  const aptWrap = root.querySelector("[data-np-apt]");
+  const aptInput = root.querySelector("[data-np-apartment]");
   const cityList = root.querySelector("#np-city-listbox");
   const branchList = root.querySelector("#np-branch-listbox");
   const hint = root.querySelector("[data-np-hint]");
   const arrow = root.querySelector("[data-np-arrow]");
   const secondWrap = root.querySelector("[data-np-second]");
+  const streetLine = root.querySelector("[data-np-street-line]");
   if (!cityInput || !branchInput || !cityList || !branchList) {
     return;
   }
@@ -50,7 +64,7 @@ function initNpShip() {
   const minChars = Number(root.dataset.npMin || 2);
   const labelBranch = root.dataset.labelBranch || "Відділення";
   const labelLocker = root.dataset.labelLocker || "Поштомат";
-  const labelStreet = root.dataset.labelStreet || "Вулиця";
+  const labelStreet = root.dataset.labelStreet || "Вулиця, будинок";
   let cityTimer = 0;
   let streetTimer = 0;
   let cityRequest = 0;
@@ -76,6 +90,15 @@ function initNpShip() {
     }
     if (secondWrap) {
       secondWrap.classList.toggle("is-courier", courier);
+    }
+    if (streetLine) {
+      streetLine.classList.toggle("is-courier", courier);
+    }
+    if (aptWrap) {
+      aptWrap.hidden = !courier;
+    }
+    if (aptInput && !courier) {
+      aptInput.value = "";
     }
   }
 
@@ -224,8 +247,8 @@ function initNpShip() {
   }
 
   async function loadStreets() {
-    const query = branchInput.value.trim();
-    if (!isCourier() || !streetsUrl || !cityRef || query.length < minChars) {
+    const { street, house } = splitStreetQuery(branchInput.value);
+    if (!isCourier() || !streetsUrl || !cityRef || street.length < minChars) {
       if (isCourier()) {
         closeList(branchList, branchInput);
       }
@@ -235,7 +258,7 @@ function initNpShip() {
     const current = ++streetRequest;
     const url = new URL(streetsUrl, window.location.origin);
     url.searchParams.set("city_ref", cityRef);
-    url.searchParams.set("q", query);
+    url.searchParams.set("q", street);
 
     try {
       const response = await fetch(url.toString(), {
@@ -261,8 +284,11 @@ function initNpShip() {
         branchInput,
         items.map((item) => ({ label: item.label, ref: item.ref })),
         (row) => {
-          branchInput.value = row.label;
+          branchInput.value = house ? `${row.label}, ${house}` : row.label;
           closeList(branchList, branchInput);
+          if (aptInput) {
+            aptInput.focus();
+          }
         }
       );
       if (!items.length) {
@@ -330,10 +356,11 @@ function initNpShip() {
         setHint("Спочатку оберіть місто зі списку.");
         return;
       }
-      if (branchInput.value.trim().length >= minChars) {
+      const { street } = splitStreetQuery(branchInput.value);
+      if (street.length >= minChars) {
         scheduleStreets();
       } else {
-        setHint("Почніть вводити назву вулиці (мінімум 2 літери).");
+        setHint("Вулиця зі списку, потім номер будинку. Квартиру — окремо.");
       }
       return;
     }
@@ -353,6 +380,9 @@ function initNpShip() {
     const input = event.target;
     if (input && input.name === "delivery_method") {
       branchInput.value = "";
+      if (aptInput) {
+        aptInput.value = "";
+      }
       warehouses = [];
       closeList(branchList, branchInput);
       syncSecondField();

@@ -68,6 +68,7 @@ class CheckoutForm(ConsentForm):
     )
     city = forms.CharField(label=_("Місто"), max_length=120, required=False)
     branch = forms.CharField(label=_("Відділення"), max_length=255, required=False)
+    apartment = forms.CharField(label=_("Квартира"), max_length=16, required=False)
     address = forms.CharField(label=_("Адреса доставки"), max_length=255, required=False)
     payment_method = forms.ChoiceField(
         label=_("Оплата"),
@@ -88,6 +89,9 @@ class CheckoutForm(ConsentForm):
             city = (cleaned.get("city") or "").strip()
             branch = (cleaned.get("branch") or "").strip()
             address = ", ".join(part for part in (city, branch) if part)
+        apartment = (cleaned.get("apartment") or "").strip()
+        if apartment and cleaned.get("delivery_method") == Order.Delivery.COURIER:
+            address = f"{address}, кв. {apartment}" if address else f"кв. {apartment}"
         if not address:
             self.add_error("city", self.fields["city"].error_messages["required"])
         cleaned["address"] = address

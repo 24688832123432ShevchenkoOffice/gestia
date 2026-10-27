@@ -36,7 +36,9 @@ def _catalog_context(request, category=None):
     facet_base = qs
     products = filter_catalog(qs, parsed)
     active = _filters_active(parsed)
-    bands = [] if active else catalog_bands()
+    # Mosaic is only for the root catalog browse; category/filter views use the grid.
+    use_mosaic = not category and not active
+    bands = catalog_bands() if use_mosaic else []
     block = HomeBlock.objects.filter(key=HomeBlock.Key.CATALOG).first()
     subcategories = []
     if category:
@@ -53,14 +55,14 @@ def _catalog_context(request, category=None):
         "parsed": parsed,
         "filter_groups": filter_groups_for_catalog(facet_base),
         "filter_categories": filter_categories(),
-        "filter_cards": [] if active else filter_frame_cards(),
-        "mobile_groups": mobile_frame_groups(),
+        "filter_cards": filter_frame_cards() if use_mosaic else [],
+        "mobile_groups": mobile_frame_groups() if use_mosaic else [],
         "panel_open": _panel_open(parsed),
         "subcategories": subcategories,
         "filters_reset_url": filters_reset_url(request),
         "crumbs": category.chain() if category else [],
         "catalog_bands": bands,
-        "show_mosaic": bool(bands),
+        "show_mosaic": use_mosaic,
         "catalog_cta": block.cta if block else "",
     }
 

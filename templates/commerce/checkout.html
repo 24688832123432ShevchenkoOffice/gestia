@@ -63,7 +63,7 @@
               data-np-streets-url="{% url 'np_streets' %}"
               data-label-branch="{% trans 'Відділення' %}"
               data-label-locker="{% trans 'Поштомат' %}"
-              data-label-street="{% trans 'Вулиця' %}"
+              data-label-street="{% trans 'Вулиця, будинок' %}"
             >
               <div class="co-suggest">
                 <label class="co-field">
@@ -86,28 +86,44 @@
                 <ul id="np-city-listbox" class="co-suggest__list" role="listbox" hidden></ul>
               </div>
               {% if form.city.errors %}<p class="co-error">{{ form.city.errors|striptags }}</p>{% endif %}
-              <div class="co-suggest" data-np-second>
-                <label class="co-field co-field--plain">
+              <div class="co-street-line" data-np-street-line>
+                <div class="co-suggest" data-np-second>
+                  <label class="co-field co-field--plain">
+                    <input
+                      name="branch"
+                      type="text"
+                      maxlength="255"
+                      role="combobox"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      aria-controls="np-branch-listbox"
+                      autocomplete="off"
+                      spellcheck="false"
+                      data-np-branch
+                      placeholder="{% trans 'Відділення' %}"
+                      value="{{ form.branch.value|default_if_none:'' }}"
+                    >
+                    <img class="co-arrow" data-np-arrow src="{% static 'figma/checkout/ef8b2949-5e35-4987-b356-507e5c04e922.svg' %}" width="15" height="15" alt="">
+                  </label>
+                  <ul id="np-branch-listbox" class="co-suggest__list" role="listbox" hidden></ul>
+                </div>
+                <label class="co-field co-field--apt" data-np-apt hidden>
+                  <span class="visually-hidden">{% trans "Квартира" %}</span>
                   <input
-                    name="branch"
+                    name="apartment"
                     type="text"
-                    maxlength="255"
-                    role="combobox"
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    aria-controls="np-branch-listbox"
-                    autocomplete="off"
-                    spellcheck="false"
-                    data-np-branch
-                    placeholder="{% trans 'Відділення' %}"
-                    value="{{ form.branch.value|default_if_none:'' }}"
+                    maxlength="16"
+                    inputmode="text"
+                    autocomplete="address-line2"
+                    data-np-apartment
+                    placeholder="{% trans 'кв.' %}"
+                    value="{{ form.apartment.value|default_if_none:'' }}"
                   >
-                  <img class="co-arrow" data-np-arrow src="{% static 'figma/checkout/ef8b2949-5e35-4987-b356-507e5c04e922.svg' %}" width="15" height="15" alt="">
                 </label>
-                <ul id="np-branch-listbox" class="co-suggest__list" role="listbox" hidden></ul>
               </div>
               <p class="co-hint" data-np-hint hidden></p>
               {% if form.branch.errors %}<p class="co-error">{{ form.branch.errors|striptags }}</p>{% endif %}
+              {% if form.apartment.errors %}<p class="co-error">{{ form.apartment.errors|striptags }}</p>{% endif %}
               {% if form.address.errors %}<p class="co-error">{{ form.address.errors|striptags }}</p>{% endif %}
             </div>
           </section>

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 
 import requests
@@ -12,6 +13,21 @@ logger = logging.getLogger(__name__)
 API_URL = "https://api.novaposhta.ua/v2.0/json/"
 PAGE_SIZE = 500
 REQUEST_TIMEOUT = 12
+
+# Trailing house number: 13, 13а, 13/2, 13-А (optional comma after street).
+_HOUSE_RE = re.compile(
+    r"^(?P<street>.+?)(?:,|\s)+(?P<house>\d+[А-Яа-яA-Za-z]?(?:[/\-]\d+[А-Яа-яA-Za-z]?)?)\s*$",
+    re.UNICODE,
+)
+
+
+def split_street_query(query: str) -> tuple[str, str]:
+    """Return (street_name, house_number). House may be empty."""
+    q = (query or "").strip()
+    match = _HOUSE_RE.match(q)
+    if not match:
+        return q, ""
+    return match.group("street").strip(), match.group("house").strip()
 
 # Local/demo data when API key is absent and DEBUG=True.
 DEMO_CITIES = [
@@ -100,7 +116,8 @@ def _demo_warehouses(city_ref: str, *, kind: str = "branch") -> list[dict[str, s
 
 
 def _demo_streets(city_ref: str, query: str, *, limit: int = 20) -> list[dict[str, str]]:
-    needle = (query or "").casefold()
+    street_q, _house = split_street_query(query)
+    needle = street_q.casefold()
     rows = DEMO_STREETS.get(city_ref, DEMO_STREETS.get("demo-kyiv", []))
     if needle:
         rows = [row for row in rows if needle in row["label"].casefold()]
@@ -248,15 +265,15 @@ def find_warehouses(query: str, *, kind: str = "branch") -> dict[str, Any]:
 
 def search_streets(city_ref: str, query: str, *, limit: int = 20) -> list[dict[str, str]]:
     ref = (city_ref or "").strip()
-    q = (query or "").strip()
-    if not ref or len(q) < 2:
+    street_q, _house = split_street_query(query)
+    if not ref or len(street_q) < 2:
         return []
     if demo_mode():
-        return _demo_streets(ref, q, limit=limit)
+        return _demo_streets(ref, street_q, limit=limit)
     if not configured():
         return []
 
-    cache_key = f"np:streets:{ref}:{q.casefold()}:{limit}"
+    cache_key = f"np:streets:{ref}:{street_q.casefold()}:{limit}"
     cached = cache.get(cache_key)
     if cached is not None:
         return cached
@@ -266,7 +283,7 @@ def search_streets(city_ref: str, query: str, *, limit: int = 20) -> list[dict[s
         "getStreet",
         {
             "CityRef": ref,
-            "FindByString": q,
+            "FindByString": street_q,
             "Limit": str(limit),
         },
     )

@@ -138,6 +138,56 @@ img.co-arrow {
   pointer-events: none;
 }
 
+.co-street-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.co-street-line .co-suggest {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.co-field--apt {
+  flex: 0 0 72px;
+  box-sizing: border-box;
+  width: 72px;
+  max-width: 72px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.co-field--apt[hidden] {
+  display: none;
+}
+
+.co-field--apt input {
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .co-street-line {
+    gap: 6px;
+  }
+
+  .co-field--apt {
+    flex-basis: 64px;
+    width: 64px;
+    max-width: 64px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .co-field--apt input {
+    font-size: 16px;
+  }
+}
+
 .co-suggest {
   position: relative;
 }
