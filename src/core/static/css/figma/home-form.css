@@ -54,6 +54,7 @@
 .figma-field input,
 .figma-field textarea {
   width: 100%;
+  min-width: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -61,8 +62,23 @@
   color: var(--brown);
   font: 500 16px/normal var(--font);
   letter-spacing: -0.48px;
+  outline: none;
+  box-shadow: none;
   -webkit-appearance: none;
   appearance: none;
+}
+
+.figma-field input:focus,
+.figma-field input:focus-visible,
+.figma-field textarea:focus,
+.figma-field textarea:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border: 0;
+}
+
+.figma-field:focus-within {
+  border-color: #251008;
 }
 
 .figma-field textarea {
@@ -76,6 +92,17 @@
   opacity: 1;
 }
 
+.figma-field input:-webkit-autofill,
+.figma-field input:-webkit-autofill:hover,
+.figma-field input:-webkit-autofill:focus,
+.figma-field textarea:-webkit-autofill,
+.figma-field textarea:-webkit-autofill:hover,
+.figma-field textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--brown);
+  box-shadow: 0 0 0 1000px #fff inset;
+  transition: background-color 99999s ease-out;
+}
+
 .figma-error {
   margin: -6px 0 0;
   color: #000;
@@ -87,41 +114,74 @@
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  width: min(279px, 100%);
+  gap: 10px;
+  width: min(320px, 100%);
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .consent input {
   position: absolute;
-  width: 9px;
-  height: 9px;
-  margin: 0;
-  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
-.consent__mark {
+.consent__box {
+  box-sizing: border-box;
   flex: 0 0 auto;
-  width: 9px;
-  height: 9px;
-  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border: 1px solid #251008;
+  border-radius: 50%;
+  background: #fff;
 }
 
-.consent__mark--desk {
-  display: none;
+.consent__box::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 3px auto 0;
+  border-radius: 50%;
+  background: #251008;
+  opacity: 0;
+  transform: scale(0.6);
 }
 
-.consent span,
-.consent a {
+.consent input:checked + .consent__box::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.consent input:focus-visible + .consent__box {
+  outline: 2px solid #251008;
+  outline-offset: 2px;
+}
+
+.consent__text,
+.consent__text a {
   color: #000;
   font-size: 12px;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.35;
   letter-spacing: -0.36px;
   text-decoration: none;
 }
 
+.consent__text a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 @media (max-width: 767px) {
-  .consent span {
+  .consent__text {
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
   }

@@ -385,9 +385,9 @@ class Command(BaseCommand):
             ("info", "Про нас", "about", "", False, 1),
             ("info", "Контакти", "anchor", "callback", False, 2),
             ("info", "Доставка та оплата", "", "", False, 3),
-            ("legal", "Публічний договір (оферта)", "", "", False, 1),
+            ("legal", "Публічний договір (оферта)", "offer", "", False, 1),
             ("legal", "Політика конфіденційності", "privacy", "", False, 2),
-            ("legal", "Політика cookies", "", "", False, 3),
+            ("legal", "Політика cookies", "cookies", "", False, 3),
         )
         for column, label, url_name, url_arg, underlined, sort in rows:
             FooterLink.objects.create(

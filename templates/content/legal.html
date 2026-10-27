@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{{ doc.seo_title }}{% endblock %}
+{% block description %}{{ doc.seo_description }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/legal.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="legal-page" data-qa="legal-page">
+    {% trans "Головна" as home_label %}
+    {% url 'home' as home_url %}
+    {% include "partials/crumbs.html" with crumb_link_url=home_url crumb_link_label=home_label crumb_current=doc.title %}
+    <article class="legal-card">
+      <header class="legal-card__head">
+        <h1>{{ doc.title }}</h1>
+        {% if doc.updated %}
+          <p class="legal-card__updated">{% trans "Оновлено" %}: {{ doc.updated }}</p>
+        {% endif %}
+      </header>
+      {% for section in doc.sections %}
+        <section class="legal-sec">
+          <h2>{{ section.heading }}</h2>
+          {% for paragraph in section.paragraphs %}
+            <p>{{ paragraph }}</p>
+          {% endfor %}
+        </section>
+      {% endfor %}
+      <nav class="legal-nav" aria-label="{% trans 'Юридичні документи' %}">
+        <a href="{% url 'offer' %}"{% if doc.slug == 'offer' %} class="is-current" aria-current="page"{% endif %}>{% trans "Оферта" %}</a>
+        <a href="{% url 'privacy' %}"{% if doc.slug == 'privacy' %} class="is-current" aria-current="page"{% endif %}>{% trans "Конфіденційність" %}</a>
+        <a href="{% url 'cookies' %}"{% if doc.slug == 'cookies' %} class="is-current" aria-current="page"{% endif %}>{% trans "Cookies" %}</a>
+      </nav>
+    </article>
+  </div>
+{% endblock %}

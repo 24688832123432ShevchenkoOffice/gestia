@@ -53,6 +53,7 @@
 .sheet select.field__input:focus,
 .sheet select.field__input:focus-visible {
   outline: none;
+  outline-offset: 0;
   border-color: #251008;
   box-shadow: none;
 }

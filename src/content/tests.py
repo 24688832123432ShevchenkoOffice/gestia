@@ -8,9 +8,31 @@ from django.utils import translation
 class PublicPageTests(TestCase):
     def test_pages_render(self):
         translation.activate("uk")
-        for url in ("/", "/pro-nas/", "/katalog/", "/koshik/", "/polityka-konfidentsiynosti/"):
+        for url in (
+            "/",
+            "/pro-nas/",
+            "/katalog/",
+            "/koshik/",
+            "/polityka-konfidentsiynosti/",
+            "/publichnyi-dogovir/",
+            "/polityka-cookies/",
+        ):
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200, url)
+
+    def test_legal_pages_have_full_copy(self):
+        translation.activate("uk")
+        privacy = self.client.get("/polityka-konfidentsiynosti/")
+        self.assertContains(privacy, "Політика конфіденційності")
+        self.assertContains(privacy, "Які дані ми збираємо")
+        self.assertContains(privacy, "css/pages/legal.css")
+        self.assertGreater(len(privacy.content), 2000)
+        offer = self.client.get("/publichnyi-dogovir/")
+        self.assertContains(offer, "Публічний договір")
+        self.assertContains(offer, "Повернення та обмін")
+        cookies = self.client.get("/polityka-cookies/")
+        self.assertContains(cookies, "Політика cookies")
+        self.assertContains(cookies, "Як керувати cookies")
 
     def test_about_frame_copy(self):
         translation.activate("uk")

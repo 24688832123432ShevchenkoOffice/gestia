@@ -1,0 +1,125 @@
+.page-legal {
+  background: #fff;
+  color: #000;
+}
+
+.legal-page {
+  box-sizing: border-box;
+  width: min(860px, calc(100% - 32px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+  margin: 0 auto;
+  padding: 0 0 calc(64px + env(safe-area-inset-bottom, 0px));
+}
+
+.page-legal .crumbs {
+  margin: 0 0 32px;
+  padding: 0;
+  color: #000;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.page-legal .crumbs a,
+.page-legal .crumbs span {
+  color: #000;
+  text-decoration: none;
+}
+
+.legal-card {
+  box-sizing: border-box;
+  padding: 28px 20px 36px;
+  border: 1px solid #251008;
+  background: #fff;
+}
+
+.legal-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(37, 16, 8, 0.2);
+}
+
+.legal-card h1 {
+  margin: 0;
+  color: #000;
+  font-size: clamp(28px, 5vw, 38px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.legal-card__updated {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 13px;
+  letter-spacing: -0.02em;
+}
+
+.legal-sec + .legal-sec {
+  margin-top: 28px;
+}
+
+.legal-sec h2 {
+  margin: 0 0 12px;
+  color: #000;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+
+.legal-sec p {
+  margin: 0 0 10px;
+  color: #000;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+}
+
+.legal-sec p:last-child {
+  margin-bottom: 0;
+}
+
+.legal-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.legal-nav a {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #251008;
+  background: #fff;
+  color: #251008;
+  font-size: 14px;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.legal-nav a.is-current {
+  background: #251008;
+  color: #feedda;
+}
+
+@media (min-width: 768px) {
+  .legal-card {
+    padding: 40px 44px 48px;
+  }
+
+  .legal-sec h2 {
+    font-size: 20px;
+  }
+
+  .legal-sec p {
+    font-size: 16px;
+  }
+}

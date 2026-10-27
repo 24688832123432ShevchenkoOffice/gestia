@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -8,7 +9,8 @@ from src.catalog.models import Category, Product
 from src.commerce.forms import ContactForm, style_form
 from src.commerce.models import Inquiry
 from src.commerce.services import create_inquiry
-from src.content.models import AboutPage, Advantage, HomeBlock, PrivacyPage, Review
+from src.content.legal_copy import get_legal
+from src.content.models import AboutPage, Advantage, HomeBlock, Review
 
 
 @require_http_methods(["GET", "POST"])
@@ -69,6 +71,20 @@ def about(request):
     )
 
 
+def legal_page(request, slug):
+    doc = get_legal(slug)
+    if doc is None:
+        raise Http404
+    return render(request, "content/legal.html", {"doc": doc})
+
+
 def privacy(request):
-    page = PrivacyPage.load()
-    return render(request, "content/privacy.html", {"page": page})
+    return legal_page(request, "privacy")
+
+
+def offer(request):
+    return legal_page(request, "offer")
+
+
+def cookies(request):
+    return legal_page(request, "cookies")

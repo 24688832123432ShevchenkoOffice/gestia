@@ -26,10 +26,9 @@
         <textarea name="message" rows="3" placeholder="{{ block.field_labels.2 }}">{{ home_form.message.value|default_if_none:'' }}</textarea>
       </label>
       <label class="consent">
-        <input type="checkbox" name="consent"{% if home_form.consent.value %} checked{% endif %}>
-        <img class="consent__mark consent__mark--desk" src="{% static 'figma/desktop/0ea3d.svg' %}" width="9" height="9" alt="">
-        <img class="consent__mark consent__mark--mob" src="{% static 'figma/mobile/20817.svg' %}" width="9" height="9" alt="">
-        <span>{{ block.note }}<a href="{% url 'privacy' %}">{{ block.link_label }}</a></span>
+        <input type="checkbox" name="consent" required{% if home_form.consent.value %} checked{% endif %}>
+        <span class="consent__box" aria-hidden="true"></span>
+        <span class="consent__text">{{ block.note }}<a href="{% url 'privacy' %}">{{ block.link_label }}</a></span>
       </label>
       {% if home_form.consent.errors %}<p class="figma-error">{{ home_form.consent.errors|striptags }}</p>{% endif %}
     </div>

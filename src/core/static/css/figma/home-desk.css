@@ -36,7 +36,6 @@
 
   .video-mark--mob,
   .field-ico--mob,
-  .consent__mark--mob,
   .rating--mob {
     display: none;
   }
@@ -44,7 +43,6 @@
   .video-mark--desk,
   .vbanner__ico--desk,
   .field-ico--desk,
-  .consent__mark--desk,
   .rating--desk {
     display: block;
   }

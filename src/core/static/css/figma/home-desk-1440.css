@@ -175,8 +175,8 @@
     line-height: 22px;
   }
 
-  .consent span,
-  .consent a {
+  .consent__text,
+  .consent__text a {
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
   }
