@@ -1,0 +1,353 @@
+.filter-dot--mob,
+.rule-mob {
+  display: none;
+}
+
+.catalog-open[hidden],
+.catalog-closed[hidden] {
+  display: none;
+}
+
+.catalog-open__crumb {
+  margin: 0;
+  color: #000;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.catalog-open__crumb a,
+.catalog-open__crumb button {
+  color: #000;
+  font: inherit;
+  letter-spacing: inherit;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.catalog-open__form {
+  margin: 0;
+}
+
+.catalog-open__bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.catalog-search {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: min(303px, 100%);
+}
+
+.catalog-search__icon {
+  width: 22px;
+  height: 22px;
+}
+
+.catalog-search input {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  width: calc(100% - 30px);
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #000;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.catalog-search input::-webkit-search-decoration,
+.catalog-search input::-webkit-search-cancel-button,
+.catalog-search input::-webkit-search-results-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+.catalog-search__line {
+  width: 100%;
+  height: 1px;
+  max-width: none;
+}
+
+.catalog-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #000;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.catalog-sort img {
+  width: 15px;
+  height: 15px;
+}
+
+.catalog-open__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.catalog-open__row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+}
+
+.filter-panel {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.filter-panel__options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 29px 29px 88px;
+}
+
+.filter-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: min(179px, 100%);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.filter-sec h2 {
+  margin: 0;
+  color: #000;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -1.68px;
+}
+
+.filter-sec__opts {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.filter-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #000;
+  cursor: pointer;
+}
+
+.filter-opt input {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  opacity: 0;
+}
+
+.filter-dot {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+}
+
+.filter-opt span {
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  white-space: nowrap;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+
+.filter-rule {
+  display: flex;
+  width: 243px;
+  height: 1px;
+  transform: rotate(0.23deg);
+  transform-origin: center center;
+}
+
+.filter-rule img {
+  width: 243px;
+  height: 1px;
+  max-width: none;
+}
+
+.filter-apply {
+  width: min(243px, calc(100% - 58px));
+  margin: 0 0 29px 29px;
+  font-weight: 500;
+}
+
+.filter-apply span,
+.catalog-open__more span {
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+
+.filter-cards,
+.filter-results .product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 10px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catalog-open__more {
+  flex: 0 0 auto;
+}
+
+.catalog-search input:focus-visible,
+.catalog-sort:focus-visible,
+.filter-apply:focus-visible,
+.catalog-open__more:focus-visible,
+.catalog-open__crumb button:focus-visible,
+.filter-opt:focus-within {
+  outline: 1px solid #000;
+  outline-offset: 2px;
+}
+
+@media (min-width: 1440px) {
+  .catalog-frame.is-filters {
+    min-height: calc(2339px - 69.211px - 346px);
+  }
+
+  .catalog-frame.is-filters .catalog-open {
+    display: block;
+  }
+
+  .catalog-open__crumb {
+    position: absolute;
+    left: 69px;
+    top: -0.211px;
+    white-space: nowrap;
+  }
+
+  .catalog-open__bar {
+    position: absolute;
+    left: 69px;
+    top: 60.789px;
+    width: 1302px;
+    gap: 0;
+  }
+
+  .catalog-search {
+    width: 303px;
+  }
+
+  .catalog-open__body {
+    position: absolute;
+    left: 69px;
+    top: 109.789px;
+    width: 1302px;
+  }
+
+  .catalog-open__row {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .filter-panel {
+    position: sticky;
+    top: 0;
+    flex: 0 0 303px;
+    width: 303px;
+    height: 758px;
+  }
+
+  .filter-panel__options {
+    position: absolute;
+    left: 29px;
+    top: 29px;
+    width: 243px;
+    padding: 0;
+  }
+
+  .filter-apply {
+    position: absolute;
+    left: 29px;
+    top: 683px;
+    width: 243px;
+    margin: 0;
+  }
+
+  .filter-results {
+    width: 969px;
+    flex: 0 0 969px;
+  }
+
+  .filter-cards,
+  .filter-results .product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    column-gap: 30px;
+    row-gap: 20px;
+    width: 969px;
+  }
+
+  .filter-cards .catalog-cell--grid,
+  .filter-results .product-card {
+    width: 303px;
+    flex: 0 0 303px;
+  }
+
+  .filter-cards .catalog-cell__meta,
+  .filter-results .product-card__meta {
+    line-height: 19px;
+  }
+
+  .filter-results .product-card__media {
+    width: 303px;
+    height: 342px;
+    aspect-ratio: auto;
+  }
+}

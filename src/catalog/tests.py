@@ -62,6 +62,23 @@ class FacetTests(TestCase):
         self.assertNotContains(filtered, "8 990 UAH")
         self.assertContains(filtered, "data-qa=\"product-grid\"")
 
+    def test_category_narrows_with_style(self):
+        other = Category.objects.create(slug="other", name_uk="Інше")
+        self.c.category = other
+        self.c.save(update_fields=["category"])
+        query = QueryDict(mutable=True)
+        query.setlist("category", ["cat"])
+        query.setlist("style", ["scandi"])
+        parsed = parse_catalog_filters(query)
+        skus = set(filter_catalog(Product.objects.all(), parsed).values_list("sku", flat=True))
+        self.assertEqual(skus, {"A", "B"})
+
+    def test_filter_panel_lists_figma_actions(self):
+        page = self.client.get("/katalog/")
+        self.assertContains(page, "Застосувати")
+        self.assertContains(page, "Скандинавський")
+        self.assertContains(page, 'data-catalog-open')
+
     def test_search_keeps_name(self):
         query = QueryDict(mutable=True)
         query["q"] = "A"

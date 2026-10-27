@@ -4,6 +4,7 @@
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/pages/catalog.css' %}">
   <link rel="stylesheet" href="{% static 'css/pages/catalog-1440.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/catalog-filters.css' %}">
 {% endblock %}
 {% block extra_js %}
   <script src="{% static 'js/pages/catalog.js' %}" defer></script>
@@ -11,16 +12,62 @@
 {% block title %}{% if category %}{{ category.name }}{% else %}{% trans "Каталог" %}{% endif %} — Gestia{% endblock %}
 
 {% block content %}
-  <div class="catalog-frame">
-    <div class="catalog-top">
-      <p class="catalog-crumb">
-        <a href="{% url 'home' %}">{% trans "Головна" %}</a>/<a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>{% for crumb in crumbs %}/{% if forloop.last %}<span aria-current="page">{{ crumb.name }}</span>{% else %}<a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a>{% endif %}{% endfor %}
-      </p>
-      <button class="btn btn--ghost filters-open" type="button" data-filters-open aria-expanded="false" aria-controls="filters">{% trans "Фільтр" %}</button>
+  <div class="catalog-frame{% if panel_open %} is-filters{% endif %}" data-catalog-page>
+    <div class="catalog-closed" data-catalog-closed{% if panel_open %} hidden{% endif %}>
+      <div class="catalog-top">
+        <p class="catalog-crumb">
+          <a href="{% url 'home' %}">{% trans "Головна" %}</a>/<a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>{% for crumb in crumbs %}/{% if forloop.last %}<span aria-current="page">{{ crumb.name }}</span>{% else %}<a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a>{% endif %}{% endfor %}
+        </p>
+        <button class="btn btn--ghost filters-open" type="button" data-filters-open aria-expanded="{% if panel_open %}true{% else %}false{% endif %}" aria-controls="catalog-filters">{% trans "Фільтр" %}</button>
+      </div>
+      <div id="catalog-results" class="catalog-board">
+        {% include "catalog/_results.html" %}
+      </div>
     </div>
-    {% include "catalog/_filters.html" %}
-    <div id="catalog-results" class="catalog-board">
-      {% include "catalog/_results.html" %}
+
+    <div class="catalog-open" id="catalog-filters" data-catalog-open{% if not panel_open %} hidden{% endif %}>
+      <p class="catalog-open__crumb">
+        <a href="{% url 'home' %}">{% trans "Головна" %}</a>/<a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>/<button type="button" data-filters-close>{% trans "Фільтри" %}</button>
+      </p>
+      <form class="catalog-open__form" method="get" action="{{ request.path }}">
+        <div class="catalog-open__bar">
+          <label class="catalog-search">
+            <span class="visually-hidden">{% trans "Пошук товарів" %}</span>
+            <img class="catalog-search__icon" src="{% static 'figma/v2/filters/dc8e5.svg' %}" width="22" height="22" alt="">
+            <input name="q" type="search" maxlength="80" enterkeyhint="search" autocomplete="off" value="{{ parsed.q }}">
+            <img class="catalog-search__line" src="{% static 'figma/v2/filters/25788.svg' %}" width="303" height="1" alt="">
+          </label>
+          <button class="catalog-sort" type="button">
+            <span>{% trans "Сортувати за " %}</span>
+            <img src="{% static 'figma/v2/filters/33b2c.svg' %}" width="15" height="15" alt="">
+          </button>
+        </div>
+        <div class="catalog-open__body">
+          <div class="catalog-open__row">
+            <div class="filter-panel">
+              {% include "catalog/_filter_fields.html" %}
+              <button class="figma-btn filter-apply" type="submit"><span>{% trans "Застосувати" %}</span></button>
+            </div>
+            <div class="filter-results">
+              {% if show_mosaic %}
+                <div class="filter-cards">
+                  {% for cell in filter_cards %}
+                    {% include "catalog/_cell.html" with cell=cell %}
+                  {% endfor %}
+                </div>
+              {% else %}
+                {% include "catalog/_grid.html" %}
+                {% if not products %}
+                  <p class="empty">{% trans "Товарів немає." %}</p>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+          {% if catalog_cta %}
+            <button class="figma-btn catalog-open__more" type="button"><span>{{ catalog_cta }}</span></button>
+          {% endif %}
+        </div>
+      </form>
     </div>
   </div>
 {% endblock %}

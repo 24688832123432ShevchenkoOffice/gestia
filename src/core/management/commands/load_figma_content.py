@@ -55,8 +55,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self._wipe()
         categories = self._categories()
+        self._attributes()
         products = self._products(categories)
         self._cells(products)
+        self._filter_cells(products)
         self._blocks()
         self._advantages()
         self._reviews()
@@ -117,7 +119,43 @@ class Command(BaseCommand):
             if image:
                 _save(category, "image", DESKTOP / image)
             made[slug] = category
+        filters = {
+            "novorichnyi-dekor": (1, ""),
+            "interierni-kompozytsii": (2, "Інтер'єрні композиції"),
+            "vazy-ta-kashpo": (3, ""),
+            "tekstyl": (4, "Текстиль"),
+            "svichky": (5, ""),
+            "podarunkovi-sety": (6, ""),
+        }
+        for slug, (filter_sort, filter_name) in filters.items():
+            category = made[slug]
+            category.filter_sort = filter_sort
+            category.filter_name_uk = filter_name
+            category.save(update_fields=["filter_sort", "filter_name_uk"])
         return made
+
+    def _attributes(self):
+        style = ProductAttributeGroup.objects.create(slug="style", name_uk="Стиль")
+        color = ProductAttributeGroup.objects.create(slug="color", name_uk="Колір")
+        styles = (
+            (1, "scandi", "Скандинавський"),
+            (2, "classic", "Класичний"),
+            (3, "modern", "Модерн"),
+            (4, "boho", "Бохо"),
+            (5, "rustic", "Рустик"),
+        )
+        colors = (
+            (1, "white", "Білий"),
+            (2, "beige", "Бежевий"),
+            (3, "green", "Зелений"),
+            (4, "red", "Червоний"),
+            (5, "gold", "Золотий"),
+            (6, "black", "Чорний"),
+        )
+        for sort, slug, name in styles:
+            ProductAttribute.objects.create(group=style, slug=slug, name_uk=name, sort=sort)
+        for sort, slug, name in colors:
+            ProductAttribute.objects.create(group=color, slug=slug, name_uk=name, sort=sort)
 
     def _products(self, categories):
         specs = (
@@ -177,6 +215,35 @@ class Command(BaseCommand):
                 name_width=name_width,
             )
             _save(cell, "image", CATALOG / image, f"cell-{band}-{role}-{sort}-{image}")
+
+    def _filter_cells(self, products):
+        rows = (
+            (1, "GH-01", "8990.00", "ukr", 127, "479da.png"),
+            (2, "GH-06", "5130.00", "cover", 127, "729be.png"),
+            (3, "GH-04", "4980.00", "cover", 119, "72b4d.png"),
+            (4, "GH-02", "4980.00", "shysh", 127, "db3d5.png"),
+            (5, "GH-04", "4980.00", "cover", 119, "72b4d.png"),
+            (6, "GH-03", "2450.00", "hnizdo", 126, "14fec.png"),
+            (7, "GH-05", "2450.00", "cover", 143, "2dcde.png"),
+            (8, "GH-01", "8990.00", "ukr", 127, "479da.png"),
+            (9, "GH-01", "8990.00", "ukr", 127, "479da.png"),
+            (10, "GH-04", "4980.00", "cover", 119, "72b4d.png"),
+            (11, "GH-01", "8990.00", "ukr", 127, "479da.png"),
+            (12, "GH-03", "2450.00", "hnizdo", 126, "14fec.png"),
+        )
+        for sort, sku, price, crop, name_width, image in rows:
+            cell = CatalogCell.objects.create(
+                product=products[sku],
+                band=0,
+                layout=CatalogCell.Layout.ROW,
+                role=CatalogCell.Role.GRID,
+                surface=CatalogCell.Surface.FILTERS,
+                sort=sort,
+                price_uah=Decimal(price),
+                crop=crop,
+                name_width=name_width,
+            )
+            _save(cell, "image", CATALOG / image, f"filter-{sort}-{image}")
 
     def _blocks(self):
         hero_title = "Декор для дому, текстиль \nі флористика"

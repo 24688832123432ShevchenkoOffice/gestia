@@ -19,7 +19,16 @@ class ProductImageInline(TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(ModelAdmin):
-    list_display = ("name_uk", "parent", "slug", "is_active", "sort", "home_sort", "menu_featured")
+    list_display = (
+        "name_uk",
+        "parent",
+        "slug",
+        "is_active",
+        "sort",
+        "home_sort",
+        "menu_featured",
+        "filter_sort",
+    )
     list_filter = ("is_active", "parent")
     search_fields = ("name_uk", "name_ru", "name_en", "slug")
     prepopulated_fields = {"slug": ("name_uk",)}
@@ -34,7 +43,7 @@ class ProductAttributeGroupAdmin(ModelAdmin):
 
 @admin.register(ProductAttribute)
 class ProductAttributeAdmin(ModelAdmin):
-    list_display = ("name_uk", "group", "slug", "is_filterable")
+    list_display = ("name_uk", "group", "slug", "sort", "is_filterable")
     list_filter = ("group", "is_filterable")
     search_fields = ("name_uk", "name_ru", "name_en", "slug")
 
@@ -48,8 +57,8 @@ class ProductSetAdmin(ModelAdmin):
 
 @admin.register(CatalogCell)
 class CatalogCellAdmin(ModelAdmin):
-    list_display = ("product", "band", "layout", "role", "sort", "price_uah", "crop")
-    list_filter = ("band", "layout", "role")
+    list_display = ("product", "surface", "band", "layout", "role", "slot", "sort", "price_uah", "crop")
+    list_filter = ("surface", "band", "layout", "role", "slot")
     autocomplete_fields = ("product",)
     ordering = ("band", "sort")
 

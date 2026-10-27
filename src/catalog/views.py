@@ -7,8 +7,11 @@ from src.catalog.selectors import (
     catalog_bands,
     category_scope,
     filter_catalog,
+    filter_categories,
+    filter_frame_cards,
     filter_groups_for_catalog,
     filters_reset_url,
+    mobile_frame_groups,
     parse_catalog_filters,
     related_products,
     same_set,
@@ -18,7 +21,11 @@ from src.content.models import HomeBlock
 
 
 def _filters_active(parsed):
-    return bool(parsed["q"] or parsed["in_stock"] or parsed["attrs"])
+    return bool(parsed["q"] or parsed["in_stock"] or parsed["attrs"] or parsed["categories"])
+
+
+def _panel_open(parsed):
+    return bool(parsed["attrs"] or parsed["categories"])
 
 
 def _catalog_context(request, category=None):
@@ -45,6 +52,10 @@ def _catalog_context(request, category=None):
         "products": products,
         "parsed": parsed,
         "filter_groups": filter_groups_for_catalog(facet_base),
+        "filter_categories": filter_categories(),
+        "filter_cards": [] if active else filter_frame_cards(),
+        "mobile_groups": mobile_frame_groups(),
+        "panel_open": _panel_open(parsed),
         "subcategories": subcategories,
         "filters_reset_url": filters_reset_url(request),
         "crumbs": category.chain() if category else [],

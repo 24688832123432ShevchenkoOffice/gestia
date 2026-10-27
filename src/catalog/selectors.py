@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 from django.db.models import Q
 
-from src.catalog.models import CatalogCell, Category, Product, ProductAttribute, ProductAttributeGroup
+from src.catalog.models import CatalogCell, Category, Product, ProductAttributeGroup
 
 ATTRIBUTE_FILTER_KEYS = (
     ProductAttributeGroup.Slug.STYLE,
@@ -34,9 +34,11 @@ def parse_catalog_filters(get):
         if values:
             attrs[key] = values
     selected = [f"{key}:{value}" for key, values in attrs.items() for value in values]
+    categories = [value for value in get.getlist("category") if value][:12]
     return {
         "attrs": attrs,
         "selected": selected,
+        "categories": categories,
         "q": (get.get("q") or "").strip()[:80],
         "in_stock": get.get("in_stock") == "1",
     }
@@ -51,6 +53,8 @@ def filter_catalog(qs, parsed):
             | Q(name_en__icontains=query)
             | Q(sku__iexact=query)
         )
+    if parsed["categories"]:
+        qs = qs.filter(category__slug__in=parsed["categories"])
     for key, values in parsed["attrs"].items():
         qs = qs.filter(filter_attrs__group__slug=key, filter_attrs__slug__in=values)
     if parsed["in_stock"]:
@@ -65,30 +69,33 @@ def category_scope(category):
 
 
 def filter_groups_for_catalog(product_qs):
-    ids = product_qs.values_list("pk", flat=True)
+    del product_qs
     groups = []
-    for group in ProductAttributeGroup.objects.filter(slug__in=ATTRIBUTE_FILTER_KEYS):
-        values = (
-            ProductAttribute.objects.filter(
-                group=group,
-                is_filterable=True,
-                products__pk__in=ids,
-                products__is_active=True,
-            )
-            .distinct()
-            .order_by("name_uk")
-        )
+    for key in ATTRIBUTE_FILTER_KEYS:
+        group = ProductAttributeGroup.objects.filter(slug=key).first()
+        if group is None:
+            continue
+        values = list(group.values.filter(is_filterable=True).order_by("sort", "name_uk"))
         if values:
-            groups.append({"group": group, "values": list(values)})
+            groups.append({"group": group, "values": values})
     return groups
 
 
-def catalog_bands():
-    cells = (
-        CatalogCell.objects.select_related("product", "product__category")
+def filter_categories():
+    return Category.objects.filter(is_active=True, filter_sort__isnull=False).order_by("filter_sort", "name_uk")
+
+
+def _cells(surface):
+    return (
+        CatalogCell.objects.filter(surface=surface)
+        .select_related("product", "product__category")
         .prefetch_related("product__images")
-        .order_by("band", "sort", "id")
+        .order_by("sort", "band", "id")
     )
+
+
+def catalog_bands():
+    cells = _cells(CatalogCell.Surface.MOSAIC).order_by("band", "sort", "id")
     bands = []
     index = {}
     for cell in cells:
@@ -100,6 +107,26 @@ def catalog_bands():
         key = "feature" if cell.role == CatalogCell.Role.FEATURE else "grid"
         band[key].append(cell)
     return bands
+
+
+def filter_frame_cards():
+    return _cells(CatalogCell.Surface.FILTERS)
+
+
+def mobile_frame_groups():
+    groups = []
+    tiles = []
+    for cell in _cells(CatalogCell.Surface.MOBILE):
+        if cell.slot in {CatalogCell.Slot.FEATURE, CatalogCell.Slot.FEATURE_TALL}:
+            if tiles:
+                groups.append({"kind": "tiles", "cells": tiles})
+                tiles = []
+            groups.append({"kind": cell.slot, "cells": [cell]})
+        else:
+            tiles.append(cell)
+    if tiles:
+        groups.append({"kind": "tiles", "cells": tiles})
+    return groups
 
 
 def filters_reset_url(request):

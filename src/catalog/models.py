@@ -34,6 +34,8 @@ class Category(TimeStampedModel):
     sort = models.PositiveIntegerField("Порядок", default=0)
     home_sort = models.PositiveIntegerField("Порядок на головній", null=True, blank=True)
     menu_featured = models.BooleanField("Акцент у меню", default=False)
+    filter_sort = models.PositiveSmallIntegerField("Порядок у фільтрі", null=True, blank=True)
+    filter_name_uk = models.CharField("Назва у фільтрі", max_length=160, blank=True)
 
     class Meta:
         ordering = ["sort", "name_uk"]
@@ -56,6 +58,10 @@ class Category(TimeStampedModel):
         if self.products.filter(is_active=True).exists():
             return True
         return self.children.filter(is_active=True, products__is_active=True).exists()
+
+    @property
+    def filter_label(self):
+        return self.filter_name_uk or self.name
 
     def chain(self):
         nodes = []
@@ -103,8 +109,10 @@ class ProductAttribute(models.Model):
     name_en = models.CharField("Назва (EN)", max_length=80, blank=True)
     is_filterable = models.BooleanField("У фільтрі", default=True)
     show_on_pdp = models.BooleanField("На картці", default=True)
+    sort = models.PositiveSmallIntegerField("Порядок", default=0)
 
     class Meta:
+        ordering = ["sort", "name_uk"]
         verbose_name = "Значення фільтра"
         verbose_name_plural = "Значення фільтрів"
         constraints = [
@@ -264,6 +272,17 @@ class CatalogCell(models.Model):
         HNIZDO = "hnizdo", "114.99%"
         WIDE = "wide", "115.8%"
 
+    class Surface(models.TextChoices):
+        MOSAIC = "mosaic", "Мозаїка"
+        FILTERS = "filters", "Фільтри"
+        MOBILE = "mobile", "Мобільний"
+
+    class Slot(models.TextChoices):
+        FEATURE = "feature", "На всю ширину"
+        FEATURE_TALL = "feature_tall", "Висока"
+        TILE = "tile", "Плитка"
+        TILE_TALL = "tile_tall", "Висока плитка"
+
     product = models.ForeignKey(
         Product,
         verbose_name="Товар",
@@ -277,6 +296,14 @@ class CatalogCell(models.Model):
     price_uah = models.DecimalField("Ціна у фреймі, грн", max_digits=10, decimal_places=2)
     crop = models.CharField("Кадр фото", max_length=16, choices=Crop.choices, default=Crop.COVER)
     name_width = models.PositiveSmallIntegerField("Ширина назви", default=127)
+    surface = models.CharField(
+        "Поверхня",
+        max_length=16,
+        choices=Surface.choices,
+        default=Surface.MOSAIC,
+    )
+    slot = models.CharField("Слот", max_length=16, choices=Slot.choices, blank=True, default="")
+    label_uk = models.CharField("Підпис у фреймі", max_length=200, blank=True)
     image = models.ImageField(
         "Фото комірки",
         upload_to="catalog/cells/",
@@ -290,7 +317,11 @@ class CatalogCell(models.Model):
         verbose_name_plural = "Комірки каталогу"
 
     def __str__(self):
-        return f"{self.band}:{self.role}:{self.product.name_uk}"
+        return f"{self.surface}:{self.band}:{self.role}:{self.product.name_uk}"
+
+    @property
+    def label(self):
+        return self.label_uk or self.product.name
 
     @property
     def price_label(self):
