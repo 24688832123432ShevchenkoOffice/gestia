@@ -223,8 +223,14 @@
     align-items: flex-start;
   }
 
+  .site-footer__col > span,
   .site-footer__col a,
   .foot-feature a {
+    color: rgba(254, 237, 218, 0.5);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.54px;
     text-align: left;
   }
 
