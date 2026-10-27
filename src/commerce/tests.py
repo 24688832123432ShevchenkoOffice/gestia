@@ -300,6 +300,8 @@ class WaitlistTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Дякуємо")
+        self.assertContains(response, "data-waitlist-success")
+        self.assertNotContains(response, "Не пропусти старт продажів")
         inquiry = Inquiry.objects.get()
         self.assertEqual(inquiry.kind, Inquiry.Kind.WAITLIST)
         self.assertEqual(inquiry.email, "guest@example.com")

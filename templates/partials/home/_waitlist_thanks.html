@@ -1,4 +1,9 @@
 {% load i18n %}
-<p class="waitlist-modal__thanks" role="status">
-  {% trans "Дякуємо! Ми повідомимо вас першими, коли святкові бокси стануть доступними." %}
-</p>
+<div class="waitlist-modal__success" data-waitlist-success>
+  <h2 class="waitlist-modal__title" id="waitlist-modal-title">
+    {% trans "Дякуємо!" %} 🎁
+  </h2>
+  <p class="waitlist-modal__thanks" role="status">
+    {% trans "Ми повідомимо вас першими, коли святкові бокси стануть доступними." %}
+  </p>
+</div>

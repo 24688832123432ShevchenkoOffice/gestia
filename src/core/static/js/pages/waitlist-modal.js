@@ -86,8 +86,14 @@
   });
 
   document.body.addEventListener("htmx:afterSwap", (event) => {
-    if (event.target && event.target.id === "waitlist-form-slot") {
+    if (!event.target) {
+      return;
+    }
+    if (event.target.id === "waitlist-form-slot" || event.target.id === "waitlist-modal-body") {
       markSeen();
+    }
+    if (event.target.id === "waitlist-modal-body" && event.target.querySelector("[data-waitlist-success]")) {
+      window.setTimeout(closeModal, 2200);
     }
   });
 

@@ -295,12 +295,16 @@ def waitlist(request):
     form = style_form(WaitlistForm(request.POST))
     if not form.is_valid():
         status = 422 if _hx(request) else 200
-        return render(
+        response = render(
             request,
             "partials/home/_waitlist_form.html",
             {"waitlist_form": form},
             status=status,
         )
+        if _hx(request):
+            response["HX-Retarget"] = "#waitlist-form-slot"
+            response["HX-Reswap"] = "innerHTML"
+        return response
     email = form.cleaned_data["email"]
     create_inquiry(
         kind=Inquiry.Kind.WAITLIST,

@@ -14,9 +14,17 @@ function syncChoices() {
   markChoice("payment_method");
 }
 
-function deliveryKind() {
+function deliveryMethodValue() {
   const checked = document.querySelector('input[name="delivery_method"]:checked');
-  return checked && checked.value === "np_locker" ? "locker" : "branch";
+  return checked ? checked.value : "np_branch";
+}
+
+function deliveryKind() {
+  return deliveryMethodValue() === "np_locker" ? "locker" : "branch";
+}
+
+function isCourier() {
+  return deliveryMethodValue() === "np_courier";
 }
 
 function initNpShip() {
@@ -30,6 +38,8 @@ function initNpShip() {
   const cityList = root.querySelector("#np-city-listbox");
   const branchList = root.querySelector("#np-branch-listbox");
   const hint = root.querySelector("[data-np-hint]");
+  const arrow = root.querySelector("[data-np-arrow]");
+  const secondWrap = root.querySelector("[data-np-second]");
   if (!cityInput || !branchInput || !cityList || !branchList) {
     return;
   }
@@ -37,11 +47,41 @@ function initNpShip() {
   const citiesUrl = root.dataset.npCitiesUrl || "";
   const warehousesUrl = root.dataset.npWarehousesUrl || "";
   const minChars = Number(root.dataset.npMin || 2);
+  const labelBranch = root.dataset.labelBranch || "Відділення";
+  const labelLocker = root.dataset.labelLocker || "Поштомат";
+  const labelStreet = root.dataset.labelStreet || "Вулиця, будинок";
   let cityTimer = 0;
   let cityRequest = 0;
   let branchRequest = 0;
   let cityRef = "";
   let warehouses = [];
+
+  function syncSecondField() {
+    const courier = isCourier();
+    const locker = deliveryMethodValue() === "np_locker";
+    branchInput.placeholder = courier ? labelStreet : locker ? labelLocker : labelBranch;
+    branchInput.autocomplete = courier ? "street-address" : "off";
+    if (courier) {
+      branchInput.removeAttribute("role");
+      branchInput.removeAttribute("aria-autocomplete");
+      branchInput.removeAttribute("aria-expanded");
+      branchInput.removeAttribute("aria-controls");
+      closeList(branchList, branchInput);
+      warehouses = [];
+      setHint("");
+    } else {
+      branchInput.setAttribute("role", "combobox");
+      branchInput.setAttribute("aria-autocomplete", "list");
+      branchInput.setAttribute("aria-expanded", "false");
+      branchInput.setAttribute("aria-controls", "np-branch-listbox");
+    }
+    if (arrow) {
+      arrow.hidden = courier;
+    }
+    if (secondWrap) {
+      secondWrap.classList.toggle("is-courier", courier);
+    }
+  }
 
   function setHint(text) {
     if (!hint) {
@@ -143,7 +183,7 @@ function initNpShip() {
   }
 
   async function loadWarehouses() {
-    if (!warehousesUrl || !cityRef) {
+    if (isCourier() || !warehousesUrl || !cityRef) {
       warehouses = [];
       closeList(branchList, branchInput);
       return;
@@ -184,6 +224,10 @@ function initNpShip() {
   }
 
   function renderBranches(filterText) {
+    if (isCourier()) {
+      closeList(branchList, branchInput);
+      return;
+    }
     const needle = (filterText || "").trim().toLocaleLowerCase("uk");
     const rows = warehouses
       .filter((item) => !needle || item.label.toLocaleLowerCase("uk").includes(needle))
@@ -215,8 +259,16 @@ function initNpShip() {
     window.setTimeout(() => closeList(cityList, cityInput), 140);
   });
 
-  branchInput.addEventListener("input", () => renderBranches(branchInput.value));
+  branchInput.addEventListener("input", () => {
+    if (!isCourier()) {
+      renderBranches(branchInput.value);
+    }
+  });
   branchInput.addEventListener("focus", () => {
+    if (isCourier()) {
+      closeList(branchList, branchInput);
+      return;
+    }
     if (warehouses.length) {
       renderBranches(branchInput.value);
     } else if (cityRef) {
@@ -235,11 +287,14 @@ function initNpShip() {
       branchInput.value = "";
       warehouses = [];
       closeList(branchList, branchInput);
-      if (cityRef) {
+      syncSecondField();
+      if (!isCourier() && cityRef) {
         loadWarehouses();
       }
     }
   });
+
+  syncSecondField();
 }
 
 document.addEventListener("change", (event) => {

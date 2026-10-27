@@ -142,6 +142,14 @@ img.co-arrow {
   position: relative;
 }
 
+.co-suggest.is-courier .co-field--plain {
+  padding-right: 18px;
+}
+
+.co-suggest.is-courier .co-arrow {
+  display: none;
+}
+
 .co-suggest__list {
   position: absolute;
   z-index: 30;

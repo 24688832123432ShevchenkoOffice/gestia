@@ -5,7 +5,7 @@
   method="post"
   action="{% url 'waitlist' %}"
   hx-post="{% url 'waitlist' %}"
-  hx-target="#waitlist-form-slot"
+  hx-target="#waitlist-modal-body"
   hx-swap="innerHTML"
 >
   {% csrf_token %}
