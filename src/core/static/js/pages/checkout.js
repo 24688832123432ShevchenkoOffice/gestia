@@ -27,62 +27,131 @@ function initNpShip() {
 
   const cityInput = root.querySelector("[data-np-city]");
   const branchInput = root.querySelector("[data-np-branch]");
-  const listbox = root.querySelector("#np-branch-listbox");
-  if (!cityInput || !branchInput || !listbox) {
+  const cityList = root.querySelector("#np-city-listbox");
+  const branchList = root.querySelector("#np-branch-listbox");
+  const hint = root.querySelector("[data-np-hint]");
+  if (!cityInput || !branchInput || !cityList || !branchList) {
     return;
   }
 
-  const endpoint = branchInput.dataset.autocompleteEndpoint || "";
-  const minChars = Number(branchInput.dataset.autocompleteMin || 2);
-  let items = [];
-  let timer = 0;
-  let requestId = 0;
+  const citiesUrl = root.dataset.npCitiesUrl || "";
+  const warehousesUrl = root.dataset.npWarehousesUrl || "";
+  const minChars = Number(root.dataset.npMin || 2);
+  let cityTimer = 0;
+  let cityRequest = 0;
+  let branchRequest = 0;
+  let cityRef = "";
+  let warehouses = [];
 
-  function setExpanded(open) {
-    branchInput.setAttribute("aria-expanded", open ? "true" : "false");
-    listbox.hidden = !open;
+  function setHint(text) {
+    if (!hint) {
+      return;
+    }
+    if (!text) {
+      hint.hidden = true;
+      hint.textContent = "";
+      return;
+    }
+    hint.hidden = false;
+    hint.textContent = text;
   }
 
-  function render(filterText) {
-    const needle = (filterText || "").trim().toLocaleLowerCase("uk");
-    const visible = needle
-      ? items.filter((item) => item.label.toLocaleLowerCase("uk").includes(needle))
-      : items;
+  function closeList(list, input) {
+    list.hidden = true;
+    list.replaceChildren();
+    if (input) {
+      input.setAttribute("aria-expanded", "false");
+    }
+  }
 
-    listbox.replaceChildren();
-    if (!visible.length) {
-      setExpanded(false);
+  function openList(list, input, rows, onPick) {
+    list.replaceChildren();
+    if (!rows.length) {
+      closeList(list, input);
+      return;
+    }
+    rows.forEach((row, index) => {
+      const option = document.createElement("li");
+      option.className = "co-suggest__item";
+      option.setAttribute("role", "option");
+      option.id = `${list.id}-opt-${index}`;
+      option.textContent = row.label;
+      option.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        onPick(row);
+      });
+      list.appendChild(option);
+    });
+    list.hidden = false;
+    input.setAttribute("aria-expanded", "true");
+  }
+
+  async function loadCities() {
+    const query = cityInput.value.trim();
+    cityRef = "";
+    warehouses = [];
+    closeList(branchList, branchInput);
+    if (!citiesUrl || query.length < minChars) {
+      closeList(cityList, cityInput);
+      setHint("");
       return;
     }
 
-    visible.forEach((item, index) => {
-      const option = document.createElement("li");
-      option.className = "co-branch-list__item";
-      option.setAttribute("role", "option");
-      option.id = `np-branch-option-${index}`;
-      option.tabIndex = -1;
-      option.textContent = item.label;
-      option.addEventListener("mousedown", (event) => {
-        event.preventDefault();
-        branchInput.value = item.label;
-        setExpanded(false);
+    const current = ++cityRequest;
+    const url = new URL(citiesUrl, window.location.origin);
+    url.searchParams.set("q", query);
+
+    try {
+      const response = await fetch(url.toString(), {
+        headers: { Accept: "application/json" },
+        credentials: "same-origin",
       });
-      listbox.appendChild(option);
-    });
-    setExpanded(true);
+      const payload = await response.json().catch(() => ({}));
+      if (current !== cityRequest) {
+        return;
+      }
+      if (response.status === 503 || payload.error === "not_configured") {
+        closeList(cityList, cityInput);
+        setHint("Підказки Нової пошти тимчасово недоступні. Додайте API-ключ.");
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(`cities ${response.status}`);
+      }
+      setHint("");
+      const items = Array.isArray(payload.items) ? payload.items : [];
+      openList(
+        cityList,
+        cityInput,
+        items.map((item) => ({ label: item.name, ref: item.ref, name: item.name })),
+        (row) => {
+          cityInput.value = row.name;
+          cityRef = row.ref;
+          closeList(cityList, cityInput);
+          branchInput.value = "";
+          loadWarehouses();
+          branchInput.focus();
+        }
+      );
+    } catch (_error) {
+      if (current !== cityRequest) {
+        return;
+      }
+      closeList(cityList, cityInput);
+      setHint("Не вдалося завантажити міста. Спробуйте ще раз.");
+    }
   }
 
   async function loadWarehouses() {
-    const query = cityInput.value.trim();
-    if (!endpoint || query.length < minChars) {
-      items = [];
-      setExpanded(false);
+    if (!warehousesUrl || !cityRef) {
+      warehouses = [];
+      closeList(branchList, branchInput);
       return;
     }
 
-    const current = ++requestId;
-    const url = new URL(endpoint, window.location.origin);
-    url.searchParams.set("q", query);
+    const current = ++branchRequest;
+    const url = new URL(warehousesUrl, window.location.origin);
+    url.searchParams.set("city_ref", cityRef);
     url.searchParams.set("kind", deliveryKind());
 
     try {
@@ -90,60 +159,87 @@ function initNpShip() {
         headers: { Accept: "application/json" },
         credentials: "same-origin",
       });
+      const payload = await response.json().catch(() => ({}));
+      if (current !== branchRequest) {
+        return;
+      }
       if (!response.ok) {
-        throw new Error(`np ${response.status}`);
+        throw new Error(`warehouses ${response.status}`);
       }
-      const payload = await response.json();
-      if (current !== requestId) {
-        return;
+      warehouses = Array.isArray(payload.items) ? payload.items : [];
+      renderBranches(branchInput.value);
+      if (!warehouses.length) {
+        setHint("Для цього міста відділень не знайдено.");
+      } else {
+        setHint("");
       }
-      items = Array.isArray(payload.items) ? payload.items : [];
-      if (payload.city && query.length <= payload.city.length) {
-        const official = String(payload.city);
-        if (official && !cityInput.value.includes(",")) {
-          cityInput.dataset.npResolved = official;
-        }
-      }
-      render(branchInput.value);
     } catch (_error) {
-      if (current !== requestId) {
+      if (current !== branchRequest) {
         return;
       }
-      items = [];
-      setExpanded(false);
+      warehouses = [];
+      closeList(branchList, branchInput);
+      setHint("Не вдалося завантажити відділення.");
     }
   }
 
-  function scheduleLoad() {
-    window.clearTimeout(timer);
-    timer = window.setTimeout(loadWarehouses, 300);
+  function renderBranches(filterText) {
+    const needle = (filterText || "").trim().toLocaleLowerCase("uk");
+    const rows = warehouses
+      .filter((item) => !needle || item.label.toLocaleLowerCase("uk").includes(needle))
+      .map((item) => ({ label: item.label, ref: item.ref }));
+    openList(branchList, branchInput, rows, (row) => {
+      branchInput.value = row.label;
+      closeList(branchList, branchInput);
+    });
   }
 
-  cityInput.addEventListener("input", scheduleLoad);
-  cityInput.addEventListener("change", scheduleLoad);
-  branchInput.addEventListener("input", () => render(branchInput.value));
-  branchInput.addEventListener("focus", () => {
-    if (items.length) {
-      render(branchInput.value);
+  function scheduleCities() {
+    window.clearTimeout(cityTimer);
+    cityTimer = window.setTimeout(loadCities, 280);
+  }
+
+  cityInput.addEventListener("input", () => {
+    cityRef = "";
+    scheduleCities();
+  });
+  cityInput.addEventListener("focus", () => {
+    if (cityInput.value.trim().length >= minChars && cityList.childElementCount) {
+      cityList.hidden = false;
+      cityInput.setAttribute("aria-expanded", "true");
     } else {
-      scheduleLoad();
+      scheduleCities();
+    }
+  });
+  cityInput.addEventListener("blur", () => {
+    window.setTimeout(() => closeList(cityList, cityInput), 140);
+  });
+
+  branchInput.addEventListener("input", () => renderBranches(branchInput.value));
+  branchInput.addEventListener("focus", () => {
+    if (warehouses.length) {
+      renderBranches(branchInput.value);
+    } else if (cityRef) {
+      loadWarehouses();
+    } else if (cityInput.value.trim().length >= minChars) {
+      setHint("Спочатку оберіть місто зі списку.");
     }
   });
   branchInput.addEventListener("blur", () => {
-    window.setTimeout(() => setExpanded(false), 120);
+    window.setTimeout(() => closeList(branchList, branchInput), 140);
   });
 
   document.addEventListener("change", (event) => {
     const input = event.target;
     if (input && input.name === "delivery_method") {
       branchInput.value = "";
-      scheduleLoad();
+      warehouses = [];
+      closeList(branchList, branchInput);
+      if (cityRef) {
+        loadWarehouses();
+      }
     }
   });
-
-  if (cityInput.value.trim().length >= minChars) {
-    scheduleLoad();
-  }
 }
 
 document.addEventListener("change", (event) => {

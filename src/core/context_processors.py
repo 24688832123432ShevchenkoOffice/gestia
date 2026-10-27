@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db.utils import OperationalError, ProgrammingError
 
-from src.commerce.forms import ContactForm, style_form
+from src.commerce.forms import ContactForm, WaitlistForm, style_form
 from src.core.i18n import localize_path
 from src.core.middleware import language_enabled
 
@@ -60,4 +60,5 @@ def shop(request):
             code: language_enabled(code) for code, _label in settings.LANGUAGES
         },
         "contact_form": style_form(ContactForm()),
+        "waitlist_form": style_form(WaitlistForm()),
     }

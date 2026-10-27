@@ -1,0 +1,44 @@
+{% load i18n %}
+<form
+  id="waitlist-form"
+  class="waitlist-modal__form"
+  method="post"
+  action="{% url 'waitlist' %}"
+  hx-post="{% url 'waitlist' %}"
+  hx-target="#waitlist-form-slot"
+  hx-swap="innerHTML"
+>
+  {% csrf_token %}
+  {% if waitlist_form.non_field_errors %}
+    <p class="waitlist-modal__error">{{ waitlist_form.non_field_errors|striptags }}</p>
+  {% endif %}
+  <label class="waitlist-modal__field">
+    <span class="visually-hidden">{% trans "Email" %}</span>
+    <input
+      class="waitlist-modal__input"
+      type="email"
+      name="email"
+      maxlength="254"
+      required
+      autocomplete="email"
+      inputmode="email"
+      placeholder="{% trans 'Ваш email' %}"
+      value="{{ waitlist_form.email.value|default_if_none:'' }}"
+    >
+  </label>
+  {% if waitlist_form.email.errors %}
+    <p class="waitlist-modal__error">{{ waitlist_form.email.errors|striptags }}</p>
+  {% endif %}
+  <label class="waitlist-modal__consent">
+    <input type="checkbox" name="consent" required{% if waitlist_form.consent.value %} checked{% endif %}>
+    <span class="waitlist-modal__box" aria-hidden="true"></span>
+    <span class="waitlist-modal__consent-text">
+      {% trans "Погоджуюсь на обробку персональних даних згідно з" %}
+      <a href="{% url 'privacy' %}">{% trans "Політикою конфіденційності" %}</a>
+    </span>
+  </label>
+  {% if waitlist_form.consent.errors %}
+    <p class="waitlist-modal__error">{{ waitlist_form.consent.errors|striptags }}</p>
+  {% endif %}
+  <button class="waitlist-modal__submit" type="submit">{% trans "Повідомити мене" %}</button>
+</form>

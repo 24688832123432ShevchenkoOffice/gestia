@@ -7,7 +7,14 @@ from django.views.decorators.http import require_GET, require_POST
 from src.catalog.models import Product
 from src.commerce.cart import add, clear, lines, set_qty
 from src.commerce import wishlist as wish
-from src.commerce.forms import BuyNowForm, CallbackForm, CheckoutForm, ContactForm, style_form
+from src.commerce.forms import (
+    BuyNowForm,
+    CallbackForm,
+    CheckoutForm,
+    ContactForm,
+    WaitlistForm,
+    style_form,
+)
 from src.commerce.models import Inquiry, Order
 from src.commerce import novaposhta
 from src.commerce.services import create_inquiry, create_order, row_from_product
@@ -72,16 +79,30 @@ def checkout(request):
 
 
 @require_GET
+def np_cities(request):
+    query = (request.GET.get("q") or "").strip()
+    if len(query) < 2:
+        return JsonResponse({"items": []})
+    if not novaposhta.configured() and not novaposhta.demo_mode():
+        return JsonResponse({"items": [], "error": "not_configured"}, status=503)
+    return JsonResponse({"items": novaposhta.search_cities(query, limit=12)})
+
+
+@require_GET
 def np_warehouses(request):
     query = (request.GET.get("q") or "").strip()
+    city_ref = (request.GET.get("city_ref") or "").strip()
     kind = "locker" if request.GET.get("kind") == "locker" else "branch"
-    if len(query) < 2:
-        return JsonResponse({"city": "", "city_ref": "", "items": [], "cities": []})
-    if not novaposhta.configured():
+    if not novaposhta.configured() and not novaposhta.demo_mode():
         return JsonResponse(
             {"city": "", "city_ref": "", "items": [], "cities": [], "error": "not_configured"},
             status=503,
         )
+    if city_ref:
+        items = novaposhta.warehouses_for_city(city_ref, kind=kind)
+        return JsonResponse({"city": "", "city_ref": city_ref, "items": items, "cities": []})
+    if len(query) < 2:
+        return JsonResponse({"city": "", "city_ref": "", "items": [], "cities": []})
     payload = novaposhta.find_warehouses(query, kind=kind)
     return JsonResponse(payload)
 
@@ -267,3 +288,26 @@ def contact(request):
         consent=True,
     )
     return render(request, "commerce/_thanks_lead.html", {"long": False})
+
+
+@require_POST
+def waitlist(request):
+    form = style_form(WaitlistForm(request.POST))
+    if not form.is_valid():
+        status = 422 if _hx(request) else 200
+        return render(
+            request,
+            "partials/home/_waitlist_form.html",
+            {"waitlist_form": form},
+            status=status,
+        )
+    email = form.cleaned_data["email"]
+    create_inquiry(
+        kind=Inquiry.Kind.WAITLIST,
+        name=email.split("@")[0][:120],
+        phone="",
+        email=email,
+        message=_("Підписка на старт святкових боксів"),
+        consent=True,
+    )
+    return render(request, "partials/home/_waitlist_thanks.html")

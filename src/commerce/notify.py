@@ -102,8 +102,11 @@ def notify_inquiry(inquiry_id: int):
         return
     lines = [
         f"<b>{_esc(inquiry.get_kind_display())}</b>",
-        f"{_esc(inquiry.name)} · {_esc(inquiry.phone)}",
     ]
+    if inquiry.name or inquiry.phone:
+        lines.append(f"{_esc(inquiry.name)} · {_esc(inquiry.phone)}")
+    if inquiry.email:
+        lines.append(_esc(inquiry.email))
     if inquiry.product_name:
         lines.append(f"{_esc(inquiry.product_name)} · {_esc(inquiry.sku)}")
     if inquiry.message:
@@ -117,6 +120,7 @@ def notify_inquiry(inquiry_id: int):
                     inquiry.get_kind_display(),
                     inquiry.name,
                     inquiry.phone,
+                    inquiry.email,
                     inquiry.product_name,
                     inquiry.sku,
                     inquiry.message,

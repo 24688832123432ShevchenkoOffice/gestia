@@ -32,7 +32,7 @@ class OrderAdmin(ModelAdmin):
 
 @admin.register(Inquiry)
 class InquiryAdmin(ModelAdmin):
-    list_display = ("created_at", "kind", "name", "phone", "sku", "product_name")
+    list_display = ("created_at", "kind", "name", "email", "phone", "sku", "product_name")
     list_filter = ("kind",)
-    search_fields = ("name", "phone", "sku", "product_name", "message")
+    search_fields = ("name", "email", "phone", "sku", "product_name", "message")
     readonly_fields = ("created_at",)

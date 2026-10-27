@@ -49,6 +49,10 @@ class BuyNowForm(ConsentForm):
         return clean_phone_value(self.cleaned_data["phone"])
 
 
+class WaitlistForm(ConsentForm):
+    email = forms.EmailField(label=_("Email"), max_length=254)
+
+
 class CheckoutForm(ConsentForm):
     name = forms.CharField(label=_("Ім’я"), max_length=120)
     phone = forms.CharField(label=_("Номер телефону"), max_length=32)

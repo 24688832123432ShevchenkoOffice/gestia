@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="{% static 'css/components/forms.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/cards.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/modal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/waitlist-modal.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/crumbs.css' %}">
   <link rel="stylesheet" href="{% url 'theme_css' %}">
   {% block extra_css %}{% endblock %}
@@ -39,10 +40,12 @@
     {% block content %}{% endblock %}
   </main>
   {% include "partials/footer.html" %}
+  {% include "partials/home/waitlist_modal.html" %}
   <script src="{% static 'js/vendor/htmx.min.js' %}" defer></script>
   <script src="{% static 'js/utils.js' %}" defer></script>
   <script src="{% static 'js/nav.js' %}" defer></script>
   <script src="{% static 'js/dialog.js' %}" defer></script>
+  <script src="{% static 'js/pages/waitlist-modal.js' %}" defer></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

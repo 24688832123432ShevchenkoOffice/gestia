@@ -75,10 +75,11 @@ class Inquiry(models.Model):
     class Kind(models.TextChoices):
         CALLBACK = "callback", "Заявка на товар"
         CONTACT = "contact", "Зворотний зв'язок"
+        WAITLIST = "waitlist", "Святкові бокси (email)"
 
     kind = models.CharField("Тип", max_length=16, choices=Kind.choices)
-    name = models.CharField("Ім'я", max_length=120)
-    phone = models.CharField("Телефон", max_length=32)
+    name = models.CharField("Ім'я", max_length=120, blank=True)
+    phone = models.CharField("Телефон", max_length=32, blank=True)
     email = models.EmailField("Email", blank=True)
     message = models.TextField("Повідомлення", blank=True)
     product = models.ForeignKey(
