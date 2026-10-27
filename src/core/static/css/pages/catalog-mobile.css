@@ -298,4 +298,8 @@ body.filters-lock {
   .catalog-mobile.is-frame {
     min-height: calc(2108px - var(--header-h));
   }
+
+  .page-catalog .site-footer {
+    height: calc(830px + env(safe-area-inset-bottom, 0px));
+  }
 }
