@@ -432,3 +432,18 @@
   height: 15px;
 }
 
+@media (max-width: 767px) {
+  .hero__intro p {
+    font-weight: 400;
+  }
+
+  .cat-card__name {
+    line-height: 19px;
+  }
+
+  .benefit p,
+  .callback .only-mob {
+    line-height: 1.2;
+  }
+}
+

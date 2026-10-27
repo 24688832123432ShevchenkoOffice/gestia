@@ -120,6 +120,13 @@
   text-decoration: none;
 }
 
+@media (max-width: 767px) {
+  .consent span {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+}
+
 .callback .figma-btn--wide {
   font-weight: 400;
 }

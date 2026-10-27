@@ -19,6 +19,12 @@
   background: #fff;
 }
 
+@media (max-width: 767px) {
+  .site-header__bar {
+    height: 69px;
+  }
+}
+
 .burger-btn,
 .head-mobile-tools {
   display: flex;

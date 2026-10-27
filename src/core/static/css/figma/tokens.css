@@ -9,6 +9,12 @@
   --field-wash: rgba(37, 16, 8, 0.02);
 }
 
+@media (max-width: 767px) {
+  :root {
+    --header-h: calc(69px + env(safe-area-inset-top, 0px));
+  }
+}
+
 body {
   font-family: var(--font);
   font-weight: 400;
