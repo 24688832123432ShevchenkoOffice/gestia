@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{% static 'css/pages/catalog.css' %}">
   <link rel="stylesheet" href="{% static 'css/pages/catalog-1440.css' %}">
   <link rel="stylesheet" href="{% static 'css/pages/catalog-filters.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/catalog-mobile.css' %}">
 {% endblock %}
 {% block extra_js %}
   <script src="{% static 'js/pages/catalog.js' %}" defer></script>
@@ -68,6 +69,74 @@
           {% endif %}
         </div>
       </form>
+    </div>
+
+    <div class="catalog-mobile{% if show_mosaic %} is-frame{% endif %}">
+      <p class="catalog-mobile__crumb">
+        <a href="{% url 'home' %}">{% trans "Головна" %}</a>/<a href="{% url 'catalog' %}">{% trans "Каталог" %}</a>
+      </p>
+      <div class="catalog-mobile__main">
+        <div class="catalog-mobile__controls">
+          <form method="get" action="{{ request.path }}">
+            <label class="catalog-search catalog-search--wide">
+              <span class="visually-hidden">{% trans "Пошук товарів" %}</span>
+              <img class="catalog-search__icon" src="{% static 'figma/v2/filters/e7e3d.svg' %}" width="22" height="22" alt="">
+              <input name="q" type="search" maxlength="80" enterkeyhint="search" autocomplete="off" value="{{ parsed.q }}">
+              <img class="catalog-search__line" src="{% static 'figma/v2/filters/a9940.svg' %}" width="362" height="1" alt="">
+            </label>
+            {% for slug in parsed.categories %}
+              <input type="hidden" name="category" value="{{ slug }}">
+            {% endfor %}
+            {% for key, values in parsed.attrs.items %}
+              {% for value in values %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+              {% endfor %}
+            {% endfor %}
+            {% if parsed.in_stock %}<input type="hidden" name="in_stock" value="1">{% endif %}
+          </form>
+          <div class="catalog-mobile__tools">
+            <button class="catalog-mobile__filter" type="button" data-sheet-open aria-expanded="false" aria-controls="catalog-sheet">
+              <img src="{% static 'figma/v2/filters/06eb2.svg' %}" width="20" height="20" alt="">
+              <span>{% trans "Фільтри" %}</span>
+            </button>
+            <button class="catalog-sort catalog-sort--mob" type="button">
+              <span>{% trans "Сортувати за " %}</span>
+              <img src="{% static 'figma/v2/filters/6f842.svg' %}" width="15" height="15" alt="">
+            </button>
+          </div>
+        </div>
+        <div class="catalog-mobile__catalog">
+          {% if show_mosaic %}
+            {% for group in mobile_groups %}
+              <div class="{% if group.kind == 'tiles' %}m-tiles{% elif group.kind == 'feature_tall' %}m-feature-tall{% else %}m-feature{% endif %}">
+                {% for cell in group.cells %}
+                  <div class="{% if cell.slot == 'tile' or cell.slot == 'tile_tall' %}m-tile{% endif %}{% if cell.slot == 'tile_tall' %} is-tall{% endif %}">
+                    {% include "catalog/_cell.html" with cell=cell %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          {% else %}
+            {% include "catalog/_grid.html" %}
+            {% if not products %}
+              <p class="empty">{% trans "Товарів немає." %}</p>
+            {% endif %}
+          {% endif %}
+        </div>
+        {% if catalog_cta %}
+          <button class="figma-btn catalog-mobile__more" type="button"><span>{{ catalog_cta }}</span></button>
+        {% endif %}
+      </div>
+      <div class="catalog-sheet" id="catalog-sheet" data-catalog-sheet hidden>
+        <form method="get" action="{{ request.path }}">
+          {% if parsed.q %}<input type="hidden" name="q" value="{{ parsed.q }}">{% endif %}
+          <div class="filter-panel">
+            {% include "catalog/_filter_fields.html" %}
+            <button class="figma-btn filter-apply" type="submit"><span>{% trans "Застосувати" %}</span></button>
+          </div>
+          <button class="visually-hidden" type="button" data-sheet-close>{% trans "Закрити" %}</button>
+        </form>
+      </div>
     </div>
   </div>
 {% endblock %}

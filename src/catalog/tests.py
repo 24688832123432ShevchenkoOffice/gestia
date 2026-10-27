@@ -78,6 +78,8 @@ class FacetTests(TestCase):
         self.assertContains(page, "Застосувати")
         self.assertContains(page, "Скандинавський")
         self.assertContains(page, 'data-catalog-open')
+        self.assertContains(page, 'data-catalog-sheet')
+        self.assertContains(page, 'data-sheet-open')
 
     def test_search_keeps_name(self):
         query = QueryDict(mutable=True)

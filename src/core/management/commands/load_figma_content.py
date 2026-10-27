@@ -59,6 +59,7 @@ class Command(BaseCommand):
         products = self._products(categories)
         self._cells(products)
         self._filter_cells(products)
+        self._mobile_cells(products)
         self._blocks()
         self._advantages()
         self._reviews()
@@ -244,6 +245,34 @@ class Command(BaseCommand):
                 name_width=name_width,
             )
             _save(cell, "image", CATALOG / image, f"filter-{sort}-{image}")
+
+    def _mobile_cells(self, products):
+        stamped = "Бокс Великодній «Украіньсикй»"
+        rows = (
+            (1, "GH-01", "feature", "", "8990.00", "ukr", "479da.png"),
+            (2, "GH-02", "tile", "", "8990.00", "shysh", "db3d5.png"),
+            (3, "GH-06", "tile", stamped, "8990.00", "cover", "729be.png"),
+            (4, "GH-06", "tile", stamped, "8990.00", "cover", "729be.png"),
+            (5, "GH-05", "tile_tall", stamped, "8990.00", "cover", "2dcde.png"),
+            (6, "GH-03", "feature_tall", stamped, "8990.00", "hnizdo", "14fec.png"),
+            (7, "GH-06", "tile", stamped, "8990.00", "cover", "729be.png"),
+            (8, "GH-05", "tile_tall", stamped, "8990.00", "cover", "2dcde.png"),
+        )
+        for sort, sku, slot, label, price, crop, image in rows:
+            cell = CatalogCell.objects.create(
+                product=products[sku],
+                band=0,
+                layout=CatalogCell.Layout.ROW,
+                role=CatalogCell.Role.GRID,
+                surface=CatalogCell.Surface.MOBILE,
+                slot=slot,
+                label_uk=label,
+                sort=sort,
+                price_uah=Decimal(price),
+                crop=crop,
+                name_width=95,
+            )
+            _save(cell, "image", CATALOG / image, f"mobile-{sort}-{image}")
 
     def _blocks(self):
         hero_title = "Декор для дому, текстиль \nі флористика"
