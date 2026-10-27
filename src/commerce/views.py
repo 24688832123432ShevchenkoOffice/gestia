@@ -26,7 +26,7 @@ def cart_page(request):
     return render(
         request,
         "commerce/cart.html",
-        {"rows": rows, "total_label": format_money(total, _currency(request))},
+        {"rows": rows, "total": total, "total_label": format_money(total, _currency(request))},
     )
 
 
@@ -65,7 +65,7 @@ def checkout(request):
     return render(
         request,
         "commerce/checkout.html",
-        {"form": form, "rows": rows, "total_label": format_money(total, currency)},
+        {"form": form, "rows": rows, "total": total, "total_label": format_money(total, currency)},
     )
 
 
@@ -113,7 +113,7 @@ def cart_update(request):
         response = render(
             request,
             "commerce/_cart_body.html",
-            {"rows": rows, "total_label": format_money(total, currency)},
+            {"rows": rows, "total": total, "total_label": format_money(total, currency)},
         )
         return response
     return HttpResponseRedirect(reverse("cart"))

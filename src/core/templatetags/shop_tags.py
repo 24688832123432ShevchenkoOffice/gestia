@@ -30,6 +30,22 @@ def figma_nbsp(value):
 
 
 @register.simple_tag(takes_context=True)
+def line_uah(context, amount):
+    currency = context.get("currency") or "uah"
+    if currency == "eur":
+        return format_money(amount, "eur")
+    return f"{_grouped(amount)} UAH"
+
+
+@register.simple_tag(takes_context=True)
+def sum_uah(context, amount):
+    currency = context.get("currency") or "uah"
+    if currency == "eur":
+        return format_money(amount, "eur")
+    return f"₴ {_grouped(amount)} грн"
+
+
+@register.simple_tag(takes_context=True)
 def home_price(context, product):
     currency = context.get("currency") or "uah"
     if currency == "eur":

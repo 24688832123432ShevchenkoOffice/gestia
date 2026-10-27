@@ -1,31 +1,66 @@
-{% load i18n %}
+{% load i18n static shop_tags %}
 {% if rows %}
-  <ul class="cart-lines">
-    {% for row in rows %}
-      <li class="cart-line">
-        {% if row.product.cover %}
-          <img src="{{ row.product.cover.image.url }}" alt="" width="96" height="120">
-        {% endif %}
-        <div>
-          <a href="{{ row.product.get_absolute_url }}">{{ row.product.name }}</a>
-          <p>{{ row.unit_label }}</p>
+  <div class="cart-layout">
+    <div class="cart-main">
+      <div class="cart-head">
+        <h1>{% trans "Кошик" %} ({{ cart_count }})</h1>
+        <div class="cart-items" role="list">
+          {% for row in rows %}
+            <article class="cart-item" role="listitem">
+              <div class="cart-item__photo">
+                {% if row.product.cover %}
+                  <img src="{{ row.product.cover.image.url }}" alt="">
+                {% endif %}
+              </div>
+              <div class="cart-item__body">
+                <div class="cart-item__top">
+                  <a class="cart-item__name" href="{{ row.product.get_absolute_url }}">{{ row.product.name }}</a>
+                  <p class="cart-item__price">{% line_uah row.unit %}</p>
+                </div>
+                <form class="cart-item__controls" method="post" action="{% url 'cart_update' %}" hx-post="{% url 'cart_update' %}" hx-target="#cart-body" hx-swap="innerHTML">
+                  {% csrf_token %}
+                  <input type="hidden" name="sku" value="{{ row.sku }}">
+                  <div class="qty">
+                    <button class="qty__btn" type="button" data-qty-step="1" aria-label="{% trans 'Збільшити кількість' %}">
+                      <img class="qty__ico qty__ico--mob" src="{% static 'figma/cart/696fdddf-66fb-4286-9381-425b0d60c695.svg' %}" width="9" height="8" alt="">
+                      <img class="qty__ico qty__ico--desk" src="{% static 'figma/cart/84034769-eda3-4db0-8f34-b03cdccb6bc8.svg' %}" width="9" height="8" alt="">
+                    </button>
+                    <label class="visually-hidden" for="qty-{{ row.sku }}">{% trans "Кількість" %}</label>
+                    <input id="qty-{{ row.sku }}" data-qty-input name="qty" type="number" min="0" max="99" inputmode="numeric" value="{{ row.qty }}">
+                    <button class="qty__btn" type="button" data-qty-step="-1" aria-label="{% trans 'Зменшити кількість' %}">
+                      <img class="qty__ico qty__ico--mob" src="{% static 'figma/cart/bb5f09f7-c721-451c-876e-84339e5e49a4.svg' %}" width="9" height="2" alt="">
+                      <img class="qty__ico qty__ico--desk" src="{% static 'figma/cart/ecbe8065-ed1b-4914-8f81-46aaf04ee155.svg' %}" width="9" height="2" alt="">
+                    </button>
+                  </div>
+                  <button class="cart-remove" type="button" data-qty-set="0" aria-label="{% trans 'Видалити з кошика' %}">
+                    <img src="{% static 'figma/cart/d10fca64-fbb5-441c-bdd0-7a6260fe440f.svg' %}" width="22.0001" height="24.7224" alt="">
+                  </button>
+                </form>
+              </div>
+            </article>
+            {% if not forloop.last %}
+              <img class="cart-rule cart-rule--mob" src="{% static 'figma/cart/afb5ff28-ef16-4752-af1e-60d9937be1cf.svg' %}" width="363" height="1" alt="">
+              <img class="cart-rule cart-rule--desk" src="{% static 'figma/cart/69d9b052-313f-46a0-97ee-7ddfda4ea702.svg' %}" width="859" height="1" alt="">
+            {% endif %}
+          {% endfor %}
         </div>
-        <form method="post" action="{% url 'cart_update' %}" hx-post="{% url 'cart_update' %}" hx-target="#cart-body" hx-swap="innerHTML">
-          {% csrf_token %}
-          <input type="hidden" name="sku" value="{{ row.sku }}">
-          <label class="visually-hidden" for="qty-{{ row.sku }}">{% trans "Кількість" %}</label>
-          <input id="qty-{{ row.sku }}" name="qty" type="number" min="0" max="99" value="{{ row.qty }}" inputmode="numeric">
-          <button class="btn btn--ghost" type="submit">{% trans "Оновити" %}</button>
-        </form>
-        <p class="cart-line__sum">{{ row.line_label }}</p>
-      </li>
-    {% endfor %}
-  </ul>
-  <p class="cart-total">{% trans "Разом" %} {{ total_label }}</p>
-  <a class="btn" data-qa="checkout-cta" href="{% url 'checkout' %}">{% trans "Оформити замовлення" %}</a>
+      </div>
+      <a class="cart-continue" href="{% url 'catalog' %}">{% trans "Продовжити покупки" %}</a>
+    </div>
+    <aside class="cart-summary">
+      <div class="cart-summary__row">
+        <p>{% trans "Загальна ціна:" %}</p>
+        <p>{% sum_uah total %}</p>
+      </div>
+      <a class="cart-go" data-qa="checkout-cta" href="{% url 'checkout' %}">{% trans "Перейти до оформлення" %}</a>
+    </aside>
+  </div>
 {% else %}
-  <p class="empty">{% trans "Кошик порожній." %}</p>
-  <a class="btn" href="{% url 'catalog' %}">{% trans "До каталогу" %}</a>
+  <div class="cart-main">
+    <h1>{% trans "Кошик" %} ({{ cart_count }})</h1>
+    <p class="cart-empty">{% trans "Кошик порожній." %}</p>
+    <a class="cart-continue" href="{% url 'catalog' %}">{% trans "До каталогу" %}</a>
+  </div>
 {% endif %}
 {% if request.META.HTTP_HX_REQUEST %}
   <span id="cart-count" data-qa="cart-count" hx-swap-oob="outerHTML">{{ cart_count }}</span>
