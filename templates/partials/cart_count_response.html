@@ -1,0 +1,2 @@
+{% include "partials/cart_count.html" %}
+<span id="cart-count-mobile" class="head-bag__count{% if not cart_count %} is-empty{% endif %}" hx-swap-oob="outerHTML" aria-hidden="{% if cart_count %}false{% else %}true{% endif %}">{% if cart_count %}{{ cart_count }}{% endif %}</span>

@@ -63,5 +63,6 @@
   </div>
 {% endif %}
 {% if request.META.HTTP_HX_REQUEST %}
-  <span id="cart-count" data-qa="cart-count" hx-swap-oob="outerHTML">{{ cart_count }}</span>
+  <span id="cart-count" class="head-bag__count{% if not cart_count %} is-empty{% endif %}" data-qa="cart-count" hx-swap-oob="outerHTML" aria-hidden="{% if cart_count %}false{% else %}true{% endif %}">{% if cart_count %}{{ cart_count }}{% endif %}</span>
+  <span id="cart-count-mobile" class="head-bag__count{% if not cart_count %} is-empty{% endif %}" hx-swap-oob="outerHTML" aria-hidden="{% if cart_count %}false{% else %}true{% endif %}">{% if cart_count %}{{ cart_count }}{% endif %}</span>
 {% endif %}

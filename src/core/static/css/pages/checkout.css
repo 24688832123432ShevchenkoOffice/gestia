@@ -422,7 +422,7 @@ img.co-arrow {
     display: grid;
     grid-template-columns: 636px 633px;
     column-gap: 33px;
-    align-items: end;
+    align-items: start;
     justify-content: start;
     width: 1302px;
   }

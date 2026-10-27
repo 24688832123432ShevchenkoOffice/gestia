@@ -1,23 +1,128 @@
 .sheet {
-  width: min(32rem, calc(100% - 1.5rem));
-  max-height: calc(100dvh - 1.5rem - env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  width: min(32rem, calc(100% - 1.5rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+  max-height: calc(100dvh - 1.5rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   margin: auto;
-  padding: 1.25rem 1rem calc(1rem + env(safe-area-inset-bottom));
-  border: 0;
-  background: var(--paper);
-  color: var(--ink);
+  padding: 1.25rem 1rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  border: 1px solid #251008;
+  border-radius: 0;
+  background: #fff;
+  color: #000;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sheet::backdrop {
-  background: rgba(36, 28, 22, 0.46);
+  background: rgba(37, 16, 8, 0.46);
 }
 
 .sheet__meta {
-  margin-bottom: 0.75rem;
-  color: var(--ink-soft);
+  margin: 0 0 1rem;
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.35;
+}
+
+.sheet form[data-qa="lead-form"] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.sheet .field {
+  margin-bottom: 0;
+}
+
+.sheet .field__label {
+  color: rgba(0, 0, 0, 0.72);
+}
+
+.sheet .field__input,
+.sheet select.field__input {
+  border: 1px solid #251008;
+  background: #fff;
+  color: #000;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sheet .field__input:focus,
+.sheet .field__input:focus-visible,
+.sheet select.field__input:focus,
+.sheet select.field__input:focus-visible {
+  outline: none;
+  border-color: #251008;
+  box-shadow: none;
+}
+
+.sheet .check {
+  color: #000;
+}
+
+.sheet .check a {
+  color: #000;
+}
+
+.sheet__actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.sheet__btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 44px;
+  padding: 12px 14px;
+  border-radius: 0;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sheet__btn--primary {
+  border: 1px solid #251008;
+  background: #251008;
+  color: #feedda;
+}
+
+.sheet__btn--ghost {
+  border: 1px solid #251008;
+  background: #fff;
+  color: #251008;
 }
 
 .thanks-note {
   font-size: var(--step-1);
+}
+
+@supports not (max-height: 100dvh) {
+  .sheet {
+    max-height: calc(100vh - 1.5rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .sheet__btn {
+    font-size: 14px;
+    padding-inline: 10px;
+  }
 }

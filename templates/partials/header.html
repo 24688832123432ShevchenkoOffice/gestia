@@ -32,7 +32,7 @@
       </a>
       <a class="icon-btn head-bag" href="{% url 'cart' %}" aria-label="{% trans 'Кошик' %}">
         <img src="{% static 'figma/desktop/38908.svg' %}" width="17.5213" height="18.7918" alt="">
-        <span class="visually-hidden">{% include "partials/cart_count.html" %}</span>
+        {% include "partials/cart_count.html" %}
       </a>
     </div>
 
@@ -42,6 +42,7 @@
       </a>
       <a class="icon-btn head-bag" href="{% url 'cart' %}" aria-label="{% trans 'Кошик' %}">
         <img src="{% static 'figma/mobile/38908.svg' %}" width="17.5213" height="18.7918" alt="">
+        {% include "partials/cart_count_mobile.html" %}
       </a>
     </div>
   </div>

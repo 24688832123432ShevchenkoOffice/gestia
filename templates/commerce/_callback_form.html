@@ -10,5 +10,8 @@
     <span><a href="{% url 'privacy' %}">{% trans "Погоджуюсь на обробку персональних даних" %}</a></span>
   </label>
   {% if callback_form.consent.errors %}<p class="field__error">{{ callback_form.consent.errors }}</p>{% endif %}
-  <button class="btn" type="submit">{% trans "Надіслати заявку" %}</button>
+  <div class="sheet__actions">
+    <button class="sheet__btn sheet__btn--primary" type="submit">{% trans "Надіслати заявку" %}</button>
+    <button class="sheet__btn sheet__btn--ghost" type="button" data-close-dialog>{% trans "Закрити" %}</button>
+  </div>
 </form>

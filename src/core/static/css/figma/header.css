@@ -159,6 +159,32 @@ body.is-burger .head-mobile-tools .icon-btn:first-child {
   height: 18.7918px;
 }
 
+.head-bag__count {
+  position: absolute;
+  right: -8px;
+  top: -6px;
+  z-index: 1;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: #251008;
+  color: #feedda;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  pointer-events: none;
+}
+
+.head-bag__count.is-empty {
+  display: none;
+}
+
 .switch-pair {
   display: flex;
   align-items: center;

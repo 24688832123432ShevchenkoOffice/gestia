@@ -53,7 +53,7 @@
               </div>
             {% endif %}
             <p class="pdp-price">{% home_price product %}</p>
-            <form class="pdp-controls" method="post" action="{% url 'cart_add' %}" hx-post="{% url 'cart_add' %}" hx-target="#cart-count" hx-swap="outerHTML">
+            <form class="pdp-controls" method="post" action="{% url 'cart_add' %}" hx-post="{% url 'cart_add' %}" hx-target="#cart-count" hx-swap="outerHTML" hx-sync="this:replace">
               {% csrf_token %}
               <input type="hidden" name="sku" value="{{ product.sku }}">
               <div class="pdp-qty">
@@ -143,11 +143,9 @@
   <dialog class="sheet" id="callback-dialog">
     <p class="sheet__meta">{{ product.name }} · {{ product.sku }}</p>
     {% include "commerce/_callback_form.html" %}
-    <button class="btn btn--ghost" type="button" data-close-dialog>{% trans "Закрити" %}</button>
   </dialog>
   <dialog class="sheet" id="buy-dialog">
     <p class="sheet__meta">{{ product.name }} · {{ product.sku }}</p>
     {% include "commerce/_buy_form.html" %}
-    <button class="btn btn--ghost" type="button" data-close-dialog>{% trans "Закрити" %}</button>
   </dialog>
 {% endblock %}

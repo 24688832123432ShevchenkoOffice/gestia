@@ -149,7 +149,11 @@ def cart_add(request):
         qty = 1
     add(request, product.sku, qty)
     if _hx(request):
-        return render(request, "partials/cart_count.html", {"cart_count": sum_count(request)})
+        return render(
+            request,
+            "partials/cart_count_response.html",
+            {"cart_count": sum_count(request)},
+        )
     return HttpResponseRedirect(product.get_absolute_url())
 
 
@@ -173,7 +177,12 @@ def cart_update(request):
         response = render(
             request,
             "commerce/_cart_body.html",
-            {"rows": rows, "total": total, "total_label": format_money(total, currency)},
+            {
+                "rows": rows,
+                "total": total,
+                "total_label": format_money(total, currency),
+                "cart_count": sum_count(request),
+            },
         )
         return response
     return HttpResponseRedirect(reverse("cart"))

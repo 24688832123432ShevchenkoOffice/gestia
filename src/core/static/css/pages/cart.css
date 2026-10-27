@@ -341,7 +341,7 @@ img.cart-rule--desk {
     display: grid;
     grid-template-columns: 858px 411px;
     column-gap: 30px;
-    align-items: end;
+    align-items: start;
     justify-content: start;
     width: 100%;
   }
