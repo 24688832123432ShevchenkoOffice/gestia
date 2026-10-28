@@ -362,3 +362,45 @@ class EnglishFrameLabelTests(TestCase):
             self.assertEqual(cell.label, "Easter box “Ukrainian”")
         with translation.override("uk"):
             self.assertEqual(cell.label, "Бокс Великодній «Український»")
+
+
+SALE_BADGE_MARKERS = (
+    "sale-badge",
+    "product-sale",
+    "is-sale",
+    "badge--sale",
+    ">Акція<",
+    ">Sale<",
+)
+
+
+class SaleBadgeTests(TestCase):
+    def test_public_pages_omit_sale_badge_when_flag_is_set(self):
+        category = Category.objects.create(slug="sale-cat", name_uk="Бокси", name_en="Boxes")
+        product = Product.objects.create(
+            category=category,
+            sku="SALE-1",
+            slug="sale-box",
+            name_uk="Бокс без бейджа",
+            name_en="Box without a badge",
+            price_uah=Decimal("100.00"),
+            price_eur=Decimal("3.00"),
+            stock_qty=10,
+            stock_status=Product.Stock.IN_STOCK,
+            is_sale=True,
+        )
+        self.assertTrue(product.is_sale)
+        pages = (
+            self.client.get("/tovar/sale-box/"),
+            self.client.get("/katalog/", {"q": "SALE-1"}),
+            self.client.get("/en/tovar/sale-box/"),
+            self.client.get("/en/katalog/", {"q": "SALE-1"}),
+        )
+        for page in pages:
+            self.assertEqual(page.status_code, 200)
+            for marker in SALE_BADGE_MARKERS:
+                self.assertNotContains(page, marker)
+        self.assertContains(pages[0], "Бокс без бейджа")
+        self.assertContains(pages[1], "Бокс без бейджа")
+        self.assertContains(pages[2], "Box without a badge")
+        self.assertContains(pages[3], "Box without a badge")
