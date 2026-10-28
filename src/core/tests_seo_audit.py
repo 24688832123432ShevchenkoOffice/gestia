@@ -1,9 +1,11 @@
 import re
 
-from src.content.models import SiteSettings
+from src.content.models import HomeBlock, SiteSettings
 from src.core.seo import is_placeholder_contact
-from src.core.tests_seo import SeoFixture, _ld, _meta_description
+from src.core.tests_seo import SeoFixture, _h1_count, _ld, _meta_description
 
+_UK_TITLE = "Декор для дому, текстиль і флористика"
+_EN_TITLE = "Home decor, textiles and floristry"
 _SEO_TITLE_UK = "Святкові бокси для сервірування столу"
 _SEO_TITLE_EN = "Festive boxes for a table from Gestia"
 _SEO_DESC_UK = (
@@ -28,6 +30,10 @@ def _organization(response):
             if node.get("@type") == "Organization":
                 return node
     return {}
+
+
+def _h1_nodes(response):
+    return re.findall(r"<h1\b([^>]*)>(.*?)</h1>", response.content.decode(), flags=re.I | re.S)
 
 
 def _save_site(**fields):
@@ -143,3 +149,36 @@ class ContactSeoTests(SeoFixture):
         self.assertEqual(uk["address"]["streetAddress"], _ADDRESS_UK)
         self.assertEqual(en["address"]["streetAddress"], _ADDRESS_EN)
         self.assertEqual(uk["sameAs"], [_INSTAGRAM, _PINTEREST])
+
+
+class HeadingSeoTests(SeoFixture):
+    def test_one_h1_when_home_has_no_hero(self):
+        self.assertFalse(HomeBlock.objects.filter(key="hero").exists())
+        for path in ("/", "/en/", "/katalog/", "/en/katalog/"):
+            page = self.client.get(path)
+            nodes = _h1_nodes(page)
+            self.assertEqual(len(nodes), 1, path)
+            self.assertEqual(_h1_count(page), 1, path)
+            self.assertIn("visually-hidden", nodes[0][0])
+        self.assertIn("Gestia Home", _h1_nodes(self.client.get("/"))[0][1])
+        self.assertIn("Gestia Home", _h1_nodes(self.client.get("/en/"))[0][1])
+        self.assertIn("Каталог", _h1_nodes(self.client.get("/katalog/"))[0][1])
+        self.assertIn("Catalogue", _h1_nodes(self.client.get("/en/katalog/"))[0][1])
+
+    def test_visible_hero_is_the_only_h1(self):
+        HomeBlock.objects.create(key="hero", title_uk=_UK_TITLE, title_en=_EN_TITLE)
+        expected = {"/": _UK_TITLE, "/en/": _EN_TITLE}
+        for path, text in expected.items():
+            page = self.client.get(path)
+            nodes = _h1_nodes(page)
+            self.assertEqual(len(nodes), 1, path)
+            self.assertEqual(_h1_count(page), 1, path)
+            self.assertNotIn("visually-hidden", nodes[0][0])
+            self.assertIn(text, nodes[0][1])
+            self.assertNotIn("Gestia Home</h1>", page.content.decode())
+        for path in ("/katalog/", "/en/katalog/"):
+            page = self.client.get(path)
+            nodes = _h1_nodes(page)
+            self.assertEqual(len(nodes), 1, path)
+            self.assertEqual(_h1_count(page), 1, path)
+            self.assertIn("visually-hidden", nodes[0][0])
