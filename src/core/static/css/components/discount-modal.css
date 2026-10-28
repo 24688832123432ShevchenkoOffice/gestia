@@ -1,7 +1,5 @@
-#discount-dialog[open] {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
+#discount-dialog > * + * {
+  margin-top: 0.85rem;
 }
 
 #discount-dialog .discount-dialog__title {
