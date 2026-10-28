@@ -1,7 +1,8 @@
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.core.cache import cache
-from django.test import TestCase, override_settings
+from django.test import Client, TestCase, override_settings
 from django.utils import translation
 
 from src.catalog.models import Category, Product
@@ -61,6 +62,34 @@ class NotFoundTests(TestCase):
         self.assertContains(response, "Сторінку не знайдено", status_code=404)
         self.assertContains(response, "На головну", status_code=404)
         self.assertContains(response, "css/pages/utility.css", status_code=404)
+
+    @override_settings(DEBUG=False)
+    def test_missing_product_renders_404_page(self):
+        response = self.client.get("/tovar/no-such-gestia-product/")
+        self.assertEqual(response.status_code, 404)
+        self.assertContains(response, "Сторінку не знайдено", status_code=404)
+        self.assertContains(response, "util-page--error", status_code=404)
+        self.assertNotContains(response, "Page not found", status_code=404)
+
+
+class ServerErrorTests(TestCase):
+    @override_settings(DEBUG=False)
+    def test_handler_renders_static_500_page(self):
+        from config import urls as root_urls
+
+        pattern = next(item for item in root_urls.urlpatterns if getattr(item, "name", None) == "healthz")
+        client = Client(raise_request_exception=False)
+        with patch.object(pattern, "callback", side_effect=RuntimeError("gestia-test-500")):
+            response = client.get("/healthz/")
+        self.assertEqual(response.status_code, 500)
+        self.assertContains(response, "Щось пішло не так", status_code=500)
+        self.assertContains(response, "Something went wrong", status_code=500)
+        self.assertContains(response, 'href="/"', status_code=500)
+        self.assertContains(response, "#241c16", status_code=500)
+        self.assertContains(response, "#f3eee6", status_code=500)
+        self.assertContains(response, "#8d3b2a", status_code=500)
+        self.assertNotContains(response, "gestia-test-500", status_code=500)
+        self.assertNotContains(response, "htmx", status_code=500)
 
 
 class SeoTests(TestCase):
