@@ -10,9 +10,14 @@ body.filters-lock {
   width: 100%;
 }
 
-.catalog-sort--mob {
+.catalog-sort--mob .catalog-sort__btn {
   color: #251008;
   font-weight: 400;
+}
+
+.catalog-sort--mob .catalog-sort__menu {
+  right: 0;
+  left: auto;
 }
 
 .catalog-mobile__crumb {
@@ -193,7 +198,7 @@ body.filters-lock {
 
 .catalog-sheet {
   position: fixed;
-  z-index: 35;
+  z-index: 2100;
   left: 0;
   right: 0;
   top: var(--header-h);
@@ -222,7 +227,7 @@ body.filters-lock {
 }
 
 .catalog-sheet .filter-sec h2,
-.catalog-sheet .filter-opt span {
+.catalog-sheet .filter-opt > span:last-child {
   color: #251008;
 }
 
@@ -231,12 +236,10 @@ body.filters-lock {
   letter-spacing: -1.4px;
 }
 
-.catalog-sheet .filter-dot--desk,
 .catalog-sheet .rule-desk {
   display: none;
 }
 
-.catalog-sheet .filter-dot--mob,
 .catalog-sheet .rule-mob {
   display: block;
 }
@@ -244,11 +247,8 @@ body.filters-lock {
 .catalog-sheet .filter-dot {
   width: 16px;
   height: 16px;
-}
-
-.catalog-sheet .filter-opt input {
-  width: 16px;
-  height: 16px;
+  border-color: #251008;
+  color: #251008;
 }
 
 .catalog-sheet .filter-rule {
@@ -270,7 +270,6 @@ body.filters-lock {
 }
 
 .catalog-mobile__filter:focus-visible,
-.catalog-sort--mob:focus-visible,
 .catalog-sheet .filter-apply:focus-visible {
   outline: 1px solid #251008;
   outline-offset: 2px;

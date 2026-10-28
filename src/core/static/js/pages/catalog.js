@@ -33,6 +33,33 @@ function setSheet(open) {
   }
 }
 
+function closeSortMenus(except) {
+  document.querySelectorAll("[data-catalog-sort]").forEach((root) => {
+    if (except && root === except) {
+      return;
+    }
+    const menu = root.querySelector("[data-sort-menu]");
+    const btn = root.querySelector("[data-sort-open]");
+    if (menu) {
+      menu.hidden = true;
+    }
+    root.classList.remove("is-open");
+    if (btn) {
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+function applySort(value) {
+  const url = new URL(window.location.href);
+  if (value) {
+    url.searchParams.set("sort", value);
+  } else {
+    url.searchParams.delete("sort");
+  }
+  window.location.assign(url.pathname + url.search + url.hash);
+}
+
 if (frame && openBtn) {
   openBtn.addEventListener("click", () => {
     setOpen(!frame.classList.contains("is-filters"));
@@ -55,10 +82,41 @@ if (sheet && sheetBtn) {
   });
 }
 
+document.addEventListener("click", (event) => {
+  const opener = event.target.closest("[data-sort-open]");
+  if (opener) {
+    const root = opener.closest("[data-catalog-sort]");
+    if (!root) {
+      return;
+    }
+    const menu = root.querySelector("[data-sort-menu]");
+    const open = menu && menu.hidden;
+    closeSortMenus(root);
+    if (menu) {
+      menu.hidden = !open;
+    }
+    root.classList.toggle("is-open", Boolean(open));
+    opener.setAttribute("aria-expanded", open ? "true" : "false");
+    return;
+  }
+
+  const option = event.target.closest("[data-sort-value]");
+  if (option) {
+    event.preventDefault();
+    applySort(option.getAttribute("data-sort-value") || "");
+    return;
+  }
+
+  if (!event.target.closest("[data-catalog-sort]")) {
+    closeSortMenus();
+  }
+});
+
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") {
     return;
   }
+  closeSortMenus();
   if (frame && frame.classList.contains("is-filters")) {
     setOpen(false);
   }

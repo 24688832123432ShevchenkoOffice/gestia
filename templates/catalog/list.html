@@ -39,10 +39,8 @@
             <input name="q" type="search" maxlength="80" enterkeyhint="search" autocomplete="off" value="{{ parsed.q }}">
             <img class="catalog-search__line" src="{% static 'figma/v2/filters/25788.svg' %}" width="303" height="1" alt="">
           </label>
-          <button class="catalog-sort" type="button">
-            <span>{% trans "Сортувати за " %}</span>
-            <img src="{% static 'figma/v2/filters/33b2c.svg' %}" width="15" height="15" alt="">
-          </button>
+          {% include "catalog/_sort_control.html" with menu_id="catalog-sort-desk" sort_icon="figma/v2/filters/33b2c.svg" %}
+          {% if parsed.sort %}<input type="hidden" name="sort" value="{{ parsed.sort }}">{% endif %}
         </div>
         <div class="catalog-open__body">
           <div class="catalog-open__row">
@@ -94,16 +92,14 @@
               {% endfor %}
             {% endfor %}
             {% if parsed.in_stock %}<input type="hidden" name="in_stock" value="1">{% endif %}
+            {% if parsed.sort %}<input type="hidden" name="sort" value="{{ parsed.sort }}">{% endif %}
           </form>
           <div class="catalog-mobile__tools">
             <button class="catalog-mobile__filter" type="button" data-sheet-open aria-expanded="false" aria-controls="catalog-sheet">
               <img src="{% static 'figma/v2/filters/06eb2.svg' %}" width="20" height="20" alt="">
               <span>{% trans "Фільтри" %}</span>
             </button>
-            <button class="catalog-sort catalog-sort--mob" type="button">
-              <span>{% trans "Сортувати за " %}</span>
-              <img src="{% static 'figma/v2/filters/6f842.svg' %}" width="15" height="15" alt="">
-            </button>
+            {% include "catalog/_sort_control.html" with menu_id="catalog-sort-mob" sort_icon="figma/v2/filters/6f842.svg" compact=1 %}
           </div>
         </div>
         <div class="catalog-mobile__catalog">
@@ -131,6 +127,7 @@
       <div class="catalog-sheet" id="catalog-sheet" data-catalog-sheet hidden>
         <form method="get" action="{{ request.path }}">
           {% if parsed.q %}<input type="hidden" name="q" value="{{ parsed.q }}">{% endif %}
+          {% if parsed.sort %}<input type="hidden" name="sort" value="{{ parsed.sort }}">{% endif %}
           <div class="filter-panel">
             {% include "catalog/_filter_fields.html" %}
             <button class="figma-btn filter-apply" type="submit"><span>{% trans "Застосувати" %}</span></button>

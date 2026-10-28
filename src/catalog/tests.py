@@ -55,6 +55,22 @@ class FacetTests(TestCase):
         skus = set(filter_catalog(Product.objects.all(), parsed).values_list("sku", flat=True))
         self.assertEqual(skus, {"A", "C"})
 
+    def test_sort_by_price_asc(self):
+        self.a.price_uah = Decimal("300")
+        self.a.save(update_fields=["price_uah"])
+        self.b.price_uah = Decimal("100")
+        self.b.save(update_fields=["price_uah"])
+        self.c.price_uah = Decimal("200")
+        self.c.save(update_fields=["price_uah"])
+        query = QueryDict(mutable=True)
+        query["sort"] = "price_asc"
+        parsed = parse_catalog_filters(query)
+        skus = list(filter_catalog(Product.objects.all(), parsed).values_list("sku", flat=True))
+        self.assertEqual(skus[:3], ["B", "C", "A"])
+        page = self.client.get("/katalog/?sort=price_asc&in_stock=1")
+        self.assertContains(page, 'data-sort-value="price_asc"')
+        self.assertContains(page, "Спочатку дешевші")
+
     def test_catalog_mosaic_uses_cell_price_until_filter(self):
         CatalogCell.objects.create(
             product=self.a,

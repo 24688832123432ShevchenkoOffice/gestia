@@ -31,6 +31,15 @@ def nav_categories():
     return [cat for cat in roots if cat.has_public_products]
 
 
+SORT_CHOICES = (
+    ("", "default"),
+    ("price_asc", "price_asc"),
+    ("price_desc", "price_desc"),
+    ("name", "name"),
+)
+SORT_KEYS = {key for key, _ in SORT_CHOICES}
+
+
 def parse_catalog_filters(get):
     attrs = {}
     for key in ATTRIBUTE_FILTER_KEYS:
@@ -39,12 +48,16 @@ def parse_catalog_filters(get):
             attrs[key] = values
     selected = [f"{key}:{value}" for key, values in attrs.items() for value in values]
     categories = [value for value in get.getlist("category") if value][:12]
+    sort = (get.get("sort") or "").strip()
+    if sort not in SORT_KEYS:
+        sort = ""
     return {
         "attrs": attrs,
         "selected": selected,
         "categories": categories,
         "q": (get.get("q") or "").strip()[:80],
         "in_stock": get.get("in_stock") == "1",
+        "sort": sort,
     }
 
 
@@ -62,7 +75,15 @@ def filter_catalog(qs, parsed):
         qs = qs.filter(filter_attrs__group__slug=key, filter_attrs__slug__in=values)
     if parsed["in_stock"]:
         qs = qs.filter(stock_status=Product.Stock.IN_STOCK)
-    return qs.distinct()
+    qs = qs.distinct()
+    sort = parsed.get("sort") or ""
+    if sort == "price_asc":
+        return qs.order_by("price_uah", "sort", "id")
+    if sort == "price_desc":
+        return qs.order_by("-price_uah", "sort", "id")
+    if sort == "name":
+        return qs.order_by("name_uk", "sort", "id")
+    return qs.order_by("sort", "id")
 
 
 def category_scope(category):

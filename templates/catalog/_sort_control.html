@@ -1,0 +1,38 @@
+{% load i18n static %}
+<div class="catalog-sort{% if compact %} catalog-sort--mob{% endif %}" data-catalog-sort>
+  <button
+    class="catalog-sort__btn"
+    type="button"
+    data-sort-open
+    aria-expanded="false"
+    aria-haspopup="listbox"
+    aria-controls="{{ menu_id }}"
+  >
+    <span data-sort-label>
+      {% if parsed.sort == "price_asc" %}
+        {% trans "Спочатку дешевші" %}
+      {% elif parsed.sort == "price_desc" %}
+        {% trans "Спочатку дорожчі" %}
+      {% elif parsed.sort == "name" %}
+        {% trans "За назвою" %}
+      {% else %}
+        {% trans "Сортувати за" %}
+      {% endif %}
+    </span>
+    <img src="{% static sort_icon %}" width="15" height="15" alt="">
+  </button>
+  <ul class="catalog-sort__menu" id="{{ menu_id }}" role="listbox" hidden data-sort-menu>
+    <li role="option">
+      <button type="button" data-sort-value="" {% if not parsed.sort %}aria-selected="true"{% endif %}>{% trans "За замовчуванням" %}</button>
+    </li>
+    <li role="option">
+      <button type="button" data-sort-value="price_asc" {% if parsed.sort == "price_asc" %}aria-selected="true"{% endif %}>{% trans "Спочатку дешевші" %}</button>
+    </li>
+    <li role="option">
+      <button type="button" data-sort-value="price_desc" {% if parsed.sort == "price_desc" %}aria-selected="true"{% endif %}>{% trans "Спочатку дорожчі" %}</button>
+    </li>
+    <li role="option">
+      <button type="button" data-sort-value="name" {% if parsed.sort == "name" %}aria-selected="true"{% endif %}>{% trans "За назвою" %}</button>
+    </li>
+  </ul>
+</div>
