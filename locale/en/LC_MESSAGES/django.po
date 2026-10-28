@@ -207,6 +207,21 @@ msgstr "Search products"
 msgid "Сортувати за "
 msgstr "Sort by "
 
+msgid "Сортувати за"
+msgstr "Sort by"
+
+msgid "За замовчуванням"
+msgstr "Default"
+
+msgid "Спочатку дешевші"
+msgstr "Price: low to high"
+
+msgid "Спочатку дорожчі"
+msgstr "Price: high to low"
+
+msgid "За назвою"
+msgstr "By name"
+
 msgid "Застосувати"
 msgstr "Apply"
 

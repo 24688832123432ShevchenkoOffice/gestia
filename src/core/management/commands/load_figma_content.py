@@ -136,8 +136,9 @@ class Command(BaseCommand):
             if image:
                 _save(category, "image", DESKTOP / image)
             made[slug] = category
+        # Labels match the Figma filter panel; products live in these category slugs.
         filters = {
-            "novorichnyi-dekor": (1, ""),
+            "rizdvyani-boksy": (1, "Новорічний декор"),
             "interierni-kompozytsii": (2, "Інтер'єрні композиції"),
             "vazy-ta-kashpo": (3, ""),
             "tekstyl": (4, "Текстиль"),
@@ -175,16 +176,21 @@ class Command(BaseCommand):
             ProductAttribute.objects.create(group=color, slug=slug, name_uk=name, sort=sort)
 
     def _products(self, categories):
+        # (key, sku, slug, name, image, price, weight, sort, category, popular, crop, name_width, styles, colors)
         specs = (
-            ("GH-01", "GH-01", "velykodnii-ukrainskyi", "Бокс Великодній «Український»", DESKTOP / "479da.png", "8990.00", 400, 1, "podarunkovi-sety", True, "ukr", 127),
-            ("GH-02", "GH-02", "boks-rizdvyanyi-shyshky", "Бокс «Різдвяний Шишки»", DESKTOP / "db3d5.png", "4980.00", 400, 2, "rizdvyani-boksy", True, "shysh", 127),
-            ("GH-03", "TL-0012", "velykodnii-hnizdo", "Бокс Великодній «Гніздо»", DESKTOP / "14fec.png", "2450.00", 400, 3, "podarunkovi-sety", True, "hnizdo", 126),
-            ("GH-04", "GH-04", "vesilnyi", "Бокс «Весільний»", DESKTOP / "72b4d.png", "14980.00", 500, 4, "podarunkovi-sety", True, "cover", 119),
-            ("GH-05", "GH-05", "vesnianyi", "Бокс «Весняний»", CATALOG / "2dcde.png", "2450.00", 400, 5, "rizdvyani-boksy", False, "cover", 143),
-            ("GH-06", "GH-06", "gazetnyi", "Бокс «Газетний»", CATALOG / "729be.png", "5130.00", 400, 6, "rizdvyani-boksy", False, "cover", 127),
+            ("GH-01", "GH-01", "velykodnii-ukrainskyi", "Бокс Великодній «Український»", DESKTOP / "479da.png", "8990.00", 400, 1, "podarunkovi-sety", True, "ukr", 127, ("classic",), ("red", "beige")),
+            ("GH-02", "GH-02", "boks-rizdvyanyi-shyshky", "Бокс «Різдвяний Шишки»", DESKTOP / "db3d5.png", "4980.00", 400, 2, "rizdvyani-boksy", True, "shysh", 127, ("rustic",), ("green", "gold")),
+            ("GH-03", "TL-0012", "velykodnii-hnizdo", "Бокс Великодній «Гніздо»", DESKTOP / "14fec.png", "2450.00", 400, 3, "podarunkovi-sety", True, "hnizdo", 126, ("scandi",), ("white",)),
+            ("GH-04", "GH-04", "vesilnyi", "Бокс «Весільний»", DESKTOP / "72b4d.png", "14980.00", 500, 4, "podarunkovi-sety", True, "cover", 119, ("classic",), ("white", "gold")),
+            ("GH-05", "GH-05", "vesnianyi", "Бокс «Весняний»", CATALOG / "2dcde.png", "2450.00", 400, 5, "interierni-kompozytsii", False, "cover", 143, ("boho",), ("beige", "green")),
+            ("GH-06", "GH-06", "gazetnyi", "Бокс «Газетний»", CATALOG / "729be.png", "5130.00", 400, 6, "tekstyl", False, "cover", 127, ("modern",), ("black", "beige")),
         )
+        attr_map = {
+            (attr.group.slug, attr.slug): attr
+            for attr in ProductAttribute.objects.select_related("group")
+        }
         made = {}
-        for key, sku, slug, name, image, price, weight, sort, category_slug, popular, crop, name_width in specs:
+        for key, sku, slug, name, image, price, weight, sort, category_slug, popular, crop, name_width, styles, colors in specs:
             product = Product.objects.create(
                 category=categories[category_slug],
                 sku=sku,
@@ -206,6 +212,13 @@ class Command(BaseCommand):
             if key != "GH-03":
                 shot = ProductImage(product=product, sort=1)
                 _save(shot, "image", image, f"{slug}.png")
+            attrs = []
+            for style in styles:
+                attrs.append(attr_map[("style", style)])
+            for color in colors:
+                attrs.append(attr_map[("color", color)])
+            if attrs:
+                product.filter_attrs.set(attrs)
             made[key] = product
         return made
 
