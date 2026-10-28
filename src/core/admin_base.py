@@ -31,7 +31,7 @@ class GestiaModelAdmin(ImagePreviewMixin, ModelAdmin):
     def get_list_display(self, request):
         display = list(super().get_list_display(request))
         if _image_fields(self.model) and "image_thumb" not in display:
-            display.insert(0, "image_thumb")
+            display.insert(1 if display else 0, "image_thumb")
         return display
 
     @admin.display(description="Фото")

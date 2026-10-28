@@ -22,47 +22,46 @@ def encode_upload(uploaded, source_name: str) -> ContentFile | None:
     suffix = Path(source_name or "").suffix.lower()
     if suffix not in _CONVERT_SUFFIXES:
         return None
-    if hasattr(uploaded, "seek"):
-        uploaded.seek(0)
+    _rewind(uploaded)
+    image = None
     try:
         image = Image.open(uploaded)
         image.load()
+        if (image.format or "").upper() not in {"JPEG", "PNG"}:
+            return None
+        try:
+            image = ImageOps.exif_transpose(image) or image
+        except Exception:
+            pass
+        image = _with_alpha(image)
+        if max(image.width, image.height) > MAX_SIDE:
+            image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
+        buffer = BytesIO()
+        image.save(buffer, format="WEBP", quality=QUALITY, method=6)
+        stem = Path(source_name).stem or "image"
+        return ContentFile(buffer.getvalue(), name=f"{stem}.webp")
     except Exception:
-        logger.warning("Не вдалося прочитати зображення %s", Path(source_name).name)
-        _rewind(uploaded)
+        logger.warning("Не вдалося обробити зображення %s", Path(source_name).name)
         return None
-    if (image.format or "").upper() not in {"JPEG", "PNG"}:
+    finally:
+        if image is not None:
+            image.close()
         _rewind(uploaded)
-        return None
-    try:
-        image = ImageOps.exif_transpose(image) or image
-    except Exception:
-        pass
-    image = _with_alpha(image)
-    if max(image.width, image.height) > MAX_SIDE:
-        image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
-    buffer = BytesIO()
-    image.save(buffer, format="WEBP", quality=QUALITY, method=6)
-    stem = Path(source_name).stem or "image"
-    return ContentFile(buffer.getvalue(), name=f"{stem}.webp")
 
 
 def convert_fieldfile(fieldfile) -> None:
     if not fieldfile or getattr(fieldfile, "_committed", True):
         return
     source_name = getattr(fieldfile, "name", "") or ""
-    content = None
-    try:
-        content = encode_upload(fieldfile.file, source_name)
-    except Exception:
-        logger.warning("Не вдалося конвертувати зображення %s", Path(source_name).name)
-        return
+    content = encode_upload(fieldfile.file, source_name)
     if content is None:
         return
     fieldfile.save(Path(content.name).name, content, save=False)
 
 
-def convert_images_on_save(sender, instance, **kwargs):
+def convert_images_on_save(sender, instance, raw=False, **kwargs):
+    if raw:
+        return
     meta = getattr(instance, "_meta", None)
     if meta is None:
         return

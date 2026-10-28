@@ -2,6 +2,7 @@ import tempfile
 from decimal import Decimal
 from io import BytesIO
 from pathlib import Path
+from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -106,6 +107,70 @@ class WebPAndAdminMediaTests(TestCase):
         product.save()
         self.assertEqual(product.slug, "boks-vesilnyi")
         self.assertTrue(issubclass(WebPImageField, models.ImageField))
+
+    def test_failed_encode_keeps_original_bytes(self):
+        payload = _image_bytes("JPEG", (8, 8))
+        category = Category(name_uk="Збій", slug="zbii")
+        category.image = _upload(payload, "ok.jpg", "image/jpeg")
+        with patch("src.core.images.Image.Image.save", side_effect=OSError("webp")):
+            category.save()
+        self.assertTrue(category.image.name.endswith(".jpg"))
+        self.assertEqual(Path(category.image.path).read_bytes(), payload)
+
+        broken = Category(name_uk="Битий", slug="bytyi")
+        broken.image = _upload(b"not-a-jpeg", "bad.jpg", "image/jpeg")
+        broken.save()
+        self.assertTrue(broken.image.name.endswith(".jpg"))
+        self.assertEqual(Path(broken.image.path).read_bytes(), b"not-a-jpeg")
+
+    def test_exif_orientation_swaps_sides(self):
+        image = Image.new("RGB", (30, 10), (1, 2, 3))
+        exif = image.getexif()
+        exif[274] = 6
+        raw = BytesIO()
+        image.save(raw, format="JPEG", exif=exif)
+        category = Category(name_uk="Екзиф", slug="ekzyf")
+        category.image = _upload(raw.getvalue(), "side.jpg", "image/jpeg")
+        category.save()
+        with Image.open(category.image.path) as saved:
+            self.assertEqual(saved.size, (10, 30))
+
+    def test_existing_category_keeps_slug_and_lists_open(self):
+        category = Category.objects.create(slug="kyiv", name_uk="Київ")
+        url = reverse("admin:catalog_category_change", args=[category.pk])
+        saved = self.client.post(
+            url,
+            {"name_uk": "Нова", "name_en": "", "sort": "0", "is_active": "on"},
+        )
+        self.assertEqual(saved.status_code, 302)
+        category.refresh_from_db()
+        self.assertEqual(category.slug, "kyiv")
+        self.assertEqual(category.name_uk, "Нова")
+
+        product = Product.objects.create(
+            category=category,
+            sku="BOX2",
+            slug="box",
+            name_uk="Бокс",
+            price_uah=Decimal("10"),
+            price_eur=Decimal("1"),
+            stock_qty=1,
+        )
+        listing = self.client.get(reverse("admin:catalog_product_changelist"))
+        self.assertEqual(listing.status_code, 200)
+        change = self.client.get(reverse("admin:catalog_product_change", args=[product.pk]))
+        self.assertEqual(change.status_code, 200)
+        self.assertNotContains(change, 'name="slug"')
+        for name in (
+            "admin:catalog_category_changelist",
+            "admin:catalog_catalogcell_changelist",
+            "admin:content_homeblock_changelist",
+            "admin:content_advantage_changelist",
+            "admin:content_aboutpage_changelist",
+            "admin:content_sitesettings_changelist",
+        ):
+            page = self.client.get(reverse(name))
+            self.assertEqual(page.status_code, 200, name)
 
 
 def _image_bytes(fmt, size, mode="RGB"):

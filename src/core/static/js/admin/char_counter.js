@@ -68,7 +68,8 @@
     }
 
     field.addEventListener("beforeinput", function (event) {
-      if (!event.inputType || event.inputType.indexOf("delete") === 0) return;
+      var kind = event.inputType || "";
+      if (!kind || kind.indexOf("delete") === 0 || kind.toLowerCase().indexOf("composition") !== -1) return;
       var data = event.data || "";
       if (!data) return;
       var start = field.selectionStart;
@@ -83,6 +84,8 @@
       update();
     });
     field.addEventListener("input", update);
+    field.addEventListener("change", update);
+    field.addEventListener("compositionend", update);
     field.addEventListener("paste", function () {
       window.setTimeout(update, 0);
     });
@@ -105,6 +108,9 @@
   }
 
   document.addEventListener("formset:added", function (event) {
+    bind(event.target || document);
+  });
+  document.addEventListener("htmx:afterSettle", function (event) {
     bind(event.target || document);
   });
 })();
