@@ -1,5 +1,5 @@
-<label class="field">
+<label class="field{% if field.errors %} is-invalid{% endif %}" data-field-wrap>
   <span class="field__label">{{ field.label }}</span>
   {{ field }}
-  {% if field.errors %}<span class="field__error">{{ field.errors }}</span>{% endif %}
+  <span class="field__error" data-error-for="{{ field.name }}" data-field-error{% if not field.errors %} hidden{% endif %}>{% if field.errors %}{{ field.errors|striptags }}{% endif %}</span>
 </label>

@@ -2,20 +2,15 @@
   display: block;
 }
 
-.mega {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
+.mega:not([hidden]) {
+  position: fixed;
+  inset: 0;
   z-index: 30;
 }
 
 .mega__scrim {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: var(--header-h);
-  bottom: 0;
+  position: absolute;
+  inset: 0;
   border: 0;
   padding: 0;
   background: rgba(0, 0, 0, 0.2);
@@ -23,8 +18,11 @@
 }
 
 .mega__panel {
-  position: relative;
+  position: absolute;
   z-index: 1;
+  left: 0;
+  right: 0;
+  top: var(--header-h);
   background: #fff;
   max-height: min(510px, calc(100dvh - var(--header-h)));
   overflow: auto;

@@ -58,6 +58,16 @@
   box-shadow: none;
 }
 
+.sheet .field.is-invalid .field__input,
+.sheet .field__input.is-invalid {
+  border-color: var(--danger);
+}
+
+.sheet .field.is-valid .field__input,
+.sheet .field__input.is-valid {
+  border-color: var(--good);
+}
+
 .sheet .check {
   color: #000;
 }

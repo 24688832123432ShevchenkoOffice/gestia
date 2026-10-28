@@ -28,8 +28,32 @@ select.field__input {
 }
 
 .field__error {
-  color: var(--accent);
+  color: var(--danger);
   font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.field.is-invalid .field__input,
+.field__input.is-invalid {
+  border-color: var(--danger);
+}
+
+.field.is-valid .field__input,
+.field__input.is-valid {
+  border-color: var(--good);
+}
+
+@media (max-width: 1023px) {
+  .field__error {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .field__input,
+  select.field__input {
+    font-size: 16px;
+  }
 }
 
 .check {

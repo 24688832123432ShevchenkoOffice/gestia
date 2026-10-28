@@ -105,9 +105,18 @@
 
 .figma-error {
   margin: -6px 0 0;
-  color: #000;
+  color: var(--danger);
   font-size: 12px;
   letter-spacing: -0.36px;
+  line-height: 1.35;
+}
+
+.figma-field.is-invalid {
+  border-color: var(--danger);
+}
+
+.figma-field.is-valid {
+  border-color: var(--good);
 }
 
 .consent {
@@ -184,6 +193,11 @@
   .consent__text {
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
+  }
+
+  .figma-error {
+    font-size: 12px;
+    padding-right: env(safe-area-inset-right, 0px);
   }
 }
 

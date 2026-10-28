@@ -1,62 +1,64 @@
-import re
-
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from src.commerce.models import Order
-
-PHONE_RE = re.compile(r"^[0-9+\-() ]{10,20}$")
-LETTER_RE = re.compile(r"[A-Za-zА-Яа-яІіЇїЄєҐґ]")
-
-
-def clean_phone_value(phone: str) -> str:
-    phone = (phone or "").strip()
-    digits = re.sub(r"\D", "", phone)
-    if LETTER_RE.search(phone) or not PHONE_RE.match(phone) or len(digits) < 10:
-        raise forms.ValidationError(_("Укажіть телефон цифрами, без літер."))
-    return phone
+from src.commerce.validators import (
+    EMAIL_ERRORS,
+    MSG_REQUIRED,
+    NAME_ERRORS,
+    PHONE_ERRORS,
+    clean_name_value,
+    clean_phone_value,
+)
 
 
 class ConsentForm(forms.Form):
-    consent = forms.BooleanField(label=_("Погоджуюсь на обробку персональних даних"), required=True)
+    consent = forms.BooleanField(
+        label=_("Погоджуюсь на обробку персональних даних"),
+        required=True,
+        error_messages={"required": MSG_REQUIRED},
+    )
 
 
-class ContactForm(ConsentForm):
-    name = forms.CharField(label=_("Ім'я"), max_length=120)
-    phone = forms.CharField(label=_("Телефон"), max_length=32)
+class NamePhoneMixin:
+    def clean_name(self):
+        return clean_name_value(self.cleaned_data["name"])
+
+    def clean_phone(self):
+        return clean_phone_value(self.cleaned_data["phone"])
+
+
+class ContactForm(NamePhoneMixin, ConsentForm):
+    name = forms.CharField(label=_("Ім'я"), max_length=120, error_messages=NAME_ERRORS.copy())
+    phone = forms.CharField(label=_("Телефон"), max_length=32, error_messages=PHONE_ERRORS.copy())
     message = forms.CharField(label=_("Повідомлення"), required=False, widget=forms.Textarea(attrs={"rows": 4}))
 
-    def clean_phone(self):
-        return clean_phone_value(self.cleaned_data["phone"])
 
-
-class CallbackForm(ConsentForm):
-    name = forms.CharField(label=_("Ім'я"), max_length=120)
-    phone = forms.CharField(label=_("Телефон"), max_length=32)
+class CallbackForm(NamePhoneMixin, ConsentForm):
+    name = forms.CharField(label=_("Ім'я"), max_length=120, error_messages=NAME_ERRORS.copy())
+    phone = forms.CharField(label=_("Телефон"), max_length=32, error_messages=PHONE_ERRORS.copy())
     sku = forms.CharField(widget=forms.HiddenInput)
 
-    def clean_phone(self):
-        return clean_phone_value(self.cleaned_data["phone"])
 
-
-class BuyNowForm(ConsentForm):
-    name = forms.CharField(label=_("Ім'я"), max_length=120)
-    phone = forms.CharField(label=_("Телефон"), max_length=32)
-    address = forms.CharField(label=_("Адреса доставки"), max_length=255)
+class BuyNowForm(NamePhoneMixin, ConsentForm):
+    name = forms.CharField(label=_("Ім'я"), max_length=120, error_messages=NAME_ERRORS.copy())
+    phone = forms.CharField(label=_("Телефон"), max_length=32, error_messages=PHONE_ERRORS.copy())
+    address = forms.CharField(
+        label=_("Адреса доставки"),
+        max_length=255,
+        error_messages={"required": MSG_REQUIRED},
+    )
     sku = forms.CharField(widget=forms.HiddenInput)
-
-    def clean_phone(self):
-        return clean_phone_value(self.cleaned_data["phone"])
 
 
 class WaitlistForm(ConsentForm):
-    email = forms.EmailField(label=_("Email"), max_length=254)
+    email = forms.EmailField(label=_("Email"), max_length=254, error_messages=EMAIL_ERRORS.copy())
 
 
-class CheckoutForm(ConsentForm):
-    name = forms.CharField(label=_("Ім’я"), max_length=120)
-    phone = forms.CharField(label=_("Номер телефону"), max_length=32)
-    email = forms.EmailField(label=_("Email"))
+class CheckoutForm(NamePhoneMixin, ConsentForm):
+    name = forms.CharField(label=_("Ім’я"), max_length=120, error_messages=NAME_ERRORS.copy())
+    phone = forms.CharField(label=_("Номер телефону"), max_length=32, error_messages=PHONE_ERRORS.copy())
+    email = forms.EmailField(label=_("Email"), error_messages=EMAIL_ERRORS.copy())
     delivery_method = forms.ChoiceField(
         label=_("Доставка"),
         choices=[
@@ -79,9 +81,6 @@ class CheckoutForm(ConsentForm):
         initial=Order.Payment.ON_DELIVERY,
     )
 
-    def clean_phone(self):
-        return clean_phone_value(self.cleaned_data["phone"])
-
     def clean(self):
         cleaned = super().clean()
         address = (cleaned.get("address") or "").strip()
@@ -93,12 +92,19 @@ class CheckoutForm(ConsentForm):
         if apartment and cleaned.get("delivery_method") == Order.Delivery.COURIER:
             address = f"{address}, кв. {apartment}" if address else f"кв. {apartment}"
         if not address:
-            self.add_error("city", self.fields["city"].error_messages["required"])
+            self.add_error("city", MSG_REQUIRED)
         cleaned["address"] = address
         return cleaned
 
 
 def style_form(form):
+    validate = {
+        "name": "name",
+        "phone": "phone",
+        "email": "email",
+        "address": "required",
+        "consent": "consent",
+    }
     for name, field in form.fields.items():
         if isinstance(field.widget, forms.CheckboxInput):
             field.widget.attrs["class"] = "field__check"
@@ -106,10 +112,24 @@ def style_form(form):
             field.widget.attrs["class"] = "field__input field__input--area"
         elif not isinstance(field.widget, forms.HiddenInput):
             field.widget.attrs["class"] = "field__input"
+        if name in validate:
+            field.widget.attrs["data-validate"] = validate[name]
         if name == "phone":
-            field.widget.attrs.update({"inputmode": "tel", "autocomplete": "tel"})
+            field.widget.attrs.update(
+                {
+                    "inputmode": "tel",
+                    "autocomplete": "tel",
+                    "maxlength": "19",
+                }
+            )
         if name == "name":
-            field.widget.attrs["autocomplete"] = "name"
+            field.widget.attrs.update(
+                {
+                    "autocomplete": "name",
+                    "autocapitalize": "words",
+                    "spellcheck": "false",
+                }
+            )
         if name == "email":
             field.widget.attrs["autocomplete"] = "email"
         if name in {"address"}:

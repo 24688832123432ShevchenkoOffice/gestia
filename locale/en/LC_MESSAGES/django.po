@@ -153,8 +153,20 @@ msgstr "Delivery"
 msgid "Оплата"
 msgstr "Payment"
 
-msgid "Укажіть телефон цифрами, без літер."
-msgstr "Enter the phone with digits only."
+msgid "Поле обов'язкове для заповнення"
+msgstr "This field is required"
+
+msgid "Ім'я не може містити цифри або спецсимволи. Будь ласка, використовуйте лише букви"
+msgstr "The name cannot contain digits or special characters. Please use letters only"
+
+msgid "Занадто коротке значення"
+msgstr "The value is too short"
+
+msgid "Введіть коректний номер мобільного телефону у форматі +380 (XX) XXX-XX-XX"
+msgstr "Enter a valid mobile number in the format +380 (XX) XXX-XX-XX"
+
+msgid "Некоректний формат"
+msgstr "Invalid format"
 
 msgid "Цей товар зараз не можна замовити."
 msgstr "This piece cannot be ordered right now."

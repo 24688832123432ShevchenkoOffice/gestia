@@ -7,6 +7,7 @@ from django.utils import translation
 from src.catalog.models import Category, Product
 from src.commerce.forms import CallbackForm
 from src.commerce.models import Inquiry, Order
+from src.commerce.validators import MSG_NAME, MSG_PHONE
 
 
 class PhoneTests(TestCase):
@@ -14,9 +15,37 @@ class PhoneTests(TestCase):
         form = CallbackForm(data={"name": "Оля", "phone": "067abc1122", "sku": "A", "consent": True})
         self.assertFalse(form.is_valid())
         self.assertIn("phone", form.errors)
+        self.assertEqual(form.errors["phone"][0], str(MSG_PHONE))
+
+    def test_rejects_short_number(self):
+        form = CallbackForm(data={"name": "Оля", "phone": "+38067111", "sku": "A", "consent": True})
+        self.assertFalse(form.is_valid())
+        self.assertIn("phone", form.errors)
 
     def test_accepts_digits(self):
         form = CallbackForm(data={"name": "Оля", "phone": "+380671112233", "sku": "A", "consent": True})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["phone"], "+380671112233")
+
+    def test_normalizes_local_mobile(self):
+        form = CallbackForm(data={"name": "Оля", "phone": "0671112233", "sku": "A", "consent": True})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["phone"], "+380671112233")
+
+
+class NameTests(TestCase):
+    def test_rejects_digits(self):
+        form = CallbackForm(data={"name": "Оля2", "phone": "+380671112233", "sku": "A", "consent": True})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors["name"][0], str(MSG_NAME))
+
+    def test_rejects_specials(self):
+        form = CallbackForm(data={"name": "Оля!", "phone": "+380671112233", "sku": "A", "consent": True})
+        self.assertFalse(form.is_valid())
+        self.assertIn("name", form.errors)
+
+    def test_accepts_hyphen_and_apostrophe(self):
+        form = CallbackForm(data={"name": "Мар'яна-Анна", "phone": "+380671112233", "sku": "A", "consent": True})
         self.assertTrue(form.is_valid())
 
 

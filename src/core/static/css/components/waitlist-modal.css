@@ -236,9 +236,19 @@ body.waitlist-modal-open {
 
 .waitlist-modal__error {
   margin: 0;
-  color: #000;
+  color: var(--danger);
   font-size: 0.75rem;
   line-height: 1.3;
+}
+
+.waitlist-modal__input.is-invalid,
+.waitlist-modal__field.is-invalid .waitlist-modal__input {
+  border-color: var(--danger);
+}
+
+.waitlist-modal__input.is-valid,
+.waitlist-modal__field.is-valid .waitlist-modal__input {
+  border-color: var(--good);
 }
 
 .waitlist-modal__success {
