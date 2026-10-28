@@ -16,7 +16,7 @@ class SingletonAdmin(ModelAdmin):
 class SiteSettingsAdmin(SingletonAdmin):
     fieldsets = (
         ("Контакти", {"fields": ("phone", "email", "instagram_url", "pinterest_url", "logo")}),
-        ("Адреса", {"fields": ("address_uk", "address_ru", "address_en")}),
+        ("Адреса", {"fields": ("address_uk", "address_en")}),
         ("Мови", {"fields": ("en_enabled",)}),
         ("Сповіщення", {"fields": ("telegram_notify_orders", "telegram_notify_leads")}),
         ("Кольори", {"fields": ("color_ink", "color_paper", "color_accent")}),
@@ -25,13 +25,8 @@ class SiteSettingsAdmin(SingletonAdmin):
             {
                 "fields": (
                     "footer_note_uk",
-                    "footer_note_ru",
                     "footer_note_en",
-                    "footer_tail_uk",
-                    "footer_tail_ru",
-                    "footer_tail_en",
                     "developer_note_uk",
-                    "developer_note_ru",
                     "developer_note_en",
                 )
             },
@@ -43,14 +38,14 @@ class SiteSettingsAdmin(SingletonAdmin):
 class HomeBlockAdmin(ModelAdmin):
     list_display = ("key", "title_uk", "sort")
     list_filter = ("key",)
-    search_fields = ("title_uk", "title_ru", "title_en", "text_uk")
+    search_fields = ("title_uk", "title_en", "text_uk")
     ordering = ("sort",)
 
 
 @admin.register(Advantage)
 class AdvantageAdmin(ModelAdmin):
     list_display = ("title_uk", "sort")
-    search_fields = ("title_uk", "title_ru", "title_en")
+    search_fields = ("title_uk", "title_en")
     ordering = ("sort",)
 
 
@@ -58,7 +53,6 @@ class AdvantageAdmin(ModelAdmin):
 class AboutPageAdmin(SingletonAdmin):
     fieldsets = (
         ("Українська", {"fields": ("title_uk", "body_uk", "seo_title_uk", "seo_description_uk")}),
-        ("Російська", {"fields": ("title_ru", "body_ru", "seo_title_ru", "seo_description_ru")}),
         ("Англійська", {"fields": ("title_en", "body_en", "seo_title_en", "seo_description_en")}),
         ("Медіа", {"fields": ("image", "video")}),
     )
@@ -68,7 +62,6 @@ class AboutPageAdmin(SingletonAdmin):
 class PrivacyPageAdmin(SingletonAdmin):
     fieldsets = (
         ("Українська", {"fields": ("title_uk", "body_uk", "seo_title_uk", "seo_description_uk")}),
-        ("Російська", {"fields": ("title_ru", "body_ru", "seo_title_ru", "seo_description_ru")}),
         ("Англійська", {"fields": ("title_en", "body_en", "seo_title_en", "seo_description_en")}),
     )
 
@@ -84,5 +77,5 @@ class ReviewAdmin(ModelAdmin):
 class FooterLinkAdmin(ModelAdmin):
     list_display = ("label_uk", "column", "url_name", "underlined", "sort")
     list_filter = ("column", "underlined")
-    search_fields = ("label_uk", "label_ru", "label_en")
+    search_fields = ("label_uk", "label_en")
     ordering = ("column", "sort")

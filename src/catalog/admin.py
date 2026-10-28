@@ -31,7 +31,7 @@ class CategoryAdmin(ModelAdmin):
         "filter_sort",
     )
     list_filter = ("is_active", "parent")
-    search_fields = ("name_uk", "name_ru", "name_en", "slug")
+    search_fields = ("name_uk", "name_en", "slug")
     prepopulated_fields = {"slug": ("name_uk",)}
     ordering = ("sort", "name_uk")
 
@@ -46,13 +46,13 @@ class ProductAttributeGroupAdmin(ModelAdmin):
 class ProductAttributeAdmin(ModelAdmin):
     list_display = ("name_uk", "group", "slug", "sort", "is_filterable")
     list_filter = ("group", "is_filterable")
-    search_fields = ("name_uk", "name_ru", "name_en", "slug")
+    search_fields = ("name_uk", "name_en", "slug")
 
 
 @admin.register(ProductSet)
 class ProductSetAdmin(ModelAdmin):
     list_display = ("name_uk", "slug")
-    search_fields = ("name_uk", "name_ru", "name_en", "slug")
+    search_fields = ("name_uk", "name_en", "slug")
     prepopulated_fields = {"slug": ("name_uk",)}
 
 
@@ -81,7 +81,7 @@ class ProductAdmin(ModelAdmin):
     list_display_links = ("name_uk",)
     list_editable = ("stock_qty",)
     list_filter = ("is_active", "stock_status", "category", "product_set")
-    search_fields = ("name_uk", "name_ru", "name_en", "sku", "slug")
+    search_fields = ("name_uk", "name_en", "sku", "slug")
     prepopulated_fields = {"slug": ("name_uk",)}
     autocomplete_fields = ("category", "product_set")
     filter_horizontal = ("filter_attrs", "related_manual")

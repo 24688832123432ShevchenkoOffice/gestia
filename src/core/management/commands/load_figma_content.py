@@ -416,9 +416,7 @@ class Command(BaseCommand):
         if about.image:
             about.image.delete(save=False)
         about.title_uk = "Про нас"
-        about.title_ru = ""
         about.title_en = ""
         about.body_uk = ""
-        about.body_ru = ""
         about.body_en = ""
         about.save()

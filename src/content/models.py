@@ -32,12 +32,10 @@ class SiteSettings(SingletonModel):
     phone = models.CharField("Телефон", max_length=40, default="+380000000000")
     email = models.EmailField("Email", blank=True)
     address_uk = models.CharField("Адреса", max_length=255, blank=True)
-    address_ru = models.CharField("Адреса (RU)", max_length=255, blank=True)
     address_en = models.CharField("Адреса (EN)", max_length=255, blank=True)
     instagram_url = models.URLField("Instagram", blank=True)
     pinterest_url = models.URLField("Pinterest", blank=True)
     developer_note_uk = models.CharField("Підпис розробника", max_length=160, blank=True)
-    developer_note_ru = models.CharField("Підпис розробника (RU)", max_length=160, blank=True)
     developer_note_en = models.CharField("Підпис розробника (EN)", max_length=160, blank=True)
     logo = models.ImageField(
         "Логотип",
@@ -45,7 +43,6 @@ class SiteSettings(SingletonModel):
         blank=True,
         validators=[IMAGE_VALIDATOR],
     )
-    ru_enabled = models.BooleanField("Російська увімкнена", default=True)
     en_enabled = models.BooleanField("Англійська увімкнена", default=True)
     telegram_notify_orders = models.BooleanField("Telegram: замовлення", default=True)
     telegram_notify_leads = models.BooleanField("Telegram: заявки", default=True)
@@ -53,7 +50,6 @@ class SiteSettings(SingletonModel):
     color_paper = models.CharField("Колір тла", max_length=7, default="#f3eee6")
     color_accent = models.CharField("Акцент", max_length=7, default="#8d3b2a")
     footer_note_uk = models.CharField("Підпис у підвалі", max_length=255, blank=True)
-    footer_note_ru = models.CharField("Підпис у підвалі (RU)", max_length=255, blank=True)
     footer_note_en = models.CharField("Підпис у підвалі (EN)", max_length=255, blank=True)
 
     class Meta:
@@ -107,10 +103,8 @@ class HomeBlock(models.Model):
 
     key = models.CharField("Ключ", max_length=32, choices=Key.choices, unique=True)
     title_uk = models.CharField("Заголовок", max_length=200, blank=True)
-    title_ru = models.CharField("Заголовок (RU)", max_length=200, blank=True)
     title_en = models.CharField("Заголовок (EN)", max_length=200, blank=True)
     text_uk = models.TextField("Текст", blank=True)
-    text_ru = models.TextField("Текст (RU)", blank=True)
     text_en = models.TextField("Текст (EN)", blank=True)
     image = models.ImageField(
         "Зображення",
@@ -131,19 +125,14 @@ class HomeBlock(models.Model):
         validators=[VIDEO_VALIDATOR],
     )
     text_mobile_uk = models.TextField("Текст (мобільний)", blank=True)
-    text_mobile_ru = models.TextField("Текст (мобільний, RU)", blank=True)
     text_mobile_en = models.TextField("Текст (мобільний, EN)", blank=True)
     cta_uk = models.CharField("Текст кнопки", max_length=200, blank=True)
-    cta_ru = models.CharField("Текст кнопки (RU)", max_length=200, blank=True)
     cta_en = models.CharField("Текст кнопки (EN)", max_length=200, blank=True)
     link_uk = models.CharField("Другий підпис", max_length=160, blank=True)
-    link_ru = models.CharField("Другий підпис (RU)", max_length=160, blank=True)
     link_en = models.CharField("Другий підпис (EN)", max_length=160, blank=True)
     note_uk = models.TextField("Примітка", blank=True)
-    note_ru = models.TextField("Примітка (RU)", blank=True)
     note_en = models.TextField("Примітка (EN)", blank=True)
     lines_uk = models.TextField("Рядки підписів", blank=True)
-    lines_ru = models.TextField("Рядки підписів (RU)", blank=True)
     lines_en = models.TextField("Рядки підписів (EN)", blank=True)
     sort = models.PositiveIntegerField("Порядок", default=0)
 
@@ -189,10 +178,8 @@ class HomeBlock(models.Model):
 
 class Advantage(models.Model):
     title_uk = models.CharField("Заголовок", max_length=160)
-    title_ru = models.CharField("Заголовок (RU)", max_length=160, blank=True)
     title_en = models.CharField("Заголовок (EN)", max_length=160, blank=True)
     text_uk = models.TextField("Текст", blank=True)
-    text_ru = models.TextField("Текст (RU)", blank=True)
     text_en = models.TextField("Текст (EN)", blank=True)
     image = models.ImageField(
         "Зображення",
@@ -222,10 +209,8 @@ class Advantage(models.Model):
 class AboutPage(SingletonModel):
     cache_key = "about_page_v1"
     title_uk = models.CharField("Заголовок", max_length=200, default="Про нас")
-    title_ru = models.CharField("Заголовок (RU)", max_length=200, blank=True)
     title_en = models.CharField("Заголовок (EN)", max_length=200, blank=True)
     body_uk = models.TextField("Текст", blank=True)
-    body_ru = models.TextField("Текст (RU)", blank=True)
     body_en = models.TextField("Текст (EN)", blank=True)
     image = models.ImageField(
         "Фото",
@@ -240,10 +225,8 @@ class AboutPage(SingletonModel):
         validators=[VIDEO_VALIDATOR],
     )
     seo_title_uk = models.CharField("SEO title", max_length=200, blank=True)
-    seo_title_ru = models.CharField("SEO title (RU)", max_length=200, blank=True)
     seo_title_en = models.CharField("SEO title (EN)", max_length=200, blank=True)
     seo_description_uk = models.CharField("SEO description", max_length=300, blank=True)
-    seo_description_ru = models.CharField("SEO description (RU)", max_length=300, blank=True)
     seo_description_en = models.CharField("SEO description (EN)", max_length=300, blank=True)
 
     class Meta:
@@ -273,16 +256,12 @@ class AboutPage(SingletonModel):
 class PrivacyPage(SingletonModel):
     cache_key = "privacy_page_v1"
     title_uk = models.CharField("Заголовок", max_length=200, default="Політика конфіденційності")
-    title_ru = models.CharField("Заголовок (RU)", max_length=200, blank=True)
     title_en = models.CharField("Заголовок (EN)", max_length=200, blank=True)
     body_uk = models.TextField("Текст", blank=True)
-    body_ru = models.TextField("Текст (RU)", blank=True)
     body_en = models.TextField("Текст (EN)", blank=True)
     seo_title_uk = models.CharField("SEO title", max_length=200, blank=True)
-    seo_title_ru = models.CharField("SEO title (RU)", max_length=200, blank=True)
     seo_title_en = models.CharField("SEO title (EN)", max_length=200, blank=True)
     seo_description_uk = models.CharField("SEO description", max_length=300, blank=True)
-    seo_description_ru = models.CharField("SEO description (RU)", max_length=300, blank=True)
     seo_description_en = models.CharField("SEO description (EN)", max_length=300, blank=True)
 
     class Meta:
@@ -315,10 +294,8 @@ class Review(models.Model):
         BLACK_FIVE = "black5", "5 чорних"
 
     author_uk = models.CharField("Ім'я", max_length=80)
-    author_ru = models.CharField("Ім'я (RU)", max_length=80, blank=True)
     author_en = models.CharField("Ім'я (EN)", max_length=80, blank=True)
     text_uk = models.TextField("Текст")
-    text_ru = models.TextField("Текст (RU)", blank=True)
     text_en = models.TextField("Текст (EN)", blank=True)
     rating_kind = models.CharField(
         "Рейтинг",
@@ -353,7 +330,6 @@ class FooterLink(models.Model):
 
     column = models.CharField("Колонка", max_length=16, choices=Column.choices)
     label_uk = models.CharField("Підпис", max_length=200)
-    label_ru = models.CharField("Підпис (RU)", max_length=200, blank=True)
     label_en = models.CharField("Підпис (EN)", max_length=200, blank=True)
     url_name = models.CharField("Ім'я URL", max_length=40, blank=True)
     url_arg = models.CharField("Аргумент URL", max_length=80, blank=True)

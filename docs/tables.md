@@ -3,7 +3,7 @@
 APPS_VARIANT=B-admin
 FACET_STACK=A
 PRICING=admin_dual_currency
-LANGUAGES=uk,ru,en
+LANGUAGES=uk,en
 FALLBACK=uk
 
 Немає apps: pricing, shipping, seo, integrations, authentication.
@@ -27,9 +27,9 @@ Product, Category, Order, Attribute не входять у CONTENT_MANIFEST.
 ## Таблиці
 
 ### content_sitesettings (pk=1)
-phone, email, address_uk/ru/en, instagram_url, logo,
-ru_enabled, en_enabled, telegram_notify_orders, telegram_notify_leads,
-color_ink, color_paper, color_accent, footer_note_uk/ru/en
+phone, email, address_uk/en, instagram_url, logo,
+en_enabled, telegram_notify_orders, telegram_notify_leads,
+color_ink, color_paper, color_accent, footer_note_uk/en
 
 ### content_homeblock
 key unique: hero | categories | advantages
@@ -62,7 +62,7 @@ index (is_active, category_id)
 index (sku)
 
 Пошук `q`: icontains по name_* + iexact sku.
-План індексу: до 2000 SKU вистачає btree. Після цього — окрема postgres-міграція `pg_trgm` + GinIndex на name_uk/name_ru/name_en. На SQLite GIN не створюється.
+План індексу: до 2000 SKU вистачає btree. Після цього — окрема postgres-міграція `pg_trgm` + GinIndex на name_uk/name_en. На SQLite GIN не створюється.
 
 ### catalog_productimage
 product_id, image, sort

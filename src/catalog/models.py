@@ -22,7 +22,6 @@ class Category(TimeStampedModel):
     )
     slug = models.SlugField("Слаг", max_length=80, unique=True)
     name_uk = models.CharField("Назва", max_length=160)
-    name_ru = models.CharField("Назва (RU)", max_length=160, blank=True)
     name_en = models.CharField("Назва (EN)", max_length=160, blank=True)
     image = models.ImageField(
         "Зображення",
@@ -81,7 +80,6 @@ class ProductAttributeGroup(models.Model):
 
     slug = models.CharField("Слаг", max_length=32, choices=Slug.choices, unique=True)
     name_uk = models.CharField("Назва", max_length=80)
-    name_ru = models.CharField("Назва (RU)", max_length=80, blank=True)
     name_en = models.CharField("Назва (EN)", max_length=80, blank=True)
 
     class Meta:
@@ -105,7 +103,6 @@ class ProductAttribute(models.Model):
     )
     slug = models.SlugField("Слаг", max_length=80)
     name_uk = models.CharField("Назва", max_length=80)
-    name_ru = models.CharField("Назва (RU)", max_length=80, blank=True)
     name_en = models.CharField("Назва (EN)", max_length=80, blank=True)
     is_filterable = models.BooleanField("У фільтрі", default=True)
     show_on_pdp = models.BooleanField("На картці", default=True)
@@ -130,7 +127,6 @@ class ProductAttribute(models.Model):
 class ProductSet(models.Model):
     slug = models.SlugField("Слаг", max_length=80, unique=True)
     name_uk = models.CharField("Назва", max_length=160)
-    name_ru = models.CharField("Назва (RU)", max_length=160, blank=True)
     name_en = models.CharField("Назва (EN)", max_length=160, blank=True)
 
     class Meta:
@@ -168,10 +164,8 @@ class Product(TimeStampedModel):
     sku = models.CharField("Артикул", max_length=64, unique=True)
     slug = models.SlugField("Слаг", max_length=120, unique=True)
     name_uk = models.CharField("Назва", max_length=200)
-    name_ru = models.CharField("Назва (RU)", max_length=200, blank=True)
     name_en = models.CharField("Назва (EN)", max_length=200, blank=True)
     description_uk = models.TextField("Опис", blank=True)
-    description_ru = models.TextField("Опис (RU)", blank=True)
     description_en = models.TextField("Опис (EN)", blank=True)
     price_uah = models.DecimalField("Ціна, грн", max_digits=10, decimal_places=2)
     price_eur = models.DecimalField("Ціна, євро", max_digits=10, decimal_places=2)
@@ -220,10 +214,8 @@ class Product(TimeStampedModel):
         related_name="related_from",
     )
     seo_title_uk = models.CharField("SEO title", max_length=200, blank=True)
-    seo_title_ru = models.CharField("SEO title (RU)", max_length=200, blank=True)
     seo_title_en = models.CharField("SEO title (EN)", max_length=200, blank=True)
     seo_description_uk = models.CharField("SEO description", max_length=300, blank=True)
-    seo_description_ru = models.CharField("SEO description (RU)", max_length=300, blank=True)
     seo_description_en = models.CharField("SEO description (EN)", max_length=300, blank=True)
 
     class Meta:

@@ -53,7 +53,6 @@ def filter_catalog(qs, parsed):
     if query:
         qs = qs.filter(
             Q(name_uk__icontains=query)
-            | Q(name_ru__icontains=query)
             | Q(name_en__icontains=query)
             | Q(sku__iexact=query)
         )

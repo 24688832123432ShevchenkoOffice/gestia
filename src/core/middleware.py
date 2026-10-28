@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.db.utils import OperationalError, ProgrammingError
-from django.http import HttpResponseRedirect
+from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.utils import translation
 
-from src.core.i18n import collapse_double_prefix, localize_path
+from src.core.i18n import collapse_double_prefix, localize_path, strip_retired_language_prefix
 
 
 def language_enabled(lang: str) -> bool:
@@ -46,6 +46,13 @@ class LanguagePrefixMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        retired = strip_retired_language_prefix(request.path_info)
+        if retired is not None:
+            target = collapse_double_prefix(retired)
+            query = request.META.get("QUERY_STRING", "")
+            if query:
+                target = f"{target}?{query}"
+            return HttpResponsePermanentRedirect(target)
         collapsed = collapse_double_prefix(request.path_info)
         if collapsed != request.path_info:
             query = request.META.get("QUERY_STRING", "")

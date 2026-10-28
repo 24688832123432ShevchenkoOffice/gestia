@@ -1,6 +1,7 @@
 from decimal import Decimal
 from unittest.mock import patch
 
+from django.conf import settings
 from django.core.cache import cache
 from django.test import Client, TestCase, override_settings
 from django.utils import translation
@@ -13,7 +14,7 @@ class LanguageTests(TestCase):
     def setUp(self):
         translation.activate("uk")
         cache.clear()
-        SiteSettings.objects.update_or_create(pk=1, defaults={"ru_enabled": False, "en_enabled": True})
+        SiteSettings.objects.update_or_create(pk=1, defaults={"en_enabled": True})
         cache.clear()
 
     def test_double_prefix_collapses(self):
@@ -42,9 +43,28 @@ class LanguageTests(TestCase):
         self.assertEqual(response["Location"], "/en/katalog/")
         self.assertEqual(self.client.session.get("currency"), "eur")
 
-    def test_ru_prefix_not_in_languages(self):
+    def test_languages_are_uk_and_en_only(self):
+        self.assertEqual([code for code, _label in settings.LANGUAGES], ["uk", "en"])
+
+    def test_ru_prefix_redirects_to_uk_path(self):
         response = self.client.get("/ru/")
-        self.assertIn(response.status_code, {302, 404})
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response["Location"], "/")
+
+    def test_ru_prefix_keeps_path_and_query(self):
+        response = self.client.get("/ru/katalog/?q=shyshky")
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response["Location"], "/katalog/?q=shyshky")
+
+    def test_repeated_ru_prefix_and_english_tail(self):
+        response = self.client.get("/ru/ru/en/katalog/")
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response["Location"], "/en/katalog/")
+
+    def test_set_language_drops_retired_prefix(self):
+        response = self.client.post("/i18n/setlang/", {"language": "ru", "next": "/ru/tovar/seo-box/"})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], "/tovar/seo-box/")
 
     def test_disabled_english_redirects_home(self):
         SiteSettings.objects.filter(pk=1).update(en_enabled=False)
@@ -96,7 +116,7 @@ class SeoTests(TestCase):
     def setUp(self):
         translation.activate("uk")
         cache.clear()
-        SiteSettings.objects.update_or_create(pk=1, defaults={"ru_enabled": False, "en_enabled": True})
+        SiteSettings.objects.update_or_create(pk=1, defaults={"en_enabled": True})
         cache.clear()
         self.category = Category.objects.create(slug="seo-cat", name_uk="Святкові бокси", is_active=True)
         self.product = Product.objects.create(
@@ -144,6 +164,9 @@ class SeoTests(TestCase):
         self.assertContains(home, '<meta property="og:title" content="Gestia Home">')
         self.assertContains(home, '<meta property="og:site_name" content="Gestia Home">')
         self.assertContains(home, '<title>Gestia Home</title>')
+        self.assertContains(home, 'hreflang="uk"')
+        self.assertContains(home, 'hreflang="en"')
+        self.assertNotContains(home, 'hreflang="ru"')
         product = self.client.get(self.product.get_absolute_url())
         self.assertContains(product, '<link rel="canonical" href="http://testserver/tovar/seo-box/">')
         self.assertContains(product, '<meta property="og:title" content="Святковий бокс">')
@@ -170,6 +193,8 @@ class SeoTests(TestCase):
         self.assertIn("/pro-nas/", body)
         self.assertNotIn("/tovar/seo-hidden/", body)
         self.assertNotIn("/katalog/seo-empty/", body)
+        self.assertNotIn("/ru/", body)
+        self.assertNotIn('hreflang="ru"', body)
 
     def test_robots_points_at_sitemap(self):
         response = self.client.get("/robots.txt")
