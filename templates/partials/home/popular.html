@@ -1,6 +1,8 @@
-{% load i18n shop_tags static %}
+{% load i18n shop_tags static content_tags %}
+{% cms block.title "popular_title" as pop_title %}
+{% cms block.cta "popular_cta" as pop_cta %}
 <section class="popular">
-  {% if block.title %}<h2>{{ block.title }}</h2>{% endif %}
+  {% if pop_title %}<h2>{{ pop_title }}</h2>{% endif %}
   <div class="pop-rail">
     {% for product in popular %}
       <a class="pop-card" href="{{ product.get_absolute_url }}">
@@ -38,10 +40,10 @@
       </a>
     </div>
   {% endif %}
-  {% if block.cta %}
+  {% if pop_cta %}
     {% if pop_nav %}
       <div class="pop-actions">
-        <a class="figma-btn figma-btn--brown" href="{% url 'catalog' %}">{{ block.cta }}</a>
+        <a class="figma-btn figma-btn--brown" href="{% url 'catalog' %}">{{ pop_cta }}</a>
         <button class="pop-nav__btn" type="button" data-about-pop-prev aria-label="{% trans 'Попередні товари' %}">
           <span class="pop-nav__turn">
             <img src="{% static 'figma/about/m/0bb23f7c-e2ab-4658-a731-ca841f4df6c2.svg' %}" width="15" height="15" alt="">
@@ -54,7 +56,7 @@
         </button>
       </div>
     {% else %}
-      <a class="figma-btn figma-btn--brown" href="{% url 'catalog' %}">{{ block.cta }}</a>
+      <a class="figma-btn figma-btn--brown" href="{% url 'catalog' %}">{{ pop_cta }}</a>
     {% endif %}
   {% endif %}
 </section>

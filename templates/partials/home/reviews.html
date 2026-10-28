@@ -1,6 +1,7 @@
-{% load shop_tags static %}
+{% load shop_tags static content_tags %}
+{% cms block.title "reviews_title" as reviews_title %}
 <section class="reviews">
-  {% if block.title %}<h2>{{ block.title }}</h2>{% endif %}
+  {% if reviews_title %}<h2>{{ reviews_title }}</h2>{% endif %}
   <div class="review-rail">
     {% for review in reviews %}
       <article class="review-card">

@@ -1,4 +1,7 @@
-{% load i18n %}
+{% load content_tags %}
+{% cms_field form_copy "sheet_consent" as sheet_consent %}
+{% cms_field form_copy "callback_button" as callback_button %}
+{% cms_field form_copy "sheet_close" as sheet_close %}
 <form data-qa="lead-form" method="post" action="{% url 'callback' %}" hx-post="{% url 'callback' %}" hx-target="this" hx-swap="outerHTML" {% include "commerce/_validate_attrs.html" %}>
   {% csrf_token %}
   {% include "commerce/_honeypot.html" %}
@@ -8,11 +11,11 @@
   {% include "commerce/_field.html" with field=callback_form.phone %}
   <label class="check" data-field-wrap>
     {{ callback_form.consent }}
-    <span><a href="{% url 'privacy' %}">{% trans "Погоджуюсь на обробку персональних даних" %}</a></span>
+    <span><a href="{% url 'privacy' %}">{{ sheet_consent }}</a></span>
   </label>
   <p class="field__error" data-error-for="consent"{% if not callback_form.consent.errors %} hidden{% endif %}>{% if callback_form.consent.errors %}{{ callback_form.consent.errors|striptags }}{% endif %}</p>
   <div class="sheet__actions">
-    <button class="sheet__btn sheet__btn--primary" type="submit">{% trans "Надіслати заявку" %}</button>
-    <button class="sheet__btn sheet__btn--ghost" type="button" data-close-dialog>{% trans "Закрити" %}</button>
+    <button class="sheet__btn sheet__btn--primary" type="submit">{{ callback_button }}</button>
+    <button class="sheet__btn sheet__btn--ghost" type="button" data-close-dialog>{{ sheet_close }}</button>
   </div>
 </form>

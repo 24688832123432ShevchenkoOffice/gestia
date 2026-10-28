@@ -361,3 +361,62 @@ class FooterLink(models.Model):
             except NoReverseMatch:
                 return ""
         return self.url_arg or ""
+
+
+class ContactForms(SingletonModel):
+    """Тексти форм, які не є окремим візуальним блоком головної."""
+
+    cache_key = "contact_forms_v1"
+
+    waitlist_title_uk = models.CharField("Заголовок вікна", max_length=56, blank=True)
+    waitlist_title_en = models.CharField("Заголовок вікна (EN)", max_length=56, blank=True)
+    waitlist_p1_uk = models.CharField("Перший абзац", max_length=160, blank=True)
+    waitlist_p1_en = models.CharField("Перший абзац (EN)", max_length=160, blank=True)
+    waitlist_p2_uk = models.CharField("Другий абзац", max_length=120, blank=True)
+    waitlist_p2_en = models.CharField("Другий абзац (EN)", max_length=120, blank=True)
+    waitlist_p3_uk = models.CharField("Третій абзац", max_length=140, blank=True)
+    waitlist_p3_en = models.CharField("Третій абзац (EN)", max_length=140, blank=True)
+    waitlist_email_uk = models.CharField("Підказка email", max_length=20, blank=True)
+    waitlist_email_en = models.CharField("Підказка email (EN)", max_length=20, blank=True)
+    waitlist_consent_uk = models.CharField("Текст згоди", max_length=72, blank=True)
+    waitlist_consent_en = models.CharField("Текст згоди (EN)", max_length=72, blank=True)
+    waitlist_privacy_uk = models.CharField("Посилання на політику", max_length=36, blank=True)
+    waitlist_privacy_en = models.CharField("Посилання на політику (EN)", max_length=36, blank=True)
+    waitlist_button_uk = models.CharField("Кнопка", max_length=24, blank=True)
+    waitlist_button_en = models.CharField("Кнопка (EN)", max_length=24, blank=True)
+    waitlist_thanks_title_uk = models.CharField("Заголовок після надсилання", max_length=16, blank=True)
+    waitlist_thanks_title_en = models.CharField("Заголовок після надсилання (EN)", max_length=16, blank=True)
+    waitlist_thanks_text_uk = models.CharField("Текст після надсилання", max_length=90, blank=True)
+    waitlist_thanks_text_en = models.CharField("Текст після надсилання (EN)", max_length=90, blank=True)
+
+    sheet_consent_uk = models.CharField("Текст згоди у вікні", max_length=56, blank=True)
+    sheet_consent_en = models.CharField("Текст згоди у вікні (EN)", max_length=56, blank=True)
+    sheet_close_uk = models.CharField("Кнопка «Закрити»", max_length=16, blank=True)
+    sheet_close_en = models.CharField("Кнопка «Закрити» (EN)", max_length=16, blank=True)
+    contact_button_uk = models.CharField("Кнопка контакту", max_length=16, blank=True)
+    contact_button_en = models.CharField("Кнопка контакту (EN)", max_length=16, blank=True)
+    callback_button_uk = models.CharField("Кнопка заявки", max_length=24, blank=True)
+    callback_button_en = models.CharField("Кнопка заявки (EN)", max_length=24, blank=True)
+    buy_button_uk = models.CharField("Кнопка швидкого замовлення", max_length=24, blank=True)
+    buy_button_en = models.CharField("Кнопка швидкого замовлення (EN)", max_length=24, blank=True)
+
+    label_name_uk = models.CharField("Підпис імені", max_length=16, blank=True)
+    label_name_en = models.CharField("Підпис імені (EN)", max_length=16, blank=True)
+    label_phone_uk = models.CharField("Підпис телефону", max_length=16, blank=True)
+    label_phone_en = models.CharField("Підпис телефону (EN)", max_length=16, blank=True)
+    label_message_uk = models.CharField("Підпис повідомлення", max_length=24, blank=True)
+    label_message_en = models.CharField("Підпис повідомлення (EN)", max_length=24, blank=True)
+    label_address_uk = models.CharField("Підпис адреси", max_length=24, blank=True)
+    label_address_en = models.CharField("Підпис адреси (EN)", max_length=24, blank=True)
+    label_email_uk = models.CharField("Підпис email", max_length=16, blank=True)
+    label_email_en = models.CharField("Підпис email (EN)", max_length=16, blank=True)
+
+    class Meta:
+        verbose_name = "CTA та контактні форми"
+        verbose_name_plural = "CTA та контактні форми"
+
+    def __str__(self):
+        return "CTA та контактні форми"
+
+
+from src.content import proxies as _home_proxies  # noqa: E402,F401

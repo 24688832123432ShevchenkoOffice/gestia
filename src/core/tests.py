@@ -206,7 +206,7 @@ class SeoTests(TestCase):
         self.assertContains(response, 'lang="en"')
         self.assertContains(
             response,
-            "We're adding the final touches to the Gestia Home festive boxes",
+            "adding the final touches to the Gestia Home festive boxes",
         )
         self.assertNotContains(response, "Ми додаємо останні штрихи")
         self.assertContains(response, "No connection. Check your internet and try again.")

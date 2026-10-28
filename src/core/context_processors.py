@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db.utils import OperationalError, ProgrammingError
 
 from src.commerce.forms import ContactForm, WaitlistForm, style_form
+from src.content.form_labels import apply_labels
 from src.core.i18n import localize_path
 from src.core.middleware import language_enabled
 
@@ -18,14 +19,16 @@ def shop(request):
     footer_columns = {"category": [], "info": [], "legal": []}
     cart_count = 0
     wishlist_count = 0
+    form_copy = None
     try:
         from src.catalog.models import Category, Product
         from src.catalog.selectors import nav_categories as load_nav
         from src.commerce.cart import item_count
         from src.commerce.wishlist import item_count as wish_count
-        from src.content.models import FooterLink, HomeBlock, SiteSettings
+        from src.content.models import ContactForms, FooterLink, HomeBlock, SiteSettings
 
         site = SiteSettings.load()
+        form_copy = ContactForms.load()
         home_blocks = {block.key: block for block in HomeBlock.objects.all()}
         nav_categories = list(load_nav())
         menu_categories = list(
@@ -59,6 +62,7 @@ def shop(request):
         "lang_enabled": {
             code: language_enabled(code) for code, _label in settings.LANGUAGES
         },
-        "contact_form": style_form(ContactForm()),
-        "waitlist_form": style_form(WaitlistForm()),
+        "form_copy": form_copy,
+        "contact_form": apply_labels(style_form(ContactForm()), form_copy),
+        "waitlist_form": apply_labels(style_form(WaitlistForm()), form_copy),
     }

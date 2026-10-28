@@ -1,9 +1,11 @@
-{% load i18n %}
+{% load content_tags %}
+{% cms_field form_copy "waitlist_thanks_title" as wl_thanks %}
+{% cms_field form_copy "waitlist_thanks_text" as wl_thanks_text %}
 <div class="waitlist-modal__success" data-waitlist-success>
   <h2 class="waitlist-modal__title" id="waitlist-modal-title">
-    {% trans "Дякуємо!" %} 🎁
+    {{ wl_thanks }} 🎁
   </h2>
   <p class="waitlist-modal__thanks" role="status">
-    {% trans "Ми повідомимо вас першими, коли святкові бокси стануть доступними." %}
+    {{ wl_thanks_text }}
   </p>
 </div>

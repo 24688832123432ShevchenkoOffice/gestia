@@ -42,7 +42,8 @@ class SidebarTreeTests(TestCase):
         self.assertIn("Групи атрибутів", labels)
         self.assertIn("Фрейми каталогу", labels)
         self.assertIn("Політика конфіденційності", labels)
-        self.assertNotIn("CTA та контактні форми", labels)
+        self.assertIn("CTA та контактні форми", labels)
+        self.assertIn("Головний банер", labels)
         self.assertNotIn("Публічний договір", labels)
 
     def test_admin_index_renders_ukrainian_tree(self):
@@ -52,7 +53,8 @@ class SidebarTreeTests(TestCase):
         self.assertContains(response, "Gestia Home")
         self.assertContains(response, "Головна")
         self.assertContains(response, "Головний банер")
-        self.assertContains(response, "key__exact=hero")
+        self.assertContains(response, reverse("admin:content_homeheroblock_changelist"))
+        self.assertContains(response, reverse("admin:content_contactforms_changelist"))
         self.assertContains(response, "Про нас")
         self.assertContains(response, "Замовлення і заявки")
         self.assertContains(response, "Хедер і футер")

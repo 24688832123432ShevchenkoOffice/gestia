@@ -20,36 +20,31 @@ NAV_TREE = [
                 "key": "home_hero",
                 "title": "Головний банер",
                 "icon": "view_carousel",
-                "url_name": "admin:content_homeblock_changelist",
-                "query": "key__exact=hero",
+                "url_name": "admin:content_homeheroblock_changelist",
             },
             {
                 "key": "home_categories",
                 "title": "Категорії",
                 "icon": "grid_view",
-                "url_name": "admin:content_homeblock_changelist",
-                "query": "key__exact=categories",
+                "url_name": "admin:content_homecategoriesblock_changelist",
             },
             {
                 "key": "home_video",
                 "title": "Відео",
                 "icon": "smart_display",
-                "url_name": "admin:content_homeblock_changelist",
-                "query": "key__exact=video",
+                "url_name": "admin:content_homevideoblock_changelist",
             },
             {
                 "key": "home_popular",
                 "title": "Популярні товари",
                 "icon": "star",
-                "url_name": "admin:content_homeblock_changelist",
-                "query": "key__exact=popular",
+                "url_name": "admin:content_homepopularblock_changelist",
             },
             {
                 "key": "home_advantages",
                 "title": "Переваги",
                 "icon": "verified",
-                "url_name": "admin:content_homeblock_changelist",
-                "query": "key__exact=advantages",
+                "url_name": "admin:content_homeadvantagesblock_changelist",
             },
             {
                 "key": "home_advantage_cards",
@@ -61,15 +56,13 @@ NAV_TREE = [
                 "key": "home_video_2",
                 "title": "Відео 2",
                 "icon": "smart_display",
-                "url_name": "admin:content_homeblock_changelist",
-                "query": "key__exact=video_2",
+                "url_name": "admin:content_homevideo2block_changelist",
             },
             {
                 "key": "home_reviews",
                 "title": "Відгуки",
                 "icon": "reviews",
-                "url_name": "admin:content_homeblock_changelist",
-                "query": "key__exact=reviews",
+                "url_name": "admin:content_homereviewsblock_changelist",
             },
             {
                 "key": "home_review_list",
@@ -81,14 +74,13 @@ NAV_TREE = [
                 "key": "home_callback",
                 "title": "Зворотний дзвінок",
                 "icon": "call",
-                "url_name": "admin:content_homeblock_changelist",
-                "query": "key__exact=callback",
+                "url_name": "admin:content_homecallbackblock_changelist",
             },
             {
                 "key": "home_cta",
                 "title": "CTA та контактні форми",
                 "icon": "mail",
-                "url_name": "",
+                "url_name": "admin:content_contactforms_changelist",
             },
         ],
     },
@@ -312,15 +304,17 @@ def _active(url_name, query):
             path = reverse(url_name)
         except NoReverseMatch:
             return False
-        if request.path.rstrip("/") != path.rstrip("/"):
-            return False
-        if not query:
-            return True
-        wanted = QueryDict(query)
-        for key in wanted:
-            if request.GET.get(key) != wanted.get(key):
+        current = request.path.rstrip("/")
+        base = path.rstrip("/")
+        if query:
+            if current != base:
                 return False
-        return True
+            wanted = QueryDict(query)
+            for key in wanted:
+                if request.GET.get(key) != wanted.get(key):
+                    return False
+            return True
+        return current == base or current.startswith(base + "/")
 
     return active
 

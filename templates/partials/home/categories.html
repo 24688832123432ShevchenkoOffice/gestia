@@ -1,5 +1,5 @@
-{% load i18n %}
-<section class="cats" aria-label="{% trans 'Категорії' %}">
+{% load content_tags %}
+<section class="cats" aria-label="{% cms home_blocks.categories.title 'categories_label' %}">
   <div class="cat-rail">
     {% for cat in categories %}
       <a class="cat-card" href="{{ cat.get_absolute_url }}">

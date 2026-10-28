@@ -1,4 +1,8 @@
-{% load i18n %}
+{% load i18n content_tags %}
+{% cms_field form_copy "waitlist_title" as wl_title %}
+{% cms_field form_copy "waitlist_p1" as wl_p1 %}
+{% cms_field form_copy "waitlist_p2" as wl_p2 %}
+{% cms_field form_copy "waitlist_p3" as wl_p3 %}
 <div
   class="waitlist-modal"
   id="waitlist-modal"
@@ -21,12 +25,12 @@
     </button>
     <div class="waitlist-modal__body" id="waitlist-modal-body">
       <h2 class="waitlist-modal__title" id="waitlist-modal-title">
-        {% trans "Твоє ідеальне свято вже майже у коробці…" %} 🎁
+        {{ wl_title }} 🎁
       </h2>
       <div class="waitlist-modal__text" id="waitlist-modal-text">
-        <p>{% trans "Ми додаємо останні штрихи до святкових боксів Gestia Home, щоб ти могла легко створити особливу атмосферу за новорічним столом." %}</p>
-        <p>{% trans "Ще трішки — і мистецтво гостинності стане частиною твоїх сімейних історій!" %}</p>
-        <p>{% trans "Не пропусти старт продажів — залиш свій email та дізнайся першою, коли святкові бокси стануть доступними!" %}</p>
+        <p>{{ wl_p1 }}</p>
+        <p>{{ wl_p2 }}</p>
+        <p>{{ wl_p3 }}</p>
       </div>
       <div id="waitlist-form-slot">
         {% include "partials/home/_waitlist_form.html" with waitlist_form=waitlist_form %}

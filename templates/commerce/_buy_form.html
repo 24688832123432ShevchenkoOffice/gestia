@@ -1,4 +1,7 @@
-{% load i18n %}
+{% load content_tags %}
+{% cms_field form_copy "sheet_consent" as sheet_consent %}
+{% cms_field form_copy "buy_button" as buy_button %}
+{% cms_field form_copy "sheet_close" as sheet_close %}
 <form data-qa="lead-form" method="post" action="{% url 'buy_now' %}" hx-post="{% url 'buy_now' %}" hx-target="this" hx-swap="outerHTML" data-once {% include "commerce/_validate_attrs.html" %}>
   {% csrf_token %}
   {% include "commerce/_honeypot.html" %}
@@ -10,11 +13,11 @@
   {% include "commerce/_field.html" with field=buy_form.address %}
   <label class="check" data-field-wrap>
     {{ buy_form.consent }}
-    <span><a href="{% url 'privacy' %}">{% trans "Погоджуюсь на обробку персональних даних" %}</a></span>
+    <span><a href="{% url 'privacy' %}">{{ sheet_consent }}</a></span>
   </label>
   <p class="field__error" data-error-for="consent"{% if not buy_form.consent.errors %} hidden{% endif %}>{% if buy_form.consent.errors %}{{ buy_form.consent.errors|striptags }}{% endif %}</p>
   <div class="sheet__actions">
-    <button class="sheet__btn sheet__btn--primary" type="submit">{% trans "Замовити одразу" %}</button>
-    <button class="sheet__btn sheet__btn--ghost" type="button" data-close-dialog>{% trans "Закрити" %}</button>
+    <button class="sheet__btn sheet__btn--primary" type="submit">{{ buy_button }}</button>
+    <button class="sheet__btn sheet__btn--ghost" type="button" data-close-dialog>{{ sheet_close }}</button>
   </div>
 </form>

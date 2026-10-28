@@ -1,4 +1,8 @@
-{% load i18n %}
+{% load i18n content_tags %}
+{% cms_field form_copy "waitlist_email" as wl_email %}
+{% cms_field form_copy "waitlist_consent" as wl_consent %}
+{% cms_field form_copy "waitlist_privacy" as wl_privacy %}
+{% cms_field form_copy "waitlist_button" as wl_button %}
 <form
   id="waitlist-form"
   class="waitlist-modal__form"
@@ -25,7 +29,7 @@
       inputmode="email"
       data-validate="email"
       aria-describedby="waitlist-email-error"
-      placeholder="{% trans 'Ваш email' %}"
+      placeholder="{{ wl_email }}"
       value="{{ waitlist_form.email.value|default_if_none:'' }}"
     >
   </label>
@@ -34,10 +38,10 @@
     <input type="checkbox" name="consent" data-validate="consent"{% if waitlist_form.consent.value %} checked{% endif %}>
     <span class="waitlist-modal__box" aria-hidden="true"></span>
     <span class="waitlist-modal__consent-text">
-      {% trans "Погоджуюсь на обробку персональних даних згідно з" %}
-      <a href="{% url 'privacy' %}">{% trans "Політикою конфіденційності" %}</a>
+      {{ wl_consent }}
+      <a href="{% url 'privacy' %}">{{ wl_privacy }}</a>
     </span>
   </label>
   <p class="waitlist-modal__error" data-error-for="consent"{% if not waitlist_form.consent.errors %} hidden{% endif %}>{% if waitlist_form.consent.errors %}{{ waitlist_form.consent.errors|striptags }}{% endif %}</p>
-  <button class="waitlist-modal__submit" type="submit">{% trans "Повідомити мене" %}</button>
+  <button class="waitlist-modal__submit" type="submit">{{ wl_button }}</button>
 </form>

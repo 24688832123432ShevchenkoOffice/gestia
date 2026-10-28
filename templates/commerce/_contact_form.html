@@ -1,4 +1,6 @@
-{% load i18n %}
+{% load content_tags %}
+{% cms_field form_copy "sheet_consent" as sheet_consent %}
+{% cms_field form_copy "contact_button" as contact_button %}
 <form data-qa="lead-form" method="post" action="{% url 'contact' %}" hx-post="{% url 'contact' %}" hx-target="this" hx-swap="outerHTML" {% include "commerce/_validate_attrs.html" %}>
   {% csrf_token %}
   {% include "commerce/_honeypot.html" %}
@@ -8,8 +10,8 @@
   {% include "commerce/_field.html" with field=contact_form.message %}
   <label class="check" data-field-wrap>
     {{ contact_form.consent }}
-    <span><a href="{% url 'privacy' %}">{% trans "Погоджуюсь на обробку персональних даних" %}</a></span>
+    <span><a href="{% url 'privacy' %}">{{ sheet_consent }}</a></span>
   </label>
   <p class="field__error" data-error-for="consent"{% if not contact_form.consent.errors %} hidden{% endif %}>{% if contact_form.consent.errors %}{{ contact_form.consent.errors|striptags }}{% endif %}</p>
-  <button class="btn" type="submit">{% trans "Надіслати" %}</button>
+  <button class="btn" type="submit">{{ contact_button }}</button>
 </form>

@@ -1,7 +1,11 @@
 from django.contrib import admin
 
+from src.content.admin_limits import tighten
 from src.content.models import AboutPage, Advantage, FooterLink, HomeBlock, PrivacyPage, Review, SiteSettings
 from src.core.admin_base import GestiaModelAdmin
+
+# Реєстрація окремих блоків головної і форм.
+import src.content.admin_blocks  # noqa: F401, E402
 
 
 class SingletonAdmin(GestiaModelAdmin):
@@ -47,6 +51,14 @@ class AdvantageAdmin(GestiaModelAdmin):
     list_display = ("title_uk", "sort")
     search_fields = ("title_uk", "title_en")
     ordering = ("sort",)
+    text_limits = {"title_uk": 24, "title_en": 24, "text_uk": 80, "text_en": 80}
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        hint = ""
+        if db_field.name == "image":
+            hint = "303×197 px. Якщо порожньо — лишається фото блоку «Переваги». JPG або PNG."
+        return tighten(formfield, self.text_limits.get(db_field.name), hint)
 
 
 @admin.register(AboutPage)
@@ -71,6 +83,11 @@ class ReviewAdmin(GestiaModelAdmin):
     list_display = ("author_uk", "rating_kind", "sort")
     search_fields = ("author_uk", "text_uk")
     ordering = ("sort",)
+    text_limits = {"author_uk": 24, "author_en": 24, "text_uk": 180, "text_en": 180}
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        return tighten(formfield, self.text_limits.get(db_field.name))
 
 
 @admin.register(FooterLink)

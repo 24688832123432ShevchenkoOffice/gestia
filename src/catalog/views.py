@@ -17,7 +17,8 @@ from src.catalog.selectors import (
     pdp_set_products,
 )
 from src.commerce.forms import BuyNowForm, CallbackForm, style_form
-from src.content.models import HomeBlock, Review
+from src.content.form_labels import apply_labels
+from src.content.models import ContactForms, HomeBlock, Review
 
 
 def _filters_active(parsed):
@@ -103,7 +104,13 @@ def product_detail(request, slug):
             "related_block": blocks.get("pdp_related"),
             "reviews_block": blocks.get("reviews"),
             "reviews": Review.objects.all(),
-            "callback_form": style_form(CallbackForm(initial={"sku": product.sku})),
-            "buy_form": style_form(BuyNowForm(initial={"sku": product.sku})),
+            "callback_form": apply_labels(
+                style_form(CallbackForm(initial={"sku": product.sku})),
+                ContactForms.load(),
+            ),
+            "buy_form": apply_labels(
+                style_form(BuyNowForm(initial={"sku": product.sku})),
+                ContactForms.load(),
+            ),
         },
     )
