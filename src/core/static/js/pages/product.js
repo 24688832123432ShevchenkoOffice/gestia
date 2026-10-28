@@ -1,9 +1,12 @@
-function clampQty(value) {
+function clampQty(value, maxValue) {
   const number = Number.parseInt(value, 10);
-  if (Number.isNaN(number)) {
-    return 1;
+  const parsedMax = Number.parseInt(maxValue, 10);
+  const cap = Number.isNaN(parsedMax) ? 99 : Math.min(99, Math.max(0, parsedMax));
+  if (cap < 1) {
+    return 0;
   }
-  return Math.min(99, Math.max(1, number));
+  const safe = Number.isNaN(number) ? 1 : number;
+  return Math.min(cap, Math.max(1, safe));
 }
 
 function bindQty(root) {
@@ -13,7 +16,7 @@ function bindQty(root) {
     return;
   }
   function setQty(next) {
-    const value = String(clampQty(next));
+    const value = String(clampQty(next, input.getAttribute("max")));
     input.value = value;
     label.textContent = value;
   }

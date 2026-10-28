@@ -189,6 +189,7 @@ class Command(BaseCommand):
                 is_popular=popular,
                 is_active=True,
                 sort=sort,
+                stock_qty=settings.STOCK_PLACEHOLDER_QTY,
             )
             _save(product, "card_image", image, f"card-{slug}.png")
             if key != "GH-03":

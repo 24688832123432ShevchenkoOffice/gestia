@@ -102,6 +102,7 @@ class CheckoutTests(TestCase):
             name_uk="Сніг",
             price_uah=Decimal("100"),
             price_eur=Decimal("2"),
+            stock_qty=100,
         )
 
     def test_cart_checkout_creates_order(self):
@@ -308,6 +309,7 @@ class CheckoutTests(TestCase):
             name_uk="Лампа",
             price_uah=Decimal("1500"),
             price_eur=Decimal("30"),
+            stock_qty=100,
         )
         snow_qty, lamp_qty = 2, 3
         session = self.client.session
@@ -447,6 +449,7 @@ class CheckoutGuardTests(TestCase):
             name_uk="Сніг",
             price_uah=Decimal("100"),
             price_eur=Decimal("2"),
+            stock_qty=100,
         )
 
     def _cart(self, **items):
@@ -469,6 +472,7 @@ class CheckoutGuardTests(TestCase):
         return data
 
     def test_oos_in_cart_creates_no_order(self):
+        self.product.stock_qty = 0
         self.product.stock_status = Product.Stock.OUT
         self.product.save()
         self._cart()
@@ -486,6 +490,7 @@ class CheckoutGuardTests(TestCase):
             name_uk="Лампа",
             price_uah=Decimal("50"),
             price_eur=Decimal("1"),
+            stock_qty=100,
         )
         self.product.is_active = False
         self.product.save()
@@ -529,6 +534,7 @@ class CheckoutGuardTests(TestCase):
         self.assertContains(page, 'data-qa="order-number"')
 
     def test_buy_now_oos(self):
+        self.product.stock_qty = 0
         self.product.stock_status = Product.Stock.OUT
         self.product.save()
         response = self.client.post(
@@ -578,6 +584,7 @@ class OrderNumberTests(TestCase):
             name_uk="Сніг",
             price_uah=Decimal("100"),
             price_eur=Decimal("2"),
+            stock_qty=100,
         )
 
     def _create(self, **extra):
@@ -624,12 +631,14 @@ class OrderNumberTests(TestCase):
         self.assertEqual(first.items.count(), 1)
 
     def test_create_order_rejects_out_of_stock_and_rereads_price(self):
+        self.product.stock_qty = 0
         self.product.stock_status = Product.Stock.OUT
         self.product.save()
         with self.assertRaises(OrderValidationError) as caught:
             self._create()
         self.assertIn("Сніг", str(caught.exception))
         self.assertEqual(Order.objects.count(), 0)
+        self.product.stock_qty = 10
         self.product.stock_status = Product.Stock.IN_STOCK
         self.product.save()
         stale = row_from_product(self.product, 2, "uah")

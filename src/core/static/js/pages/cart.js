@@ -17,7 +17,10 @@ document.addEventListener("click", (event) => {
     const step = Number(button.getAttribute("data-qty-step"));
     const current = Number.parseInt(input.value, 10);
     const base = Number.isNaN(current) ? 1 : current;
-    const next = Math.min(99, Math.max(1, base + step));
+    const parsedMax = Number.parseInt(input.getAttribute("max"), 10);
+    const cap = Number.isNaN(parsedMax) ? 99 : Math.min(99, Math.max(0, parsedMax));
+    const ceiling = Math.max(cap, 1);
+    const next = Math.min(ceiling, Math.max(1, base + step));
     input.value = String(next);
   }
   if (typeof form.requestSubmit === "function") {

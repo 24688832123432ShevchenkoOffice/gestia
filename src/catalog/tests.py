@@ -30,6 +30,7 @@ class FacetTests(TestCase):
             name_uk=sku,
             price_uah=Decimal("10"),
             price_eur=Decimal("1"),
+            stock_qty=100,
         )
         product.filter_attrs.add(
             ProductAttribute.objects.get(slug=style),
@@ -106,6 +107,7 @@ class FacetTests(TestCase):
         self.assertContains(page, "Додати в кошик")
         self.assertContains(page, "Замовити одразу")
         self.assertContains(page, 'name="qty"')
+        self.assertContains(page, 'max="99"')
         self.assertContains(page, "data-qty-label")
         self.assertContains(page, "Арт. A")
 

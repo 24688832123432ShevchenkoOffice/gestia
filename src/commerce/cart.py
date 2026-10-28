@@ -26,19 +26,33 @@ def item_count(request) -> int:
     return sum(int(qty) for qty in _raw(request).values())
 
 
-def set_qty(request, sku: str, qty: int):
+def _limit(stock_qty):
+    if stock_qty is None:
+        return MAX_QTY
+    return min(MAX_QTY, max(int(stock_qty), 0))
+
+
+def set_qty(request, sku: str, qty: int, stock_qty=None):
     data = _raw(request)
     if qty <= 0:
         data.pop(sku, None)
     else:
-        data[sku] = min(int(qty), MAX_QTY)
+        capped = min(int(qty), _limit(stock_qty))
+        if capped <= 0:
+            data.pop(sku, None)
+        else:
+            data[sku] = capped
     _save(request, data)
 
 
-def add(request, sku: str, qty: int = 1):
+def add(request, sku: str, qty: int = 1, stock_qty=None):
     data = _raw(request)
     current = int(data.get(sku, 0))
-    data[sku] = min(current + max(int(qty), 1), MAX_QTY)
+    capped = min(current + max(int(qty), 1), _limit(stock_qty))
+    if capped <= 0:
+        data.pop(sku, None)
+    else:
+        data[sku] = capped
     _save(request, data)
 
 
@@ -67,6 +81,7 @@ def lines(request, currency: str):
         unit = product.amount(currency)
         line_total = unit * qty
         total += line_total
+        out_of_stock = product.stock_status == Product.Stock.OUT
         rows.append(
             {
                 "product": product,
@@ -76,7 +91,8 @@ def lines(request, currency: str):
                 "unit_label": format_money(unit, currency),
                 "line_label": format_money(line_total, currency),
                 "line_total": line_total,
-                "out_of_stock": product.stock_status == Product.Stock.OUT,
+                "out_of_stock": out_of_stock,
+                "over_stock": qty > product.stock_qty and not out_of_stock,
             }
         )
     if removed:

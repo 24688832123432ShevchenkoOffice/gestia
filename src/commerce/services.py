@@ -2,6 +2,7 @@ import secrets
 from decimal import Decimal
 
 from django.db import IntegrityError, transaction
+from django.db.models import Case, CharField, F, Value, When
 from django.utils import timezone
 from django.utils.translation import get_language, gettext as _
 
@@ -21,6 +22,11 @@ class OrderValidationError(Exception):
 def unavailable_message(name) -> str:
     label = str(name or "").strip() or "—"
     return _("Товар «%(name)s» зараз відсутній. Приберіть його з кошика.") % {"name": label}
+
+
+def insufficient_stock_message(name, left) -> str:
+    label = str(name or "").strip() or "—"
+    return _("Товару «%(name)s» залишилось лише %(left)s шт.") % {"name": label, "left": left}
 
 
 def normalize_idempotency_key(value):
@@ -55,8 +61,11 @@ def _locked_rows(rows, currency):
             raise OrderValidationError(unavailable_message(name))
         unit = product.amount(currency)
         qty = int(row["qty"])
+        if qty > product.stock_qty:
+            raise OrderValidationError(insufficient_stock_message(product.name_uk, product.stock_qty))
         priced.append(
             {
+                "pk": product.pk,
                 "sku": product.sku,
                 "name": row.get("name") or product.name_uk,
                 "qty": qty,
@@ -65,6 +74,28 @@ def _locked_rows(rows, currency):
             }
         )
     return priced
+
+
+def _take_stock(rows):
+    needed = {}
+    for row in rows:
+        pk = row["pk"]
+        needed[pk] = needed.get(pk, 0) + int(row["qty"])
+    for pk, qty in needed.items():
+        taken = Product.objects.filter(pk=pk, stock_qty__gte=qty).update(
+            stock_qty=F("stock_qty") - qty,
+            stock_status=Case(
+                When(stock_qty=qty, then=Value(Product.Stock.OUT)),
+                default=F("stock_status"),
+                output_field=CharField(max_length=16),
+            ),
+        )
+        if taken == 1:
+            continue
+        product = Product.objects.filter(pk=pk).first()
+        name = product.name_uk if product is not None else ""
+        left = product.stock_qty if product is not None else 0
+        raise OrderValidationError(insufficient_stock_message(name, left))
 
 
 def _insert_order(*, source, customer, currency, language, total, idempotency_key):
@@ -131,6 +162,7 @@ def create_order(*, source, customer, rows, currency, language, idempotency_key=
             for row in priced
         ]
     )
+    _take_stock(priced)
     order_id = order.pk
     transaction.on_commit(lambda oid=order_id: notify_order(oid))
     return order

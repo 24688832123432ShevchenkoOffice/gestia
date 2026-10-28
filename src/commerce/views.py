@@ -23,6 +23,7 @@ from src.commerce.services import (
     OrderValidationError,
     create_inquiry,
     create_order,
+    insufficient_stock_message,
     normalize_idempotency_key,
     row_from_product,
     unavailable_message,
@@ -39,10 +40,19 @@ def _hx(request):
     return request.headers.get("HX-Request")
 
 
-def _cart_notice(request):
+def _no_stock(product):
+    return product.stock_status == Product.Stock.OUT or product.stock_qty <= 0
+
+
+def _cart_notice(request, rows=None):
+    parts = []
     if int(getattr(request, "_cart_removed", 0) or 0) > 0:
-        return _("Деякі товари стали недоступні й прибрані з кошика.")
-    return ""
+        parts.append(_("Деякі товари стали недоступні й прибрані з кошика."))
+    for row in rows or []:
+        if not row.get("over_stock"):
+            continue
+        parts.append(insufficient_stock_message(row["product"].name, row["product"].stock_qty))
+    return " ".join(parts)
 
 
 def _remember_order(request, number):
@@ -103,10 +113,11 @@ def _order_rows(rows):
 def _checkout_post_ok(form, request, rows):
     ok = form.is_valid()
     for row in rows:
-        if not row.get("out_of_stock"):
-            continue
-        form.add_error(None, unavailable_message(row["product"].name))
-        ok = False
+        if row.get("out_of_stock"):
+            form.add_error(None, unavailable_message(row["product"].name))
+            ok = False
+        elif row.get("over_stock"):
+            ok = False
     submitted = (request.POST.get("cart_sig") or "").strip()
     if submitted and submitted != signature(rows):
         form.add_error(
@@ -123,7 +134,7 @@ def _checkout_render(request, form, rows, total, currency):
         "rows": rows,
         "total": total,
         "total_label": format_money(total, currency),
-        "cart_notice": _cart_notice(request),
+        "cart_notice": _cart_notice(request, rows),
         "cart_sig": signature(rows),
         "idem": secrets.token_urlsafe(16),
     }
@@ -139,7 +150,7 @@ def cart_page(request):
             "rows": rows,
             "total": total,
             "total_label": format_money(total, currency),
-            "cart_notice": _cart_notice(request),
+            "cart_notice": _cart_notice(request, rows),
         },
     )
 
@@ -286,13 +297,13 @@ def wishlist_remove(request):
 @require_POST
 def cart_add(request):
     product = get_object_or_404(Product, sku=request.POST.get("sku", ""), is_active=True)
-    if product.stock_status == Product.Stock.OUT:
+    if _no_stock(product):
         return HttpResponse(status=422)
     try:
         qty = int(request.POST.get("qty", "1"))
     except (TypeError, ValueError):
         qty = 1
-    add(request, product.sku, qty)
+    add(request, product.sku, qty, stock_qty=product.stock_qty)
     if _hx(request):
         return render(
             request,
@@ -313,9 +324,13 @@ def cart_update(request):
     sku = request.POST.get("sku", "")
     try:
         qty = int(request.POST.get("qty", "1"))
-    except ValueError:
+    except (TypeError, ValueError):
         qty = 1
-    set_qty(request, sku, qty)
+    product = Product.objects.filter(sku=sku, is_active=True).first()
+    if qty > 0 and product is not None and _no_stock(product):
+        return HttpResponse(status=422)
+    stock_qty = product.stock_qty if product is not None else None
+    set_qty(request, sku, qty, stock_qty=stock_qty)
     if _hx(request):
         currency = _currency(request)
         rows, total = lines(request, currency)
@@ -327,7 +342,7 @@ def cart_update(request):
                 "total": total,
                 "total_label": format_money(total, currency),
                 "cart_count": sum_count(request),
-                "cart_notice": _cart_notice(request),
+                "cart_notice": _cart_notice(request, rows),
             },
         )
         return response

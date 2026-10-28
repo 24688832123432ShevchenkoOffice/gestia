@@ -79,6 +79,7 @@ class SeoTests(TestCase):
             price_uah=Decimal("100.00"),
             price_eur=Decimal("2.00"),
             is_active=True,
+            stock_qty=100,
         )
         Product.objects.create(
             category=self.category,
@@ -88,6 +89,7 @@ class SeoTests(TestCase):
             price_uah=Decimal("10.00"),
             price_eur=Decimal("1.00"),
             is_active=False,
+            stock_qty=100,
         )
         Category.objects.create(slug="seo-empty", name_uk="Порожня", is_active=True)
         parent = Category.objects.create(slug="seo-parent", name_uk="Батько", is_active=True)
@@ -100,6 +102,7 @@ class SeoTests(TestCase):
             price_uah=Decimal("50.00"),
             price_eur=Decimal("1.00"),
             is_active=True,
+            stock_qty=100,
         )
 
     def tearDown(self):

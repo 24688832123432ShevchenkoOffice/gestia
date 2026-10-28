@@ -170,7 +170,7 @@
           <h2 class="co-card__title">{% trans "Ваше замовлення" %}</h2>
           <div class="co-lines">
             {% for row in rows %}
-              <div class="co-line">
+              <div class="co-line"{% if row.over_stock %} data-over-stock{% endif %}>
                 <p>{{ row.product.name }}</p>
                 <p>х{{ row.qty }}</p>
               </div>

@@ -181,6 +181,7 @@ class Product(TimeStampedModel):
         choices=Stock.choices,
         default=Stock.IN_STOCK,
     )
+    stock_qty = models.PositiveIntegerField("Залишок, шт", default=0)
     is_active = models.BooleanField("Активний", default=True)
     is_popular = models.BooleanField("Популярний на головній", default=False)
     menu_name_uk = models.CharField("Назва в меню", max_length=200, blank=True)
@@ -237,6 +238,19 @@ class Product(TimeStampedModel):
     def __str__(self):
         return self.name_uk
 
+    def save(self, *args, **kwargs):
+        status_changed = False
+        if self.stock_qty == 0 and self.stock_status == self.Stock.IN_STOCK:
+            self.stock_status = self.Stock.OUT
+            status_changed = True
+        elif self.stock_qty > 0 and self.stock_status == self.Stock.OUT:
+            self.stock_status = self.Stock.IN_STOCK
+            status_changed = True
+        update_fields = kwargs.get("update_fields")
+        if status_changed and update_fields is not None:
+            kwargs["update_fields"] = set(update_fields) | {"stock_status"}
+        super().save(*args, **kwargs)
+
     @property
     def name(self):
         return localized(self, "name")
@@ -261,6 +275,10 @@ class Product(TimeStampedModel):
         if currency == "eur":
             return self.price_eur
         return self.price_uah
+
+    @property
+    def qty_max(self):
+        return min(99, self.stock_qty)
 
     def get_absolute_url(self):
         return reverse("product", kwargs={"slug": self.slug})

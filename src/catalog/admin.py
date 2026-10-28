@@ -75,8 +75,11 @@ class ProductAdmin(ModelAdmin):
         "price_weight",
         "is_popular",
         "stock_status",
+        "stock_qty",
         "is_active",
     )
+    list_display_links = ("name_uk",)
+    list_editable = ("stock_qty",)
     list_filter = ("is_active", "stock_status", "category", "product_set")
     search_fields = ("name_uk", "name_ru", "name_en", "sku", "slug")
     prepopulated_fields = {"slug": ("name_uk",)}

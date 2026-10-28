@@ -9,7 +9,7 @@
         <h1>{% trans "Кошик" %} ({{ cart_count }})</h1>
         <div class="cart-items" role="list">
           {% for row in rows %}
-            <article class="cart-item" role="listitem">
+            <article class="cart-item" role="listitem"{% if row.over_stock %} data-over-stock{% endif %}>
               <div class="cart-item__photo">
                 {% if row.product.cover %}
                   <img src="{{ row.product.cover.image.url }}" alt="">
@@ -29,7 +29,7 @@
                       <img class="qty__ico qty__ico--desk" src="{% static 'figma/cart/ecbe8065-ed1b-4914-8f81-46aaf04ee155.svg' %}" width="9" height="2" alt="">
                     </button>
                     <label class="visually-hidden" for="qty-{{ row.sku }}">{% trans "Кількість" %}</label>
-                    <input id="qty-{{ row.sku }}" data-qty-input name="qty" type="number" min="0" max="99" inputmode="numeric" value="{{ row.qty }}">
+                    <input id="qty-{{ row.sku }}" data-qty-input name="qty" type="number" min="0" max="{{ row.product.qty_max }}" inputmode="numeric" value="{{ row.qty }}">
                     <button class="qty__btn" type="button" data-qty-step="1" aria-label="{% trans 'Збільшити кількість' %}">
                       <img class="qty__ico qty__ico--mob" src="{% static 'figma/cart/696fdddf-66fb-4286-9381-425b0d60c695.svg' %}" width="9" height="8" alt="">
                       <img class="qty__ico qty__ico--desk" src="{% static 'figma/cart/84034769-eda3-4db0-8f34-b03cdccb6bc8.svg' %}" width="9" height="8" alt="">

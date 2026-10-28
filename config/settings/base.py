@@ -101,6 +101,10 @@ TELEGRAM_BOT_TOKEN = config("TELEGRAM_BOT_TOKEN", default="")
 TELEGRAM_CHAT_ID = config("TELEGRAM_CHAT_ID", default="")
 NOVA_POSHTA_API_KEY = config("NOVA_POSHTA_API_KEY", default="")
 
+# Тимчасова кількість для товарів, які вже були в наявності або під замовлення.
+# Адміністратор має замінити її на реальний залишок кожної позиції.
+STOCK_PLACEHOLDER_QTY = 100
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
