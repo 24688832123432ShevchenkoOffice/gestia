@@ -6,8 +6,15 @@
     phone: "Введіть коректний номер мобільного телефону у форматі +380 (XX) XXX-XX-XX",
     email: "Некоректний формат",
   };
-  const NAME_OK = /^[A-Za-zÀ-ÖØ-öø-ÿА-Яа-яЁёІіЇїЄєҐґ'’ʼ`\- ]+$/;
-  const NAME_LETTER = /[A-Za-zÀ-ÖØ-öø-ÿА-Яа-яЁёІіЇїЄєҐґ]/g;
+  const NAME_LETTERS = "A-Za-zА-Яа-яЁёІіЇїЄєҐґ";
+  const NAME_PATTERN = "[" + NAME_LETTERS + "]+(?:['\u2019\u02bc -][" + NAME_LETTERS + "]+)*";
+  const NAME_OK = new RegExp("^" + NAME_PATTERN + "$");
+  const NAME_LETTER = new RegExp("[" + NAME_LETTERS + "]", "g");
+  const UA_MOBILE_CODES = [
+    "39", "50", "63", "66", "67", "68", "73", "77",
+    "91", "92", "93", "94", "95", "96", "97", "98", "99",
+  ];
+  const PHONE_PATTERN = "\\+38 \\(0(?:" + UA_MOBILE_CODES.join("|") + ")\\) \\d{3}-\\d{2}-\\d{2}";
   const EMAIL_OK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   function formOf(el) {
@@ -128,7 +135,15 @@
   }
 
   function isUaPhone(value) {
-    return uaPhoneDigits(value).length === 9;
+    const national = uaPhoneDigits(value);
+    if (national.length !== 9) {
+      return false;
+    }
+    return UA_MOBILE_CODES.indexOf(national.slice(0, 2)) !== -1;
+  }
+
+  function normalizeName(value) {
+    return String(value || "").trim().replace(/\s+/g, " ");
   }
 
   function validateInput(form, input) {
@@ -144,10 +159,11 @@
       return msg(form, "required");
     }
     if (kind === "name") {
-      if (!NAME_OK.test(value)) {
+      const name = normalizeName(value);
+      if (!NAME_OK.test(name)) {
         return msg(form, "name");
       }
-      const letters = value.match(NAME_LETTER) || [];
+      const letters = name.match(NAME_LETTER) || [];
       if (letters.length < 2) {
         return msg(form, "nameShort");
       }
@@ -179,6 +195,57 @@
       } catch (_err) {
         /* iOS Safari can ignore caret moves on type=tel */
       }
+    }
+  }
+
+  function clipboardText(event) {
+    const clipboard = event.clipboardData || window.clipboardData;
+    if (!clipboard || typeof clipboard.getData !== "function") {
+      return "";
+    }
+    const kinds = ["text/plain", "text"];
+    for (let i = 0; i < kinds.length; i += 1) {
+      try {
+        const value = clipboard.getData(kinds[i]);
+        if (value) {
+          return value;
+        }
+      } catch (_err) {
+        /* iOS Safari may reject one MIME type */
+      }
+    }
+    return "";
+  }
+
+  function isCompletePhonePaste(text) {
+    const digits = String(text || "").replace(/\D/g, "");
+    if (digits.startsWith("380") && digits.length === 12) {
+      return true;
+    }
+    if (digits.startsWith("0") && digits.length === 10) {
+      return true;
+    }
+    return digits.length === 9;
+  }
+
+  function onPaste(event) {
+    const input = event.target;
+    if (!input || kindOf(input) !== "phone") {
+      return;
+    }
+    const text = clipboardText(event);
+    if (!isCompletePhonePaste(text)) {
+      return;
+    }
+    event.preventDefault();
+    input.value = text;
+    applyPhoneMask(input);
+    const form = formOf(input);
+    if (!form) {
+      return;
+    }
+    if (input.dataset.touched === "1" || form.dataset.submitted === "1") {
+      setState(form, input, validateInput(form, input));
     }
   }
 
@@ -245,7 +312,11 @@
 
   function hydratePhones(root) {
     const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll('[data-validate="name"]').forEach((input) => {
+      input.setAttribute("pattern", NAME_PATTERN);
+    });
     scope.querySelectorAll('[data-validate="phone"]').forEach((input) => {
+      input.setAttribute("pattern", PHONE_PATTERN);
       if (input.value) {
         applyPhoneMask(input);
       }
@@ -254,6 +325,7 @@
 
   document.addEventListener("input", onInput, true);
   document.addEventListener("change", onInput, true);
+  document.addEventListener("paste", onPaste, true);
   document.addEventListener("focusout", onBlur, true);
   document.addEventListener("submit", onSubmit, true);
   document.addEventListener("DOMContentLoaded", () => hydratePhones(document));

@@ -6,7 +6,9 @@ from src.commerce.validators import (
     EMAIL_ERRORS,
     MSG_REQUIRED,
     NAME_ERRORS,
+    NAME_PATTERN,
     PHONE_ERRORS,
+    PHONE_PATTERN,
     clean_name_value,
     clean_phone_value,
 )
@@ -120,6 +122,7 @@ def style_form(form):
                     "inputmode": "tel",
                     "autocomplete": "tel",
                     "maxlength": "19",
+                    "pattern": PHONE_PATTERN,
                 }
             )
         if name == "name":
@@ -128,6 +131,7 @@ def style_form(form):
                     "autocomplete": "name",
                     "autocapitalize": "words",
                     "spellcheck": "false",
+                    "pattern": NAME_PATTERN,
                 }
             )
         if name == "email":

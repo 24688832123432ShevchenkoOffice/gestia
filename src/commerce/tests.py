@@ -32,6 +32,26 @@ class PhoneTests(TestCase):
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data["phone"], "+380671112233")
 
+    def test_normalizes_0671234567(self):
+        form = CallbackForm(data={"name": "Оля", "phone": "0671234567", "sku": "A", "consent": True})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["phone"], "+380671234567")
+
+    def test_accepts_050(self):
+        form = CallbackForm(data={"name": "Оля", "phone": "0501234567", "sku": "A", "consent": True})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["phone"], "+380501234567")
+
+    def test_rejects_062(self):
+        form = CallbackForm(data={"name": "Оля", "phone": "0621234567", "sku": "A", "consent": True})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors["phone"][0], str(MSG_PHONE))
+
+    def test_rejects_044(self):
+        form = CallbackForm(data={"name": "Оля", "phone": "0441234567", "sku": "A", "consent": True})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors["phone"][0], str(MSG_PHONE))
+
 
 class NameTests(TestCase):
     def test_rejects_digits(self):
@@ -47,6 +67,27 @@ class NameTests(TestCase):
     def test_accepts_hyphen_and_apostrophe(self):
         form = CallbackForm(data={"name": "Мар'яна-Анна", "phone": "+380671112233", "sku": "A", "consent": True})
         self.assertTrue(form.is_valid())
+
+    def test_rejects_accented_latin(self):
+        form = CallbackForm(data={"name": "José", "phone": "+380671112233", "sku": "A", "consent": True})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors["name"][0], str(MSG_NAME))
+
+    def test_rejects_backtick(self):
+        form = CallbackForm(data={"name": "Мар`яна", "phone": "+380671112233", "sku": "A", "consent": True})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors["name"][0], str(MSG_NAME))
+
+    def test_rejects_leading_hyphen(self):
+        form = CallbackForm(data={"name": "-Анна", "phone": "+380671112233", "sku": "A", "consent": True})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors["name"][0], str(MSG_NAME))
+
+    def test_accepts_maryana_anna(self):
+        name = "Мар\u2019яна-Анна"
+        form = CallbackForm(data={"name": name, "phone": "+380671112233", "sku": "A", "consent": True})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["name"], name)
 
 
 class CheckoutTests(TestCase):

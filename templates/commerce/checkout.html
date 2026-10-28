@@ -28,12 +28,12 @@
             <div class="co-fields">
               <label class="co-field{% if form.name.errors %} is-invalid{% endif %}" data-field-wrap>
                 <img class="co-ico" src="{% static 'figma/checkout/3858d14e-7578-4ce2-8c54-aabd04bfff9f.svg' %}" width="22" height="22" alt="">
-                <input name="name" type="text" maxlength="120" autocomplete="name" autocapitalize="words" spellcheck="false" data-validate="name" aria-describedby="co-name-error" placeholder="{% trans 'Ім’я' %}" value="{{ form.name.value|default_if_none:'' }}">
+                <input name="name" type="text" maxlength="120" autocomplete="name" autocapitalize="words" spellcheck="false" pattern="[A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+(?:['’ʼ -][A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+)*" data-validate="name" aria-describedby="co-name-error" placeholder="{% trans 'Ім’я' %}" value="{{ form.name.value|default_if_none:'' }}">
               </label>
               <p class="co-error" id="co-name-error" data-error-for="name"{% if not form.name.errors %} hidden{% endif %}>{% if form.name.errors %}{{ form.name.errors|striptags }}{% endif %}</p>
               <label class="co-field{% if form.phone.errors %} is-invalid{% endif %}" data-field-wrap>
                 <img class="co-ico" src="{% static 'figma/checkout/24baed88-aa5f-4c39-88b2-cb26acd9a8f5.svg' %}" width="22" height="22" alt="">
-                <input name="phone" type="tel" inputmode="tel" maxlength="19" autocomplete="tel" data-validate="phone" aria-describedby="co-phone-error" placeholder="{% trans 'Номер телефону' %}" value="{{ form.phone.value|default_if_none:'' }}">
+                <input name="phone" type="tel" inputmode="tel" maxlength="19" autocomplete="tel" pattern="\+38 \(0(?:39|50|63|66|67|68|73|77|91|92|93|94|95|96|97|98|99)\) \d{3}-\d{2}-\d{2}" data-validate="phone" aria-describedby="co-phone-error" placeholder="{% trans 'Номер телефону' %}" value="{{ form.phone.value|default_if_none:'' }}">
               </label>
               <p class="co-error" id="co-phone-error" data-error-for="phone"{% if not form.phone.errors %} hidden{% endif %}>{% if form.phone.errors %}{{ form.phone.errors|striptags }}{% endif %}</p>
               <label class="co-field{% if form.email.errors %} is-invalid{% endif %}" data-field-wrap>

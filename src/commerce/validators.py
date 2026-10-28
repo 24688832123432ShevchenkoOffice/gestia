@@ -3,10 +3,32 @@ import re
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-NAME_ALLOWED_RE = re.compile(
-    r"^[A-Za-zÀ-ÖØ-öø-ÿА-Яа-яЁёІіЇїЄєҐґ'’ʼ`\- ]+$"
+UA_MOBILE_CODES = (
+    "39",
+    "50",
+    "63",
+    "66",
+    "67",
+    "68",
+    "73",
+    "77",
+    "91",
+    "92",
+    "93",
+    "94",
+    "95",
+    "96",
+    "97",
+    "98",
+    "99",
 )
-NAME_LETTER_RE = re.compile(r"[A-Za-zÀ-ÖØ-öø-ÿА-Яа-яЁёІіЇїЄєҐґ]")
+
+_NAME_LETTERS = "A-Za-zА-Яа-яЁёІіЇїЄєҐґ"
+_NAME_SEPARATORS = "'\u2019\u02bc -"
+NAME_PATTERN = rf"[{_NAME_LETTERS}]+(?:[{_NAME_SEPARATORS}][{_NAME_LETTERS}]+)*"
+NAME_ALLOWED_RE = re.compile(NAME_PATTERN)
+NAME_LETTER_RE = re.compile(rf"[{_NAME_LETTERS}]")
+PHONE_PATTERN = rf"\+38 \(0(?:{'|'.join(UA_MOBILE_CODES)})\) \d{{3}}-\d{{2}}-\d{{2}}"
 PHONE_LETTER_RE = re.compile(r"[A-Za-zА-Яа-яЁёІіЇїЄєҐґ]")
 
 MSG_REQUIRED = _("Поле обов'язкове для заповнення")
@@ -41,9 +63,13 @@ def clean_phone_value(phone: str) -> str:
         raise forms.ValidationError(MSG_PHONE)
     digits = re.sub(r"\D", "", phone)
     if digits.startswith("380") and len(digits) == 12:
-        return f"+{digits}"
-    if digits.startswith("0") and len(digits) == 10:
-        return f"+38{digits}"
-    if len(digits) == 9:
-        return f"+380{digits}"
-    raise forms.ValidationError(MSG_PHONE)
+        normalized = f"+{digits}"
+    elif digits.startswith("0") and len(digits) == 10:
+        normalized = f"+38{digits}"
+    elif len(digits) == 9:
+        normalized = f"+380{digits}"
+    else:
+        raise forms.ValidationError(MSG_PHONE)
+    if normalized[4:6] not in UA_MOBILE_CODES:
+        raise forms.ValidationError(MSG_PHONE)
+    return normalized

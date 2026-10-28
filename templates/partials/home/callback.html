@@ -11,13 +11,13 @@
       <label class="figma-field{% if home_form.name.errors %} is-invalid{% endif %}" data-field-wrap>
         <img class="field-ico field-ico--desk" src="{% static 'figma/desktop/85674.svg' %}" width="22" height="22" alt="">
         <img class="field-ico field-ico--mob" src="{% static 'figma/mobile/c9365.svg' %}" width="22" height="22" alt="">
-        <input name="name" type="text" maxlength="120" autocomplete="name" autocapitalize="words" spellcheck="false" data-validate="name" aria-describedby="home-name-error" placeholder="{{ block.field_labels.0 }}" value="{{ home_form.name.value|default_if_none:'' }}">
+        <input name="name" type="text" maxlength="120" autocomplete="name" autocapitalize="words" spellcheck="false" pattern="[A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+(?:['’ʼ -][A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+)*" data-validate="name" aria-describedby="home-name-error" placeholder="{{ block.field_labels.0 }}" value="{{ home_form.name.value|default_if_none:'' }}">
       </label>
       <p class="figma-error" id="home-name-error" data-error-for="name"{% if not home_form.name.errors %} hidden{% endif %}>{% if home_form.name.errors %}{{ home_form.name.errors|striptags }}{% endif %}</p>
       <label class="figma-field{% if home_form.phone.errors %} is-invalid{% endif %}" data-field-wrap>
         <img class="field-ico field-ico--desk" src="{% static 'figma/desktop/fcab0.svg' %}" width="22" height="22" alt="">
         <img class="field-ico field-ico--mob" src="{% static 'figma/mobile/ddb85.svg' %}" width="22" height="22" alt="">
-        <input name="phone" type="tel" inputmode="tel" maxlength="19" autocomplete="tel" data-validate="phone" aria-describedby="home-phone-error" placeholder="{{ block.field_labels.1 }}" value="{{ home_form.phone.value|default_if_none:'' }}">
+        <input name="phone" type="tel" inputmode="tel" maxlength="19" autocomplete="tel" pattern="\+38 \(0(?:39|50|63|66|67|68|73|77|91|92|93|94|95|96|97|98|99)\) \d{3}-\d{2}-\d{2}" data-validate="phone" aria-describedby="home-phone-error" placeholder="{{ block.field_labels.1 }}" value="{{ home_form.phone.value|default_if_none:'' }}">
       </label>
       <p class="figma-error" id="home-phone-error" data-error-for="phone"{% if not home_form.phone.errors %} hidden{% endif %}>{% if home_form.phone.errors %}{{ home_form.phone.errors|striptags }}{% endif %}</p>
       <label class="figma-field figma-field--area">
