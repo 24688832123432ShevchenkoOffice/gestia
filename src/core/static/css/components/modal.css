@@ -58,6 +58,11 @@
   box-shadow: none;
 }
 
+.sheet .field__input::placeholder {
+  color: #9a9088;
+  opacity: 1;
+}
+
 .sheet .field.is-invalid .field__input,
 .sheet .field__input.is-invalid {
   border-color: var(--danger);

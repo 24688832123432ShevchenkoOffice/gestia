@@ -58,6 +58,10 @@
     if (alreadySeen() || root.classList.contains("is-open")) {
       return;
     }
+    var sheet = document.querySelector("[data-catalog-sheet]");
+    if (sheet && !sheet.hidden) {
+      return;
+    }
     markSeen();
     lastFocused = document.activeElement;
     lockScroll(true);

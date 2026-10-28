@@ -78,7 +78,7 @@
 }
 
 .figma-field:focus-within {
-  border-color: #251008;
+  border-color: var(--brown);
 }
 
 .figma-field textarea {
@@ -86,9 +86,14 @@
   resize: none;
 }
 
+.figma-field input,
+.figma-field textarea {
+  caret-color: #251008;
+}
+
 .figma-field input::placeholder,
 .figma-field textarea::placeholder {
-  color: var(--brown);
+  color: #9a9088;
   opacity: 1;
 }
 

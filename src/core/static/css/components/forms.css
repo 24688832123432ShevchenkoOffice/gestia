@@ -19,7 +19,22 @@ select.field__input {
   border-radius: 0;
   background: #faf7f2;
   color: var(--ink);
+  caret-color: #251008;
   appearance: none;
+}
+
+.field__input:focus,
+.field__input:focus-visible,
+select.field__input:focus,
+select.field__input:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border-color: var(--line);
+}
+
+.field__input::placeholder {
+  color: #9a9088;
+  opacity: 1;
 }
 
 .field__input--area {

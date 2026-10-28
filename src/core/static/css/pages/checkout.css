@@ -259,6 +259,7 @@ img.co-arrow {
   letter-spacing: -0.48px;
   outline: none;
   box-shadow: none;
+  caret-color: #251008;
   -webkit-appearance: none;
   appearance: none;
 }
@@ -271,7 +272,7 @@ img.co-arrow {
 }
 
 .co-field input::placeholder {
-  color: #000;
+  color: #9a9088;
   opacity: 1;
 }
 

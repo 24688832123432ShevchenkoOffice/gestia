@@ -338,10 +338,13 @@
   }
 
   .figma-field input,
-  .figma-field textarea,
+  .figma-field textarea {
+    color: #000;
+  }
+
   .figma-field input::placeholder,
   .figma-field textarea::placeholder {
-    color: #000;
+    color: #9a9088;
   }
 
   .callback .figma-btn--wide {

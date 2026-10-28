@@ -133,12 +133,18 @@ body.waitlist-modal-open {
   border-radius: 0;
   background: #fff;
   color: #000;
+  caret-color: #251008;
   font-family: inherit;
   font-size: 1rem;
   font-weight: 400;
   letter-spacing: -0.03em;
   -webkit-appearance: none;
   appearance: none;
+}
+
+.waitlist-modal__input::placeholder {
+  color: #9a9088;
+  opacity: 1;
 }
 
 .waitlist-modal__input:focus,
