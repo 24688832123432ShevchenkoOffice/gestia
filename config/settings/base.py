@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "tinymce",
     "src.core",
     "src.content",
     "src.catalog",
@@ -160,6 +161,33 @@ LOGGING = {
         "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": False},
         "src": {"handlers": ["console"], "level": "INFO", "propagate": False},
     },
+}
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": 280,
+    "menubar": False,
+    "branding": False,
+    "promotion": False,
+    "statusbar": False,
+    "plugins": "link lists",
+    "toolbar": (
+        "undo redo | bold italic underline | bullist numlist | link | "
+        "blocks | blockquote | removeformat"
+    ),
+    "block_formats": "Абзац=p; Заголовок 2=h2; Заголовок 3=h3; Заголовок 4=h4",
+    "language": "uk",
+    "forced_root_block": "p",
+    "newline_behavior": "block",
+    "valid_elements": (
+        "p,br,strong/b,em/i,u,a[href|target|rel],ul,ol,li,h2,h3,h4,blockquote,span"
+    ),
+    "link_default_target": "_blank",
+    "link_default_rel": "noopener noreferrer",
+    "content_style": (
+        "body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; "
+        "font-size: 16px; line-height: 1.5; margin: 8px; }"
+        "p { margin: 0 0 0.75em; }"
+    ),
 }
 
 UNFOLD = {

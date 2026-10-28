@@ -5,3 +5,8 @@ class CoreConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "src.core"
     verbose_name = "Спільне"
+
+    def ready(self):
+        from src.core.richtext import connect as connect_richtext
+
+        connect_richtext()
