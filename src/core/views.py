@@ -1,5 +1,3 @@
-import re
-
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -7,11 +5,9 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.i18n import check_for_language
 
-from src.content.models import SiteSettings
+from src.content.theme import build_theme_css
 from src.core.i18n import collapse_double_prefix, localize_path, safe_next
 from src.core.middleware import language_enabled
-
-HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 
 def healthz(request):
@@ -29,18 +25,7 @@ def robots_txt(request):
 
 
 def theme_css(request):
-    site = SiteSettings.load()
-    ink = site.color_ink if HEX.match(site.color_ink or "") else "#241c16"
-    paper = site.color_paper if HEX.match(site.color_paper or "") else "#f3eee6"
-    accent = site.color_accent if HEX.match(site.color_accent or "") else "#8d3b2a"
-    css = (
-        ":root{"
-        f"--ink:{ink};"
-        f"--paper:{paper};"
-        f"--accent:{accent};"
-        "}"
-    )
-    return HttpResponse(css, content_type="text/css")
+    return HttpResponse(build_theme_css(), content_type="text/css")
 
 
 def _extract_next(request) -> str:

@@ -206,9 +206,59 @@ NAV_TREE = [
         "items": [
             {
                 "key": "styles",
-                "title": "Стилі сайту",
+                "title": "Стилі",
                 "icon": "palette",
-                "url_name": "",
+                "url_name": "admin:content_globalpagestyle_changelist",
+                "items": [
+                    {
+                        "key": "style_global",
+                        "title": "Увесь сайт",
+                        "icon": "public",
+                        "url_name": "admin:content_globalpagestyle_changelist",
+                    },
+                    {
+                        "key": "style_home",
+                        "title": "Головна",
+                        "icon": "home",
+                        "url_name": "admin:content_homepagestyle_changelist",
+                    },
+                    {
+                        "key": "style_catalog",
+                        "title": "Каталог",
+                        "icon": "grid_view",
+                        "url_name": "admin:content_catalogpagestyle_changelist",
+                    },
+                    {
+                        "key": "style_product",
+                        "title": "Товар",
+                        "icon": "inventory_2",
+                        "url_name": "admin:content_productpagestyle_changelist",
+                    },
+                    {
+                        "key": "style_cart",
+                        "title": "Кошик",
+                        "icon": "shopping_cart",
+                        "url_name": "admin:content_cartpagestyle_changelist",
+                    },
+                    {
+                        "key": "style_checkout",
+                        "title": "Оформлення",
+                        "icon": "payments",
+                        "url_name": "admin:content_checkoutpagestyle_changelist",
+                    },
+                    {
+                        "key": "style_about",
+                        "title": "Про нас",
+                        "icon": "info",
+                        "url_name": "admin:content_aboutpagestyle_changelist",
+                    },
+                    {
+                        "key": "style_legal",
+                        "title": "Юридичні",
+                        "icon": "gavel",
+                        "url_name": "admin:content_legalpagestyle_changelist",
+                    },
+                ],
             },
         ],
     },

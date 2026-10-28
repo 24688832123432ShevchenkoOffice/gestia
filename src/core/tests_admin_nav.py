@@ -33,7 +33,7 @@ class SidebarTreeTests(TestCase):
         self.assertIn("Каталог", titles)
         self.assertIn("Юридичні сторінки", titles)
         self.assertIn("Знижка", titles)
-        self.assertNotIn("Стилі", titles)
+        self.assertIn("Стилі", titles)
         labels = _labels(groups)
         self.assertIn("Товари", labels)
         self.assertIn("Категорії", labels)
@@ -64,6 +64,9 @@ class SidebarTreeTests(TestCase):
         self.assertContains(response, "Вийти")
         self.assertContains(response, "Знижка")
         self.assertContains(response, reverse("admin:content_discountmodal_changelist"))
+        self.assertContains(response, "Стилі")
+        self.assertContains(response, "Увесь сайт")
+        self.assertContains(response, reverse("admin:content_globalpagestyle_changelist"))
 
     def test_user_and_group_changelists_open(self):
         self.assertEqual(self.client.get(reverse("admin:auth_user_changelist")).status_code, 200)

@@ -1,6 +1,7 @@
 from django.core.cache import cache
 from django.core.validators import FileExtensionValidator
 from django.db import models
+from django.db.utils import OperationalError, ProgrammingError
 
 from src.content.media import MediaChoice
 from src.core.fields import WebPImageField
@@ -74,6 +75,23 @@ class SiteSettings(SingletonModel):
 
     def __str__(self):
         return "Налаштування сайту"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self._sync_global_style()
+
+    def _sync_global_style(self):
+        from src.content.colors import TOKEN_ACCENT, TOKEN_INK, TOKEN_PAPER, normalize_hex
+        from src.content.models_styles import PageStyle
+
+        try:
+            PageStyle.objects.filter(page=PageStyle.Key.GLOBAL).update(
+                text_color=normalize_hex(self.color_ink) or TOKEN_INK,
+                background_color=normalize_hex(self.color_paper) or TOKEN_PAPER,
+                hover_color=normalize_hex(self.color_accent) or TOKEN_ACCENT,
+            )
+        except (OperationalError, ProgrammingError):
+            return
 
     @property
     def address(self):
@@ -418,4 +436,5 @@ class ContactForms(SingletonModel):
 from src.content import models_about as _about_models  # noqa: E402,F401
 from src.content import models_discount as _discount_models  # noqa: E402,F401
 from src.content import models_legal as _legal_models  # noqa: E402,F401
+from src.content import models_styles as _style_models  # noqa: E402,F401
 from src.content import proxies as _home_proxies  # noqa: E402,F401

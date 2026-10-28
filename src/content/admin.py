@@ -9,6 +9,7 @@ import src.content.admin_about  # noqa: F401, E402
 import src.content.admin_blocks  # noqa: F401, E402
 import src.content.admin_discount  # noqa: F401, E402
 import src.content.admin_legal  # noqa: F401, E402
+import src.content.admin_styles  # noqa: F401, E402
 
 
 class SingletonAdmin(GestiaModelAdmin):
@@ -39,7 +40,6 @@ class SiteSettingsAdmin(SingletonAdmin):
         ("Адреса", {"fields": ("address_uk", "address_en")}),
         ("Мови", {"fields": ("en_enabled",)}),
         ("Сповіщення", {"fields": ("telegram_notify_orders", "telegram_notify_leads")}),
-        ("Кольори", {"fields": ("color_ink", "color_paper", "color_accent")}),
     )
 
 

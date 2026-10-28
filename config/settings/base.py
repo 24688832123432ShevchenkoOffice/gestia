@@ -217,9 +217,11 @@ UNFOLD = {
     "STYLES": [
         _admin_asset("css/admin/char_counter.css"),
         _admin_asset("css/admin/image_preview.css"),
+        _admin_asset("css/admin/color_picker.css"),
     ],
     "SCRIPTS": [
         _admin_asset("js/admin/char_counter.js"),
+        _admin_asset("js/admin/color_picker.js"),
     ],
     "COLORS": {
         "base": {

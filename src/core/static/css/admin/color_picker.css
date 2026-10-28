@@ -1,0 +1,67 @@
+.gestia-color {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+}
+
+.gestia-color__native {
+  box-sizing: border-box;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.15rem;
+  border: 1px solid #d9cfc2;
+  background: #fff;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.gestia-color__hex,
+.gestia-color__reset {
+  box-sizing: border-box;
+  min-height: 2.75rem;
+  border: 1px solid #d9cfc2;
+  border-radius: 0;
+  background: #fff;
+  color: #241c16;
+  font-size: 16px;
+  line-height: 1.2;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gestia-color__hex {
+  width: 7.5rem;
+  max-width: 100%;
+  padding: 0.5rem 0.65rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.gestia-color__reset {
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+html.dark .gestia-color__native,
+html.dark .gestia-color__hex {
+  background: #2c241e;
+  color: #f3eee6;
+  border-color: #5c5148;
+}
+
+html.dark .gestia-color__reset {
+  border-color: #5c5148;
+  color: #f3eee6;
+}
+
+@media (max-width: 767px) {
+  .gestia-color__hex,
+  .gestia-color__reset {
+    flex: 1 1 8rem;
+  }
+}

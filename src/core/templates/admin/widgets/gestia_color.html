@@ -1,0 +1,5 @@
+<div class="gestia-color" data-gestia-color data-default-color="{{ widget.default_color }}">
+  <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %} data-gestia-color-native aria-label="Колір"{% include "django/forms/widgets/attrs.html" %}>
+  <input type="text" class="gestia-color__hex" data-gestia-color-hex maxlength="7" spellcheck="false" autocomplete="off" autocapitalize="none" inputmode="text" value="{{ widget.value }}" aria-label="HEX">
+  <button type="button" class="gestia-color__reset" data-gestia-color-reset>Стандарт</button>
+</div>

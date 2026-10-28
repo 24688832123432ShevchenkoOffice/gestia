@@ -3,6 +3,7 @@ from django.db.utils import OperationalError, ProgrammingError
 
 from src.commerce.forms import ContactForm, WaitlistForm, style_form
 from src.content.form_labels import apply_labels
+from src.content.theme import page_style_key
 from src.core.i18n import localize_path
 from src.core.middleware import language_enabled
 
@@ -27,10 +28,8 @@ def shop(request):
         from src.commerce.cart import item_count
         from src.commerce.wishlist import item_count as wish_count
         from src.content.models import ContactForms, FooterLink, HomeBlock, SiteSettings
-        from src.content.models_discount import DiscountModal
 
         site = SiteSettings.load()
-        discount_modal = DiscountModal.load()
         form_copy = ContactForms.load()
         home_blocks = {block.key: block for block in HomeBlock.objects.all()}
         nav_categories = list(load_nav())
@@ -46,6 +45,12 @@ def shop(request):
         wishlist_count = wish_count(request)
     except (OperationalError, ProgrammingError):
         pass
+    try:
+        from src.content.models_discount import DiscountModal
+
+        discount_modal = DiscountModal.load()
+    except (OperationalError, ProgrammingError):
+        discount_modal = None
     full = request.get_full_path()
     switch = {
         code: localize_path(full, code)
@@ -67,6 +72,7 @@ def shop(request):
         },
         "form_copy": form_copy,
         "discount_modal": discount_modal,
+        "page_style_key": page_style_key(request),
         "contact_form": apply_labels(style_form(ContactForm()), form_copy),
         "waitlist_form": apply_labels(style_form(WaitlistForm()), form_copy),
     }
