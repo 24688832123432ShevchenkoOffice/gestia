@@ -1,10 +1,19 @@
+import importlib
 from decimal import Decimal
 
+from django.apps import apps
 from django.http import QueryDict
 from django.test import TestCase
 from django.utils import translation
 
-from src.catalog.models import CatalogCell, Category, Product, ProductAttribute, ProductAttributeGroup
+from src.catalog.models import (
+    CatalogCell,
+    Category,
+    Product,
+    ProductAttribute,
+    ProductAttributeGroup,
+    ProductSet,
+)
 from src.catalog.selectors import filter_catalog, parse_catalog_filters
 
 
@@ -117,3 +126,75 @@ class FacetTests(TestCase):
         parsed = parse_catalog_filters(query)
         skus = list(filter_catalog(Product.objects.all(), parsed).values_list("sku", flat=True))
         self.assertEqual(skus, ["A"])
+
+
+class EnglishCatalogCopyTests(TestCase):
+    def setUp(self):
+        translation.activate("uk")
+        self.copy = importlib.import_module("src.catalog.migrations.0009_english_catalog_copy")
+        self.category = Category.objects.create(slug="svichky", name_uk="Свічки", name_en="")
+        Category.objects.create(slug="tekstyl", name_uk="Текстиль ", name_en="Already translated")
+        Category.objects.create(slug="not-in-shop", name_uk="Інше", name_en="")
+        ProductSet.objects.create(slug="velykodni", name_uk="Великодній", name_en="")
+        style = ProductAttributeGroup.objects.create(slug="style", name_uk="Стиль", name_en="Kept style")
+        ProductAttribute.objects.create(group=style, slug="scandi", name_uk="Скандинавський", name_en="")
+        self.product = Product.objects.create(
+            category=self.category,
+            sku="GH-04",
+            slug="vesilnyi",
+            name_uk="Бокс «Весільний»",
+            name_en="",
+            price_uah=Decimal("14980.00"),
+            price_eur=Decimal("320.00"),
+            stock_qty=100,
+        )
+        Product.objects.create(
+            category=self.category,
+            sku="GH-01",
+            slug="velykodnii-ukrainskyi",
+            name_uk="Бокс Великодній «Український»",
+            name_en="Custom English name",
+            price_uah=Decimal("8990.00"),
+            price_eur=Decimal("190.00"),
+            stock_qty=100,
+        )
+        self.nest = Product.objects.create(
+            category=self.category,
+            sku="TL-0012",
+            slug="velykodnii-hnizdo",
+            name_uk="Бокс Великодній «Гніздо»",
+            description_uk="Великодній бокс «Гніздо» — святкова композиція",
+            name_en="",
+            description_en="",
+            price_uah=Decimal("2450.00"),
+            price_eur=Decimal("52.00"),
+            stock_qty=100,
+        )
+
+    def test_fill_writes_empty_english_and_skips_existing_or_unknown(self):
+        self.copy.fill_english_catalog(apps, None)
+        self.category.refresh_from_db()
+        self.product.refresh_from_db()
+        self.nest.refresh_from_db()
+        self.assertEqual(self.category.name_en, "Candles")
+        self.assertEqual(Category.objects.get(slug="tekstyl").name_en, "Already translated")
+        self.assertEqual(Category.objects.get(slug="not-in-shop").name_en, "")
+        self.assertEqual(self.product.name_en, "Wedding box")
+        self.assertEqual(Product.objects.get(sku="GH-01").name_en, "Custom English name")
+        self.assertEqual(self.nest.name_en, "Easter box “The Nest”")
+        self.assertIn("flower-shaped candle holders", self.nest.description_en)
+        self.assertEqual(ProductAttributeGroup.objects.get(slug="style").name_en, "Kept style")
+        self.assertEqual(ProductAttribute.objects.get(slug="scandi").name_en, "Scandinavian")
+        self.assertEqual(ProductSet.objects.get(slug="velykodni").name_en, "Easter")
+
+    def test_english_product_page_shows_english_name(self):
+        self.copy.fill_english_catalog(apps, None)
+        page = self.client.get("/en/tovar/vesilnyi/")
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, 'lang="en"')
+        self.assertContains(page, "<h1>Wedding box</h1>")
+        self.assertNotContains(page, "Бокс «Весільний»")
+        nest = self.client.get("/en/tovar/velykodnii-hnizdo/")
+        self.assertContains(nest, "Easter box “The Nest”")
+        self.assertContains(nest, "flower-shaped candle holders")
+        self.assertNotContains(nest, "Бокс Великодній «Гніздо»")
