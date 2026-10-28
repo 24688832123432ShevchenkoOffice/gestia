@@ -81,11 +81,15 @@ def _contact_lines(request) -> str:
         label = _md_label(LITERALS["callback_title"][0 if code == "uk" else 1])
         href = _abs(request, "home", lang=code, suffix="#callback")
         rows.append(f"- [{label}]({href})")
-    phone, email = public_contacts()
-    if phone:
-        rows.append(f"- Телефон: {phone}")
-    if email:
-        rows.append(f"- Email: {email}")
+    contacts = public_contacts()
+    if contacts["phone"]:
+        rows.append(f"- Телефон: {contacts['phone']}")
+    if contacts["email"]:
+        rows.append(f"- Email: {contacts['email']}")
+    for address in contacts["addresses"]:
+        rows.append(f"- Адреса: {address}")
+    for url in contacts["same_as"]:
+        rows.append(f"- {url}")
     return "\n".join(rows)
 
 

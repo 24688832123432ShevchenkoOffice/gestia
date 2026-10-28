@@ -46,7 +46,15 @@ PRIVATE_PREFIXES = (
     "/healthz/",
 )
 BRAND = "Gestia Home"
-PLACEHOLDER_PHONE_DIGITS = "380000000000"
+_RESERVED_EMAIL_DOMAINS = ("example.com", "example.org", "example.net")
+_FAKE_EMAIL_SUFFIXES = (".local", ".example", ".test")
+_EMPTY_CONTACTS = {
+    "phone": "",
+    "email": "",
+    "address": "",
+    "addresses": (),
+    "same_as": (),
+}
 
 
 def plain_text(value) -> str:
@@ -282,7 +290,28 @@ def robots_text(request) -> str:
     return "\n".join(lines) + "\n"
 
 
-def public_contacts() -> tuple[str, str]:
+def is_placeholder_contact(value: str, kind: str) -> bool:
+    raw = str(value or "").strip()
+    if kind == "phone":
+        digits = "".join(ch for ch in raw if ch.isdigit())
+        if not digits or set(digits) == {"0"}:
+            return True
+        if digits.startswith("380"):
+            national = digits[3:]
+            if not national or set(national) == {"0"}:
+                return True
+        return False
+    if kind == "email":
+        if "@" not in raw:
+            return True
+        domain = raw.rsplit("@", 1)[1].lower().rstrip(".")
+        if not domain or domain.endswith(_FAKE_EMAIL_SUFFIXES):
+            return True
+        return any(domain == name or domain.endswith("." + name) for name in _RESERVED_EMAIL_DOMAINS)
+    return not raw
+
+
+def public_contacts() -> dict:
     try:
         from django.db.utils import OperationalError, ProgrammingError
 
@@ -290,10 +319,28 @@ def public_contacts() -> tuple[str, str]:
 
         site = SiteSettings.load()
     except (OperationalError, ProgrammingError, AttributeError):
-        return "", ""
+        return dict(_EMPTY_CONTACTS)
     phone = " ".join(str(site.phone or "").split())
-    digits = "".join(ch for ch in phone if ch.isdigit())
-    if not digits or digits == PLACEHOLDER_PHONE_DIGITS:
+    if is_placeholder_contact(phone, "phone"):
         phone = ""
     email = str(site.email or "").strip()
-    return phone, email
+    if is_placeholder_contact(email, "email"):
+        email = ""
+    address = " ".join(str(getattr(site, "address", "") or "").split())
+    addresses = []
+    for code in ("uk", "en"):
+        text = " ".join(str(getattr(site, f"address_{code}", "") or "").split())
+        if text and text not in addresses:
+            addresses.append(text)
+    same = []
+    for attr in ("instagram_url", "pinterest_url"):
+        value = str(getattr(site, attr, "") or "").strip()
+        if value:
+            same.append(value)
+    return {
+        "phone": phone,
+        "email": email,
+        "address": address,
+        "addresses": tuple(addresses),
+        "same_as": tuple(same),
+    }

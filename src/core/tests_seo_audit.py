@@ -1,6 +1,8 @@
 import re
 
-from src.core.tests_seo import SeoFixture, _meta_description
+from src.content.models import SiteSettings
+from src.core.seo import is_placeholder_contact
+from src.core.tests_seo import SeoFixture, _ld, _meta_description
 
 _SEO_TITLE_UK = "Святкові бокси для сервірування столу"
 _SEO_TITLE_EN = "Festive boxes for a table from Gestia"
@@ -8,10 +10,32 @@ _SEO_DESC_UK = (
     "Святкові бокси, свічки й текстиль для сервірування святкового столу від Gestia Home."
 )
 _SEO_DESC_EN = "Festive table boxes, candles and home textiles from Gestia Home."
+_PHONE = "+380 67 123 45 67"
+_EMAIL = "hello@gestia-shop.com.ua"
+_ADDRESS_UK = "Київ, вул. Тестова, 1"
+_ADDRESS_EN = "Kyiv, Testova St, 1"
+_INSTAGRAM = "https://instagram.com/gestia.home"
+_PINTEREST = "https://www.pinterest.com/gestia/"
 
 
 def _title(response):
     return re.search(r"<title>(.*?)</title>", response.content.decode()).group(1)
+
+
+def _organization(response):
+    for payload in _ld(response):
+        for node in payload.get("@graph") or []:
+            if node.get("@type") == "Organization":
+                return node
+    return {}
+
+
+def _save_site(**fields):
+    site = SiteSettings.objects.get(pk=1)
+    for name, value in fields.items():
+        setattr(site, name, value)
+    site.save()
+    return site
 
 
 class CategorySeoTests(SeoFixture):
@@ -51,3 +75,71 @@ class CategorySeoTests(SeoFixture):
         cleared = self.client.get(f"/en{path}")
         self.assertEqual(_title(cleared), "Festive boxes — Gestia")
         self.assertEqual(_meta_description(cleared), "Festive boxes. Gestia")
+
+
+class ContactSeoTests(SeoFixture):
+    def test_placeholder_rules(self):
+        for phone in ("", "   ", "+380 00 000 00 00", "+380000000000", "000 000 0000", "+380 000"):
+            self.assertTrue(is_placeholder_contact(phone, "phone"), phone)
+        self.assertFalse(is_placeholder_contact(_PHONE, "phone"))
+        for email in (
+            "",
+            "editor@example.com",
+            "editor@example.org",
+            "editor@example.net",
+            "editor@sub.example.com",
+            "staff@mail.local",
+            "staff@name.example",
+            "staff@name.test",
+        ):
+            self.assertTrue(is_placeholder_contact(email, "email"), email)
+        self.assertFalse(is_placeholder_contact(_EMAIL, "email"))
+        self.assertFalse(is_placeholder_contact("hello@example.com.ua", "email"))
+
+    def test_placeholder_contacts_stay_out_of_llms_and_jsonld(self):
+        _save_site(
+            phone="+380 00 000 00 00",
+            email="editor@example.com",
+            address_uk=_ADDRESS_UK,
+            address_en="",
+            instagram_url=_INSTAGRAM,
+            pinterest_url="",
+        )
+        llms = self.client.get("/llms.txt").content.decode()
+        org = _organization(self.client.get("/"))
+        self.assertNotIn("Телефон:", llms)
+        self.assertNotIn("Email:", llms)
+        self.assertNotIn("+380 00 000 00 00", llms)
+        self.assertNotIn("editor@example.com", llms)
+        self.assertNotIn("telephone", org)
+        self.assertNotIn("email", org)
+        self.assertIn(f"- Адреса: {_ADDRESS_UK}", llms)
+        self.assertIn(f"- {_INSTAGRAM}", llms)
+        self.assertEqual(org["address"]["streetAddress"], _ADDRESS_UK)
+        self.assertEqual(org["sameAs"], [_INSTAGRAM])
+
+    def test_real_contacts_appear_in_llms_and_jsonld(self):
+        _save_site(
+            phone=_PHONE,
+            email=_EMAIL,
+            address_uk=_ADDRESS_UK,
+            address_en=_ADDRESS_EN,
+            instagram_url=_INSTAGRAM,
+            pinterest_url=_PINTEREST,
+        )
+        llms = self.client.get("/llms.txt").content.decode()
+        uk = _organization(self.client.get("/"))
+        en = _organization(self.client.get("/en/"))
+        self.assertIn(f"- Телефон: {_PHONE}", llms)
+        self.assertIn(f"- Email: {_EMAIL}", llms)
+        self.assertIn(f"- Адреса: {_ADDRESS_UK}", llms)
+        self.assertIn(f"- Адреса: {_ADDRESS_EN}", llms)
+        self.assertIn(f"- {_INSTAGRAM}", llms)
+        self.assertIn(f"- {_PINTEREST}", llms)
+        self.assertEqual(uk["telephone"], _PHONE)
+        self.assertEqual(uk["email"], _EMAIL)
+        self.assertEqual(en["telephone"], _PHONE)
+        self.assertEqual(en["email"], _EMAIL)
+        self.assertEqual(uk["address"]["streetAddress"], _ADDRESS_UK)
+        self.assertEqual(en["address"]["streetAddress"], _ADDRESS_EN)
+        self.assertEqual(uk["sameAs"], [_INSTAGRAM, _PINTEREST])

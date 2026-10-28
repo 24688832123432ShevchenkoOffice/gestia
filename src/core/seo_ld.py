@@ -59,24 +59,15 @@ def _organization(request, site, image: str) -> dict:
     }
     if image:
         node["logo"] = image
-    phone, email = public_contacts() if site is not None else ("", "")
-    if phone:
-        node["telephone"] = phone
-    if email:
-        node["email"] = email
-    address = ""
-    if site is not None:
-        address = " ".join(str(getattr(site, "address", "") or "").split())
-    if address:
-        node["address"] = {"@type": "PostalAddress", "streetAddress": address}
-    same = []
-    if site is not None:
-        for attr in ("instagram_url", "pinterest_url"):
-            value = str(getattr(site, attr, "") or "").strip()
-            if value:
-                same.append(value)
-    if same:
-        node["sameAs"] = same
+    contacts = public_contacts() if site is not None else None
+    if contacts and contacts["phone"]:
+        node["telephone"] = contacts["phone"]
+    if contacts and contacts["email"]:
+        node["email"] = contacts["email"]
+    if contacts and contacts["address"]:
+        node["address"] = {"@type": "PostalAddress", "streetAddress": contacts["address"]}
+    if contacts and contacts["same_as"]:
+        node["sameAs"] = list(contacts["same_as"])
     return node
 
 
