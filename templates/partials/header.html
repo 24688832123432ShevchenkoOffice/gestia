@@ -102,12 +102,12 @@
       <input id="burger-q" name="q" type="search" maxlength="80" enterkeyhint="search" autocomplete="off">
       <img class="burger-search__line" src="{% static 'figma/mobile_burger/cb9a5.svg' %}" width="362" height="1" alt="">
     </form>
-    <div class="burger__catalog">
-      <div class="burger__catalog-head">
-        <p>{% cms_field site_settings "menu_title" %}</p>
+    <div class="burger__catalog" data-burger-catalog>
+      <button class="burger__catalog-head" type="button" data-burger-catalog-toggle aria-expanded="true" aria-controls="burger-cats">
+        <span>{% cms_field site_settings "menu_title" %}</span>
         <img src="{% static 'figma/mobile_burger/fed4e.svg' %}" width="15" height="15" alt="">
-      </div>
-      <div class="burger__cats">
+      </button>
+      <div class="burger__cats" id="burger-cats" data-burger-cats>
         <a href="{% url 'catalog' %}">{% cms_field site_settings "nav_all" %}</a>
         {% for cat in menu_categories %}
           <a class="{% if cat.menu_featured %}is-feature{% endif %}" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>

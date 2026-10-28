@@ -52,7 +52,8 @@
 .mega__list a,
 .burger__cats a,
 .burger__about,
-.burger__catalog-head p {
+.burger__catalog-head,
+.burger__catalog-head span {
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -194,6 +195,13 @@
   appearance: none;
 }
 
+.burger-search input:focus,
+.burger-search input:focus-visible {
+  outline: none;
+  outline-offset: 0;
+  box-shadow: none;
+}
+
 .burger-search__line,
 .burger__rule {
   width: 100%;
@@ -211,12 +219,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .burger__catalog-head img {
   width: 15px;
   height: 15px;
   transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.burger__catalog.is-collapsed .burger__catalog-head img {
+  transform: rotate(0deg);
+}
+
+.burger__catalog-head:focus-visible {
+  outline: 1px solid #251008;
+  outline-offset: 2px;
 }
 
 .burger__cats {
@@ -224,6 +252,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+}
+
+.burger__catalog.is-collapsed .burger__cats {
+  display: none;
 }
 
 .burger__cats a {

@@ -118,6 +118,15 @@
 
   if (burger) {
     burger.addEventListener("click", function (event) {
+      var toggle = event.target.closest("[data-burger-catalog-toggle]");
+      if (toggle) {
+        var block = toggle.closest("[data-burger-catalog]");
+        if (!block) return;
+        var open = toggle.getAttribute("aria-expanded") !== "true";
+        block.classList.toggle("is-collapsed", !open);
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        return;
+      }
       if (event.target.closest("a")) setBurger(false);
     });
   }
