@@ -3,7 +3,7 @@
 mode: typed singletons + фіксовані блоки. Не SiteBlock, не конструктор сторінок.
 seed command: `python manage.py load_figma_content`
 CMS_ALLOW_STATIC_FALLBACK=false
-мова контенту: *_uk / *_ru / *_en, fallback на uk якщо переклад порожній.
+мова контенту: *_uk / *_en, fallback на uk якщо переклад порожній.
 UI-рядки: gettext, не поля моделей.
 
 | surface | mode | model | key / field | kind | required |

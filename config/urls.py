@@ -6,7 +6,16 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 
 from src.core.sitemaps import SITEMAPS
-from src.core.views import healthz, page_not_found, robots_txt, set_currency, set_language, theme_css
+from src.core.views import (
+    healthz,
+    llm_txt,
+    llms_txt,
+    page_not_found,
+    robots_txt,
+    set_currency,
+    set_language,
+    theme_css,
+)
 
 urlpatterns = [
     path("tinymce/", include("tinymce.urls")),
@@ -14,6 +23,8 @@ urlpatterns = [
     path("healthz/", healthz, name="healthz"),
     path("theme.css", theme_css, name="theme_css"),
     path("robots.txt", robots_txt, name="robots"),
+    path("llms.txt", llms_txt, name="llms"),
+    path("llm.txt", llm_txt, name="llm_legacy"),
     path("sitemap.xml", sitemap, {"sitemaps": SITEMAPS}, name="sitemap"),
     path("i18n/setlang/", set_language, name="set_language"),
     path("i18n/setcurrency/", set_currency, name="set_currency"),

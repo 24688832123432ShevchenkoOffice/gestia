@@ -1,8 +1,9 @@
 import re
 
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.i18n import check_for_language
@@ -19,13 +20,24 @@ def healthz(request):
 
 
 def page_not_found(request, exception):
+    request.seo_noindex = True
     return render(request, "404.html", status=404)
 
 
 def robots_txt(request):
-    sitemap_url = request.build_absolute_uri("/sitemap.xml")
-    lines = ["User-agent: *", "Allow: /", "", f"Sitemap: {sitemap_url}"]
-    return HttpResponse("\n".join(lines) + "\n", content_type="text/plain")
+    from src.core.seo import robots_text
+
+    return HttpResponse(robots_text(request), content_type="text/plain")
+
+
+def llms_txt(request):
+    from src.core.seo_llms import llms_text
+
+    return HttpResponse(llms_text(request), content_type="text/plain; charset=utf-8")
+
+
+def llm_txt(request):
+    return HttpResponsePermanentRedirect(reverse("llms"))
 
 
 def theme_css(request):

@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from django.conf import settings
 from django.contrib.sitemaps import Sitemap
 from django.db.models import Exists, OuterRef
@@ -5,12 +7,15 @@ from django.urls import reverse
 
 from src.catalog.models import Category, Product
 from src.core.middleware import language_enabled
+from src.core.seo import configured_origin
 
 STATIC_PAGES = ("home", "catalog", "about", "shipping", "offer", "privacy", "cookies")
 
 
 class LocalizedSitemap(Sitemap):
     i18n = True
+    alternates = True
+    x_default = True
 
     def get_languages_for_item(self, item):
         return [code for code, _label in settings.LANGUAGES if language_enabled(code)]
@@ -20,6 +25,11 @@ class LocalizedSitemap(Sitemap):
         has_items = items.exists() if hasattr(items, "exists") else bool(items)
         if not has_items:
             return []
+        origin = configured_origin()
+        if origin is not None:
+            scheme, netloc = origin
+            site = SimpleNamespace(domain=netloc)
+            protocol = scheme
         return super().get_urls(page=page, site=site, protocol=protocol)
 
 

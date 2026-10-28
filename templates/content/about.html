@@ -105,7 +105,9 @@
     </section>
 
     <section class="reviews">
-      {% if reviews_block.title %}<h2>{{ reviews_block.title }}</h2>{% endif %}
+      {% if reviews_block.title or reviews %}
+        <h2{% if not reviews_block.title %} class="visually-hidden"{% endif %}>{% if reviews_block.title %}{{ reviews_block.title }}{% else %}{% trans "Відгуки" %}{% endif %}</h2>
+      {% endif %}
       <div class="review-rail" data-reviews-track>
         {% for review in reviews %}
           <article class="review-card">

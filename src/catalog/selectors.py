@@ -10,6 +10,11 @@ ATTRIBUTE_FILTER_KEYS = (
 )
 
 
+def catalog_filter_query_names():
+    """GET-параметри, які каталог справді читає для фільтрів."""
+    return ("q", "in_stock", "category", *ATTRIBUTE_FILTER_KEYS)
+
+
 def _ordered_images():
     return Prefetch("images", queryset=ProductImage.objects.order_by("sort", "id"))
 

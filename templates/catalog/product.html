@@ -12,7 +12,6 @@
 {% endblock %}
 {% block title %}{{ product.seo_title }}{% endblock %}
 {% block description %}{{ product.seo_description }}{% endblock %}
-{% block og_image %}{% if product.cover %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ product.cover.image.url }}">{% endif %}{% endblock %}
 
 {% block content %}
   <article class="pdp" data-pdp>
@@ -82,7 +81,7 @@
         <div class="pdp-notes">
           {% if ship_block %}
             <section class="pdp-note">
-              <h2>{{ ship_block.title }}</h2>
+              {% if ship_block.title %}<h2>{{ ship_block.title }}</h2>{% endif %}
               <div>
                 {% for line in ship_block.text.splitlines %}
                   {% if line %}<p>{{ line }}</p>{% endif %}
@@ -92,7 +91,7 @@
           {% endif %}
           {% if pay_block %}
             <section class="pdp-note">
-              <h2>{{ pay_block.title }}</h2>
+              {% if pay_block.title %}<h2>{{ pay_block.title }}</h2>{% endif %}
               <div>
                 {% for line in pay_block.text.splitlines %}
                   {% if line %}<p>{{ line }}</p>{% endif %}
@@ -118,7 +117,7 @@
 
       {% if reviews %}
         <section class="pdp-reviews">
-          <h2>{% if reviews_block %}{{ reviews_block.title }}{% else %}{% trans "Відгуки" %}{% endif %}</h2>
+          <h2>{% if reviews_block and reviews_block.title %}{{ reviews_block.title }}{% else %}{% trans "Відгуки" %}{% endif %}</h2>
           <div class="pdp-review-rail">
             {% for review in reviews %}
               <article class="pdp-review">
