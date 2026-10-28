@@ -78,6 +78,8 @@ class HomeBlockAdminTests(TestCase):
         page = self.client.get(reverse("admin:content_homeheroblock_change", args=[hero.pk]))
         self.assertContains(page, "Банер тест")
         self.assertContains(page, 'maxlength="64"')
+        self.assertContains(page, "Виберіть файл для завантаження")
+        self.assertNotContains(page, "Choose file to upload")
 
     def test_callback_placeholders_roundtrip(self):
         block = HomeBlock.objects.get(key="callback")

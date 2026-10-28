@@ -67,6 +67,22 @@ class SidebarTreeTests(TestCase):
         self.assertContains(response, "Стилі")
         self.assertContains(response, "Увесь сайт")
         self.assertContains(response, reverse("admin:content_globalpagestyle_changelist"))
+        self.assertContains(response, "Пошук додатків і моделей...")
+        self.assertNotContains(response, "Search apps and models")
+        self.assertContains(response, "Перемкнути світлу або темну тему")
+        self.assertContains(response, "Світла")
+        self.assertContains(response, "Темна")
+        self.assertContains(response, "Системна")
+
+    def test_unfold_changelist_actions_are_ukrainian(self):
+        page = self.client.get(reverse("admin:catalog_product_changelist"))
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, "Скинути фільтри")
+        self.assertContains(page, "Виконати")
+        self.assertContains(page, "Виберіть дію")
+        self.assertNotContains(page, "Reset filters")
+        self.assertNotContains(page, "Select action")
+        self.assertNotRegex(page.content.decode(), r">\s*Run\s*<")
 
     def test_user_and_group_changelists_open(self):
         self.assertEqual(self.client.get(reverse("admin:auth_user_changelist")).status_code, 200)
