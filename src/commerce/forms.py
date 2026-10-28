@@ -1,3 +1,5 @@
+import secrets
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -51,6 +53,12 @@ class BuyNowForm(NamePhoneMixin, ConsentForm):
         error_messages={"required": MSG_REQUIRED},
     )
     sku = forms.CharField(widget=forms.HiddenInput)
+    idem = forms.CharField(required=False, widget=forms.HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.is_bound:
+            self.fields["idem"].initial = secrets.token_urlsafe(16)
 
 
 class WaitlistForm(ConsentForm):

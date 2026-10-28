@@ -24,6 +24,13 @@ class Order(models.Model):
         PAID = "paid", "Оплачено"
 
     number = models.CharField("Номер", max_length=24, unique=True)
+    idempotency_key = models.CharField(
+        "Ключ ідемпотентності",
+        max_length=64,
+        null=True,
+        blank=True,
+        unique=True,
+    )
     source = models.CharField("Джерело", max_length=16, choices=Source.choices)
     customer_name = models.CharField("Ім'я", max_length=120)
     phone = models.CharField("Телефон", max_length=32)

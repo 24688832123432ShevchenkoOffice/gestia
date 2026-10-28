@@ -15,11 +15,16 @@
     {% trans "Оформлення замовлення" as checkout_label %}
     {% url 'cart' as cart_url %}
     {% include "partials/crumbs.html" with crumb_link_url=cart_url crumb_link_label=cart_label crumb_current=checkout_label %}
-    <form class="checkout-layout" method="post" action="{% url 'checkout' %}" {% include "commerce/_validate_attrs.html" %}>
+    <form class="checkout-layout" method="post" action="{% url 'checkout' %}" data-once {% include "commerce/_validate_attrs.html" %}>
       {% csrf_token %}
+      <input type="hidden" name="cart_sig" value="{{ cart_sig }}">
+      <input type="hidden" name="idem" value="{{ idem }}">
       <div class="checkout-form">
         <h1>{% trans "Оформлення замовлення" %}</h1>
         <div class="checkout-details">
+          {% if cart_notice %}
+            <p class="co-error" role="alert">{{ cart_notice }}</p>
+          {% endif %}
           {% if form.non_field_errors %}
             <p class="co-error">{{ form.non_field_errors|striptags }}</p>
           {% endif %}

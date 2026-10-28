@@ -1,4 +1,7 @@
 {% load i18n static shop_tags %}
+{% if cart_notice %}
+  <p class="co-error" role="alert">{{ cart_notice }}</p>
+{% endif %}
 {% if rows %}
   <div class="cart-layout">
     <div class="cart-main">

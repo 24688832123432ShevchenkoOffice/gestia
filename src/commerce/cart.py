@@ -1,3 +1,4 @@
+import hashlib
 from decimal import Decimal
 
 from django.db.models import Prefetch
@@ -48,17 +49,19 @@ def clear(request):
 def lines(request, currency: str):
     data = _raw(request)
     if not data:
+        request._cart_removed = 0
         return [], Decimal("0")
-    products = (
-        Product.objects.filter(sku__in=list(data.keys()), is_active=True)
-        .prefetch_related(Prefetch("images", queryset=ProductImage.objects.order_by("sort", "id")))
+    products = Product.objects.filter(sku__in=list(data.keys())).prefetch_related(
+        Prefetch("images", queryset=ProductImage.objects.order_by("sort", "id"))
     )
     by_sku = {product.sku: product for product in products}
     rows = []
     total = Decimal("0")
+    removed = []
     for sku, qty in data.items():
         product = by_sku.get(sku)
-        if product is None:
+        if product is None or not product.is_active:
+            removed.append(sku)
             continue
         qty = int(qty)
         unit = product.amount(currency)
@@ -73,6 +76,17 @@ def lines(request, currency: str):
                 "unit_label": format_money(unit, currency),
                 "line_label": format_money(line_total, currency),
                 "line_total": line_total,
+                "out_of_stock": product.stock_status == Product.Stock.OUT,
             }
         )
+    if removed:
+        for sku in removed:
+            data.pop(sku, None)
+        _save(request, data)
+    request._cart_removed = len(removed)
     return rows, total
+
+
+def signature(rows) -> str:
+    parts = sorted(f"{row['sku']}:{row['qty']}:{row['unit']}" for row in rows)
+    return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()

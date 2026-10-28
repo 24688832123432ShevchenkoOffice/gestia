@@ -7,6 +7,7 @@ from django.utils import translation
 from src.catalog.models import Category, Product
 from src.commerce.forms import CallbackForm
 from src.commerce.models import Inquiry, Order
+from src.commerce.services import OrderValidationError, create_order, row_from_product
 from src.commerce.validators import MSG_NAME, MSG_PHONE
 
 
@@ -361,6 +362,9 @@ class CheckoutTests(TestCase):
         self.assertEqual(self.client.session.get("wishlist"), [])
 
     def test_thank_you_page(self):
+        session = self.client.session
+        session["orders_done"] = ["G-100"]
+        session.save()
         page = self.client.get("/thank-you/?kind=order&number=G-100")
         self.assertEqual(page.status_code, 200)
         self.assertContains(page, "Дякуємо за замовлення")
@@ -419,3 +423,224 @@ class WaitlistTests(TestCase):
         self.assertEqual(inquiry.kind, Inquiry.Kind.WAITLIST)
         self.assertEqual(inquiry.email, "guest@example.com")
         self.assertTrue(inquiry.consent)
+
+
+def _customer():
+    return {
+        "name": "Оля",
+        "phone": "+380671112233",
+        "email": "olya@example.com",
+        "delivery_method": Order.Delivery.BRANCH,
+        "address": "Відділення 12",
+        "payment_method": Order.Payment.ON_DELIVERY,
+    }
+
+
+class CheckoutGuardTests(TestCase):
+    def setUp(self):
+        translation.activate("uk")
+        category = Category.objects.create(slug="cat", name_uk="Каталог")
+        self.product = Product.objects.create(
+            category=category,
+            sku="SNIH",
+            slug="snih",
+            name_uk="Сніг",
+            price_uah=Decimal("100"),
+            price_eur=Decimal("2"),
+        )
+
+    def _cart(self, **items):
+        session = self.client.session
+        session["cart"] = items or {"SNIH": 1}
+        session["currency"] = "uah"
+        session.save()
+
+    def _payload(self, **extra):
+        data = {
+            "name": "Оля",
+            "phone": "+380671112233",
+            "email": "olya@example.com",
+            "delivery_method": Order.Delivery.BRANCH,
+            "address": "Відділення 12",
+            "payment_method": Order.Payment.ON_DELIVERY,
+            "consent": "on",
+        }
+        data.update(extra)
+        return data
+
+    def test_oos_in_cart_creates_no_order(self):
+        self.product.stock_status = Product.Stock.OUT
+        self.product.save()
+        self._cart()
+        response = self.client.post("/zamovlennia/", self._payload())
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Товар «Сніг» зараз відсутній. Приберіть його з кошика.")
+        self.assertEqual(Order.objects.count(), 0)
+        self.assertEqual(self.client.session["cart"]["SNIH"], 1)
+
+    def test_inactive_product_removed_with_notice(self):
+        Product.objects.create(
+            category=self.product.category,
+            sku="LAMP",
+            slug="lampa",
+            name_uk="Лампа",
+            price_uah=Decimal("50"),
+            price_eur=Decimal("1"),
+        )
+        self.product.is_active = False
+        self.product.save()
+        self._cart(SNIH=1, MISSING=1, LAMP=2)
+        cart = self.client.get("/koshik/")
+        self.assertContains(cart, "Деякі товари стали недоступні й прибрані з кошика.")
+        self.assertContains(cart, 'role="alert"')
+        self.assertNotContains(cart, "Сніг")
+        self.assertContains(cart, "Лампа")
+        self.assertEqual(self.client.session["cart"], {"LAMP": 2})
+        self._cart(SNIH=1, LAMP=1)
+        checkout = self.client.get("/zamovlennia/")
+        self.assertContains(checkout, "Деякі товари стали недоступні й прибрані з кошика.")
+        self.assertContains(checkout, 'role="alert"')
+        self.assertContains(checkout, "Лампа")
+        self.assertNotContains(checkout, "Сніг")
+        self.assertNotIn("SNIH", self.client.session["cart"])
+
+    def test_cart_sig_mismatch_creates_no_order(self):
+        self._cart()
+        response = self.client.post("/zamovlennia/", self._payload(cart_sig="0" * 64))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Кошик або ціни змінилися. Перевірте суму та підтвердіть замовлення ще раз.",
+        )
+        self.assertEqual(Order.objects.count(), 0)
+
+    def test_same_idem_posts_redirect_to_one_order(self):
+        self._cart()
+        payload = self._payload(idem="same-token")
+        first = self.client.post("/zamovlennia/", payload)
+        second = self.client.post("/zamovlennia/", payload)
+        self.assertEqual(first.status_code, 302)
+        self.assertEqual(Order.objects.count(), 1)
+        number = Order.objects.get().number
+        self.assertIn(number, first["Location"])
+        self.assertEqual(first["Location"], second["Location"])
+        page = self.client.get(first["Location"])
+        self.assertContains(page, number)
+        self.assertContains(page, 'data-qa="order-number"')
+
+    def test_buy_now_oos(self):
+        self.product.stock_status = Product.Stock.OUT
+        self.product.save()
+        response = self.client.post(
+            "/zamovyty-odrazu/",
+            {
+                "name": "Оля",
+                "phone": "+380671112233",
+                "address": "Київ",
+                "sku": "SNIH",
+                "consent": "on",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Order.objects.count(), 0)
+        self.assertContains(response, "Цей товар зараз не можна замовити.")
+
+    def test_buy_form_renders_idem_and_once(self):
+        page = self.client.get("/tovar/snih/")
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, 'name="idem"')
+        self.assertContains(page, "data-once")
+
+
+class ThanksGuardTests(TestCase):
+    def test_hides_foreign_number(self):
+        page = self.client.get("/thank-you/?kind=order&number=GS-FOREIGN")
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, "Дякуємо за замовлення")
+        self.assertNotContains(page, "Номер замовлення")
+        self.assertNotContains(page, 'data-qa="order-number"')
+
+
+class HomeHeadTests(TestCase):
+    def test_head_home_is_ok(self):
+        response = self.client.head("/")
+        self.assertEqual(response.status_code, 200)
+
+
+class OrderNumberTests(TestCase):
+    def setUp(self):
+        translation.activate("uk")
+        category = Category.objects.create(slug="cat-num", name_uk="Каталог")
+        self.product = Product.objects.create(
+            category=category,
+            sku="NUM",
+            slug="num",
+            name_uk="Сніг",
+            price_uah=Decimal("100"),
+            price_eur=Decimal("2"),
+        )
+
+    def _create(self, **extra):
+        payload = {
+            "source": Order.Source.CART,
+            "customer": _customer(),
+            "rows": [row_from_product(self.product, 1, "uah")],
+            "currency": "uah",
+            "language": "uk",
+        }
+        payload.update(extra)
+        return create_order(**payload)
+
+    def test_retries_when_number_is_taken(self):
+        with patch("src.commerce.services.secrets.token_hex", return_value="aaaaaa"):
+            first = self._create()
+        self.assertTrue(first.number.endswith("-AAAAAA"))
+        tokens = iter(["aaaaaa", "bbbbbb", "cccccc"])
+        with patch(
+            "src.commerce.services.secrets.token_hex",
+            side_effect=lambda _n: next(tokens),
+        ):
+            second = self._create()
+        self.assertTrue(second.number.endswith("-BBBBBB"))
+        self.assertEqual(Order.objects.count(), 2)
+        self.assertRegex(second.number, r"^GS\d{6}-[0-9A-F]{6}$")
+
+    def test_idempotency_race_returns_existing_order(self):
+        first = self._create(idempotency_key="race-key")
+        real_filter = Order.objects.filter
+        calls = {"n": 0}
+
+        def flaky(*args, **kwargs):
+            if kwargs.get("idempotency_key") == "race-key":
+                calls["n"] += 1
+                if calls["n"] == 1:
+                    return real_filter(pk__in=[])
+            return real_filter(*args, **kwargs)
+
+        with patch.object(Order.objects, "filter", side_effect=flaky):
+            second = self._create(idempotency_key="race-key")
+        self.assertEqual(second.pk, first.pk)
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertEqual(first.items.count(), 1)
+
+    def test_create_order_rejects_out_of_stock_and_rereads_price(self):
+        self.product.stock_status = Product.Stock.OUT
+        self.product.save()
+        with self.assertRaises(OrderValidationError) as caught:
+            self._create()
+        self.assertIn("Сніг", str(caught.exception))
+        self.assertEqual(Order.objects.count(), 0)
+        self.product.stock_status = Product.Stock.IN_STOCK
+        self.product.save()
+        stale = row_from_product(self.product, 2, "uah")
+        self.product.price_uah = Decimal("80")
+        self.product.save()
+        order = create_order(
+            source=Order.Source.BUY_NOW,
+            customer=_customer(),
+            rows=[stale],
+            currency="uah",
+            language="uk",
+        )
+        self.assertEqual(order.total, Decimal("160"))
+        self.assertEqual(order.items.get().unit_price, Decimal("80"))

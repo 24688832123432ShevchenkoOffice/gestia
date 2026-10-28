@@ -13,7 +13,7 @@ from src.content.legal_copy import get_legal
 from src.content.models import AboutPage, Advantage, HomeBlock, Review
 
 
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["GET", "HEAD", "POST"])
 def home(request):
     form = style_form(ContactForm(request.POST or None))
     if request.method == "POST" and form.is_valid():

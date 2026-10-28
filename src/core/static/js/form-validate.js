@@ -283,9 +283,37 @@
     setState(form, input, validateInput(form, input));
   }
 
+  function armOnce(form) {
+    if (!form.hasAttribute("data-once")) {
+      return;
+    }
+    form.dataset.onceLock = "1";
+    const button = form.querySelector("[type='submit']");
+    // Disable after the event so iOS Safari still sends the first POST.
+    window.setTimeout(function () {
+      if (button) {
+        button.disabled = true;
+      }
+    }, 0);
+  }
+
+  function releaseOnce() {
+    document.querySelectorAll("form[data-once]").forEach((form) => {
+      delete form.dataset.onceLock;
+      form.querySelectorAll("[type='submit']").forEach((button) => {
+        button.disabled = false;
+      });
+    });
+  }
+
   function onSubmit(event) {
     const form = event.target;
     if (!form || !form.hasAttribute("data-validate-form")) {
+      return;
+    }
+    if (form.dataset.onceLock === "1") {
+      event.preventDefault();
+      event.stopPropagation();
       return;
     }
     form.dataset.submitted = "1";
@@ -298,6 +326,7 @@
       }
     });
     if (!firstInvalid) {
+      armOnce(form);
       return;
     }
     event.preventDefault();
@@ -328,6 +357,7 @@
   document.addEventListener("paste", onPaste, true);
   document.addEventListener("focusout", onBlur, true);
   document.addEventListener("submit", onSubmit, true);
+  window.addEventListener("pageshow", releaseOnce);
   document.addEventListener("DOMContentLoaded", () => hydratePhones(document));
   document.body.addEventListener("htmx:afterSwap", (event) => {
     hydratePhones(event.detail && event.detail.target);

@@ -1,3 +1,5 @@
+import secrets
+
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -5,7 +7,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET, require_POST
 
 from src.catalog.models import Product
-from src.commerce.cart import add, clear, lines, set_qty
+from src.commerce.cart import add, clear, lines, set_qty, signature
 from src.commerce import wishlist as wish
 from src.commerce.forms import (
     BuyNowForm,
@@ -17,7 +19,14 @@ from src.commerce.forms import (
 )
 from src.commerce.models import Inquiry, Order
 from src.commerce import novaposhta
-from src.commerce.services import create_inquiry, create_order, row_from_product
+from src.commerce.services import (
+    OrderValidationError,
+    create_inquiry,
+    create_order,
+    normalize_idempotency_key,
+    row_from_product,
+    unavailable_message,
+)
 from src.core.utils import format_money
 
 
@@ -30,52 +39,136 @@ def _hx(request):
     return request.headers.get("HX-Request")
 
 
+def _cart_notice(request):
+    if int(getattr(request, "_cart_removed", 0) or 0) > 0:
+        return _("Деякі товари стали недоступні й прибрані з кошика.")
+    return ""
+
+
+def _remember_order(request, number):
+    raw = request.session.get("orders_done")
+    done = [item for item in raw if isinstance(item, str)] if isinstance(raw, list) else []
+    if number and number not in done:
+        done.append(number)
+    request.session["orders_done"] = done[-10:]
+
+
+def _order_by_idem(raw):
+    key = normalize_idempotency_key(raw)
+    if not key:
+        return None
+    return Order.objects.filter(idempotency_key=key).first()
+
+
+def _finish_checkout(request, order):
+    clear(request)
+    _remember_order(request, order.number)
+    return HttpResponseRedirect(f"{reverse('thanks')}?kind=order&number={order.number}")
+
+
+def _finish_buy_now(request, order):
+    _remember_order(request, order.number)
+    target = f"{reverse('thanks')}?kind=order&number={order.number}"
+    if _hx(request):
+        response = HttpResponse()
+        response["HX-Redirect"] = target
+        return response
+    return HttpResponseRedirect(target)
+
+
+def _customer(form):
+    return {
+        "name": form.cleaned_data["name"],
+        "phone": form.cleaned_data["phone"],
+        "email": form.cleaned_data["email"],
+        "delivery_method": form.cleaned_data["delivery_method"],
+        "address": form.cleaned_data["address"],
+        "payment_method": form.cleaned_data["payment_method"],
+    }
+
+
+def _order_rows(rows):
+    return [
+        {
+            "sku": row["sku"],
+            "name": row["product"].name_uk,
+            "qty": row["qty"],
+            "unit": row["unit"],
+            "line_total": row["line_total"],
+        }
+        for row in rows
+    ]
+
+
+def _checkout_post_ok(form, request, rows):
+    ok = form.is_valid()
+    for row in rows:
+        if not row.get("out_of_stock"):
+            continue
+        form.add_error(None, unavailable_message(row["product"].name))
+        ok = False
+    submitted = (request.POST.get("cart_sig") or "").strip()
+    if submitted and submitted != signature(rows):
+        form.add_error(
+            None,
+            _("Кошик або ціни змінилися. Перевірте суму та підтвердіть замовлення ще раз."),
+        )
+        ok = False
+    return ok
+
+
+def _checkout_render(request, form, rows, total, currency):
+    return {
+        "form": form,
+        "rows": rows,
+        "total": total,
+        "total_label": format_money(total, currency),
+        "cart_notice": _cart_notice(request),
+        "cart_sig": signature(rows),
+        "idem": secrets.token_urlsafe(16),
+    }
+
+
 def cart_page(request):
-    rows, total = lines(request, _currency(request))
+    currency = _currency(request)
+    rows, total = lines(request, currency)
     return render(
         request,
         "commerce/cart.html",
-        {"rows": rows, "total": total, "total_label": format_money(total, _currency(request))},
+        {
+            "rows": rows,
+            "total": total,
+            "total_label": format_money(total, currency),
+            "cart_notice": _cart_notice(request),
+        },
     )
 
 
 def checkout(request):
     currency = _currency(request)
+    if request.method == "POST":
+        existing = _order_by_idem(request.POST.get("idem"))
+        if existing is not None:
+            return _finish_checkout(request, existing)
     rows, total = lines(request, currency)
     if not rows:
         return HttpResponseRedirect(reverse("cart"))
     form = style_form(CheckoutForm(request.POST or None))
-    if request.method == "POST" and form.is_valid():
-        order = create_order(
-            source=Order.Source.CART,
-            customer={
-                "name": form.cleaned_data["name"],
-                "phone": form.cleaned_data["phone"],
-                "email": form.cleaned_data["email"],
-                "delivery_method": form.cleaned_data["delivery_method"],
-                "address": form.cleaned_data["address"],
-                "payment_method": form.cleaned_data["payment_method"],
-            },
-            rows=[
-                {
-                    "sku": row["sku"],
-                    "name": row["product"].name_uk,
-                    "qty": row["qty"],
-                    "unit": row["unit"],
-                    "line_total": row["line_total"],
-                }
-                for row in rows
-            ],
-            currency=currency,
-            language=request.LANGUAGE_CODE,
-        )
-        clear(request)
-        return HttpResponseRedirect(f"{reverse('thanks')}?kind=order&number={order.number}")
-    return render(
-        request,
-        "commerce/checkout.html",
-        {"form": form, "rows": rows, "total": total, "total_label": format_money(total, currency)},
-    )
+    if request.method == "POST" and _checkout_post_ok(form, request, rows):
+        try:
+            order = create_order(
+                source=Order.Source.CART,
+                customer=_customer(form),
+                rows=_order_rows(rows),
+                currency=currency,
+                language=request.LANGUAGE_CODE,
+                idempotency_key=normalize_idempotency_key(request.POST.get("idem")),
+            )
+        except OrderValidationError as exc:
+            form.add_error(None, exc.message)
+        else:
+            return _finish_checkout(request, order)
+    return render(request, "commerce/checkout.html", _checkout_render(request, form, rows, total, currency))
 
 
 @require_GET
@@ -120,10 +213,14 @@ def np_streets(request):
 
 def thanks(request):
     kind = request.GET.get("kind", "order")
+    number = (request.GET.get("number") or "").strip()
+    done = request.session.get("orders_done")
+    if not isinstance(done, list) or number not in done:
+        number = ""
     return render(
         request,
         "commerce/thanks.html",
-        {"kind": kind, "number": request.GET.get("number", "")},
+        {"kind": kind, "number": number},
     )
 
 
@@ -230,6 +327,7 @@ def cart_update(request):
                 "total": total,
                 "total_label": format_money(total, currency),
                 "cart_count": sum_count(request),
+                "cart_notice": _cart_notice(request),
             },
         )
         return response
@@ -254,35 +352,39 @@ def callback(request):
 
 @require_POST
 def buy_now(request):
+    existing = _order_by_idem(request.POST.get("idem"))
+    if existing is not None:
+        return _finish_buy_now(request, existing)
     form = style_form(BuyNowForm(request.POST))
     product = Product.objects.filter(sku=request.POST.get("sku", ""), is_active=True).first()
     valid = form.is_valid()
     if product is None or product.stock_status == Product.Stock.OUT:
         form.add_error(None, _("Цей товар зараз не можна замовити."))
         valid = False
-    if not valid or product is None:
-        status = 422 if _hx(request) else 200
-        return render(request, "commerce/_buy_form.html", {"buy_form": form}, status=status)
-    currency = _currency(request)
-    order = create_order(
-        source=Order.Source.BUY_NOW,
-        customer={
-            "name": form.cleaned_data["name"],
-            "phone": form.cleaned_data["phone"],
-            "email": "",
-            "delivery_method": Order.Delivery.COURIER,
-            "address": form.cleaned_data["address"],
-            "payment_method": Order.Payment.ON_DELIVERY,
-        },
-        rows=[row_from_product(product, 1, currency)],
-        currency=currency,
-        language=request.LANGUAGE_CODE,
-    )
-    if _hx(request):
-        response = HttpResponse()
-        response["HX-Redirect"] = f"{reverse('thanks')}?kind=order&number={order.number}"
-        return response
-    return HttpResponseRedirect(f"{reverse('thanks')}?kind=order&number={order.number}")
+    if valid and product is not None:
+        currency = _currency(request)
+        try:
+            order = create_order(
+                source=Order.Source.BUY_NOW,
+                customer={
+                    "name": form.cleaned_data["name"],
+                    "phone": form.cleaned_data["phone"],
+                    "email": "",
+                    "delivery_method": Order.Delivery.COURIER,
+                    "address": form.cleaned_data["address"],
+                    "payment_method": Order.Payment.ON_DELIVERY,
+                },
+                rows=[row_from_product(product, 1, currency)],
+                currency=currency,
+                language=request.LANGUAGE_CODE,
+                idempotency_key=normalize_idempotency_key(request.POST.get("idem")),
+            )
+        except OrderValidationError as exc:
+            form.add_error(None, exc.message)
+        else:
+            return _finish_buy_now(request, order)
+    status = 422 if _hx(request) else 200
+    return render(request, "commerce/_buy_form.html", {"buy_form": form}, status=status)
 
 
 @require_POST

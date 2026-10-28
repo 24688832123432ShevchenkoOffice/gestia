@@ -1,7 +1,8 @@
 {% load i18n %}
-<form data-qa="lead-form" method="post" action="{% url 'buy_now' %}" hx-post="{% url 'buy_now' %}" hx-target="this" hx-swap="outerHTML" {% include "commerce/_validate_attrs.html" %}>
+<form data-qa="lead-form" method="post" action="{% url 'buy_now' %}" hx-post="{% url 'buy_now' %}" hx-target="this" hx-swap="outerHTML" data-once {% include "commerce/_validate_attrs.html" %}>
   {% csrf_token %}
   {{ buy_form.sku }}
+  {{ buy_form.idem }}
   {% if buy_form.non_field_errors %}<p class="field__error">{{ buy_form.non_field_errors }}</p>{% endif %}
   {% include "commerce/_field.html" with field=buy_form.name %}
   {% include "commerce/_field.html" with field=buy_form.phone %}
