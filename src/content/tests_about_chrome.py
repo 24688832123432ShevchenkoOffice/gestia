@@ -76,11 +76,12 @@ class HeaderFooterRenderTests(TestCase):
         self.site.menu_title_en = "Boxes"
         self.site.save()
         page = self.client.get("/")
-        self.assertContains(page, "<p>Бокси</p>")
-        self.assertContains(page, "head-nav__catalog")
+        self.assertContains(page, "<span>Бокси</span>")
+        self.assertContains(page, 'class="head-nav__catalog"')
         self.assertContains(page, "Каталог")
         english = self.client.get("/en/")
-        self.assertContains(english, "<p>Boxes</p>")
+        self.assertContains(english, "<span>Boxes</span>")
+        self.assertContains(english, 'class="head-nav__catalog"')
         self.assertContains(english, "Catalogue")
 
 
