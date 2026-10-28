@@ -10,7 +10,7 @@ from src.commerce.forms import ContactForm, style_form
 from src.commerce.models import Inquiry
 from src.commerce.services import create_inquiry
 from src.core.ratelimit import honeypot_filled, reject_if_limited
-from src.content.legal_copy import get_legal
+from src.content.legal_pages import legal_document
 from src.content.models import AboutPage, Advantage, HomeBlock, Review
 
 
@@ -79,7 +79,7 @@ def about(request):
 
 
 def legal_page(request, slug):
-    doc = get_legal(slug)
+    doc = legal_document(slug)
     if doc is None:
         raise Http404
     return render(request, "content/legal.html", {"doc": doc})

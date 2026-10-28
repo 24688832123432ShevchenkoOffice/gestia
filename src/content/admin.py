@@ -1,12 +1,13 @@
 from django.contrib import admin
 
 from src.content.admin_limits import tighten
-from src.content.models import Advantage, FooterLink, HomeBlock, PrivacyPage, Review, SiteSettings
+from src.content.models import Advantage, FooterLink, HomeBlock, Review, SiteSettings
 from src.core.admin_base import GestiaModelAdmin
 
 # Реєстрація окремих блоків головної, форм, «Про нас» і підвалу.
 import src.content.admin_about  # noqa: F401, E402
 import src.content.admin_blocks  # noqa: F401, E402
+import src.content.admin_legal  # noqa: F401, E402
 
 
 class SingletonAdmin(GestiaModelAdmin):
@@ -62,14 +63,6 @@ class AdvantageAdmin(GestiaModelAdmin):
         if db_field.name == "image":
             hint = "303×197 px. Якщо порожньо — лишається фото блоку «Переваги». JPG або PNG."
         return tighten(formfield, self.text_limits.get(db_field.name), hint)
-
-
-@admin.register(PrivacyPage)
-class PrivacyPageAdmin(SingletonAdmin):
-    fieldsets = (
-        ("Українська", {"fields": ("title_uk", "body_uk", "seo_title_uk", "seo_description_uk")}),
-        ("Англійська", {"fields": ("title_en", "body_en", "seo_title_en", "seo_description_en")}),
-    )
 
 
 @admin.register(Review)

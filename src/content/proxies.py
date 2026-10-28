@@ -1,4 +1,5 @@
 from src.content.models import HomeBlock, SiteSettings
+from src.content.models_legal import LegalPage
 
 
 class HomeHeroBlock(HomeBlock):
@@ -55,6 +56,34 @@ class HomeCallbackBlock(HomeBlock):
         proxy = True
         verbose_name = "Зворотний дзвінок"
         verbose_name_plural = "Зворотний дзвінок"
+
+
+class OfferPage(LegalPage):
+    class Meta:
+        proxy = True
+        verbose_name = "Публічний договір"
+        verbose_name_plural = "Публічний договір"
+
+
+class PrivacyPolicyPage(LegalPage):
+    class Meta:
+        proxy = True
+        verbose_name = "Політика конфіденційності"
+        verbose_name_plural = "Політика конфіденційності"
+
+
+class CookiePolicyPage(LegalPage):
+    class Meta:
+        proxy = True
+        verbose_name = "Політика cookies"
+        verbose_name_plural = "Політика cookies"
+
+
+class ShippingPage(LegalPage):
+    class Meta:
+        proxy = True
+        verbose_name = "Доставка та оплата"
+        verbose_name_plural = "Доставка та оплата"
 
 
 class FooterChrome(SiteSettings):

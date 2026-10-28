@@ -42,9 +42,11 @@ class SidebarTreeTests(TestCase):
         self.assertIn("Групи атрибутів", labels)
         self.assertIn("Фрейми каталогу", labels)
         self.assertIn("Політика конфіденційності", labels)
+        self.assertIn("Публічний договір", labels)
+        self.assertIn("Політика cookies", labels)
+        self.assertIn("Доставка та оплата", labels)
         self.assertIn("CTA та контактні форми", labels)
         self.assertIn("Головний банер", labels)
-        self.assertNotIn("Публічний договір", labels)
 
     def test_admin_index_renders_ukrainian_tree(self):
         self.client.cookies["django_language"] = "en"

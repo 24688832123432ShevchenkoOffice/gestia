@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load i18n static richtext %}
 
 {% block title %}{{ doc.seo_title }}{% endblock %}
 {% block description %}{{ doc.seo_description }}{% endblock %}
@@ -20,14 +20,18 @@
           <p class="legal-card__updated">{% trans "Оновлено" %}: {{ doc.updated }}</p>
         {% endif %}
       </header>
-      {% for section in doc.sections %}
-        <section class="legal-sec">
-          <h2>{{ section.heading }}</h2>
-          {% for paragraph in section.paragraphs %}
-            <p>{{ paragraph }}</p>
-          {% endfor %}
-        </section>
-      {% endfor %}
+      {% if doc.html %}
+        <div class="legal-copy">{{ doc.html|richhtml }}</div>
+      {% else %}
+        {% for section in doc.sections %}
+          <section class="legal-sec">
+            <h2>{{ section.heading }}</h2>
+            {% for paragraph in section.paragraphs %}
+              <p>{{ paragraph }}</p>
+            {% endfor %}
+          </section>
+        {% endfor %}
+      {% endif %}
       <nav class="legal-nav" aria-label="{% trans 'Юридичні документи' %}">
         <a href="{% url 'offer' %}"{% if doc.slug == 'offer' %} class="is-current" aria-current="page"{% endif %}>{% trans "Оферта" %}</a>
         <a href="{% url 'shipping' %}"{% if doc.slug == 'shipping' %} class="is-current" aria-current="page"{% endif %}>{% trans "Доставка та оплата" %}</a>

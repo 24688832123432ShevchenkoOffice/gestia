@@ -284,41 +284,6 @@ class AboutPage(MediaChoice, SingletonModel):
         return localized(self, "seo_description")
 
 
-class PrivacyPage(SingletonModel):
-    cache_key = "privacy_page_v1"
-    title_uk = models.CharField("Заголовок", max_length=200, default="Політика конфіденційності")
-    title_en = models.CharField("Заголовок (EN)", max_length=200, blank=True)
-    body_uk = models.TextField("Текст", blank=True)
-    body_en = models.TextField("Текст (EN)", blank=True)
-    seo_title_uk = models.CharField("SEO title", max_length=200, blank=True)
-    seo_title_en = models.CharField("SEO title (EN)", max_length=200, blank=True)
-    seo_description_uk = models.CharField("SEO description", max_length=300, blank=True)
-    seo_description_en = models.CharField("SEO description (EN)", max_length=300, blank=True)
-
-    class Meta:
-        verbose_name = "Політика конфіденційності"
-        verbose_name_plural = "Політика конфіденційності"
-
-    def __str__(self):
-        return "Політика конфіденційності"
-
-    @property
-    def title(self):
-        return localized(self, "title")
-
-    @property
-    def body(self):
-        return localized(self, "body")
-
-    @property
-    def seo_title(self):
-        return localized(self, "seo_title") or self.title
-
-    @property
-    def seo_description(self):
-        return localized(self, "seo_description")
-
-
 class Review(models.Model):
     class Rating(models.TextChoices):
         GOLD_FOUR = "gold4", "4 золоті"
@@ -451,4 +416,5 @@ class ContactForms(SingletonModel):
 
 
 from src.content import models_about as _about_models  # noqa: E402,F401
+from src.content import models_legal as _legal_models  # noqa: E402,F401
 from src.content import proxies as _home_proxies  # noqa: E402,F401

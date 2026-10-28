@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from html import escape
+
 
 def offer_doc() -> dict:
     return {
@@ -313,3 +315,12 @@ DOCS = {
 def get_legal(slug: str) -> dict | None:
     factory = DOCS.get(slug)
     return factory() if factory else None
+
+
+def sections_to_html(sections) -> str:
+    chunks = []
+    for section in sections:
+        chunks.append(f"<h2>{escape(section['heading'])}</h2>")
+        for paragraph in section["paragraphs"]:
+            chunks.append(f"<p>{escape(paragraph)}</p>")
+    return "".join(chunks)

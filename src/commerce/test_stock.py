@@ -213,7 +213,8 @@ class StockTests(TestCase):
         self.assertIn("stock_qty", product_admin.list_editable)
         self.assertIsNone(product_admin.fields)
         self.assertIsNone(product_admin.exclude)
-        self.assertIsNone(product_admin.fieldsets)
+        declared = [name for _title, options in product_admin.fieldsets for name in options["fields"]]
+        self.assertIn("stock_qty", declared)
         form = modelform_factory(Product, fields="__all__")()
         self.assertIn("stock_qty", form.base_fields)
 
