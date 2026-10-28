@@ -8,7 +8,7 @@ from django.utils import translation
 
 from src.catalog.models import Category, Product
 from src.content.models import SiteSettings
-from src.core.seo import clip_text
+from src.core.seo import DESCRIPTION_MAX, TITLE_MAX, clip_text
 
 
 def _ld(response):
@@ -42,6 +42,26 @@ def _types(data):
 
 def _h1_count(response):
     return response.content.decode().lower().count("<h1")
+
+
+def _meta_description(response):
+    match = re.search(
+        r'<meta name="description" content="([^"]*)"',
+        response.content.decode(),
+    )
+    if match is None:
+        return ""
+    return match.group(1)
+
+
+def _word_boundary(source, clipped):
+    body = clipped[:-1]
+    if not body or not source.startswith(body):
+        return False
+    rest = source[len(body) :]
+    if not rest:
+        return False
+    return not (body[-1].isalnum() and rest[0].isalnum())
 
 
 class SeoFixture(TestCase):
@@ -152,6 +172,88 @@ class SeoHeadTests(SeoFixture):
         self.assertLessEqual(len(description), 160)
         self.assertNotEqual(title, long_title)
         self.assertEqual(_h1_count(page), 1)
+
+    def test_product_meta_description_is_non_empty(self):
+        bare = Product.objects.create(
+            category=self.category,
+            sku="SEO-BARE",
+            slug="seo-bare",
+            name_uk="Порожній бокс",
+            name_en="Empty box",
+            price_uah=Decimal("1500.00"),
+            price_eur=Decimal("30.00"),
+            is_active=True,
+            stock_qty=2,
+        )
+        uk = _meta_description(self.client.get(bare.get_absolute_url()))
+        self.assertEqual(uk, "Порожній бокс. Святкові бокси. 1 500 ₴. Gestia")
+        self.assertNotIn("<", uk)
+
+        bare.description_uk = "<p>Короткий <strong>опис</strong>&nbsp;боксу</p>"
+        bare.save(update_fields=["description_uk"])
+        described = _meta_description(self.client.get(bare.get_absolute_url()))
+        self.assertEqual(described, "Короткий опис боксу")
+
+        bare.seo_description_uk = "<p>SEO <em>текст</em> картки</p>"
+        bare.save(update_fields=["seo_description_uk"])
+        self.assertEqual(
+            _meta_description(self.client.get(bare.get_absolute_url())),
+            "SEO текст картки",
+        )
+
+        parent = Category.objects.create(slug="seo-parent", name_uk="Декор", name_en="Decor", is_active=True)
+        child = Category.objects.create(
+            slug="seo-child",
+            name_uk="Свічки",
+            name_en="Candles",
+            parent=parent,
+            is_active=True,
+        )
+        self.assertEqual(
+            _meta_description(self.client.get(child.get_absolute_url())),
+            "Свічки. Декор. Gestia",
+        )
+        self.assertEqual(
+            _meta_description(self.client.get(self.category.get_absolute_url())),
+            "Святкові бокси. Gestia",
+        )
+        bare.seo_description_uk = ""
+        bare.description_uk = ""
+        bare.save(update_fields=["seo_description_uk", "description_uk"])
+        self.assertEqual(
+            _meta_description(self.client.get("/en/tovar/seo-bare/")),
+            "Empty box. Festive boxes. 1 500 ₴. Gestia",
+        )
+        self.assertEqual(
+            _meta_description(self.client.get("/en/katalog/seo-child/")),
+            "Candles. Decor. Gestia",
+        )
+
+    def test_clip_text_cuts_at_word_boundary(self):
+        source = "Альфа бета гамма дельта"
+        self.assertEqual(clip_text(source, 16), "Альфа бета…")
+        self.assertEqual(clip_text(source, 17), "Альфа бета гамма…")
+        self.assertEqual(clip_text("Коротко надзвичайнодовгеслово", 24), "Коротко…")
+        self.assertEqual(clip_text("<p>Альфа <b>бета</b> гамма дельта</p>", 16), "Альфа бета…")
+        self.assertNotIn("<", clip_text("<p>Альфа <b>бета</b></p>", 40))
+        self.assertEqual(clip_text("Gestia", TITLE_MAX), "Gestia")
+
+        long_title = ("Святковий " * 12).strip()
+        long_description = ("Опис товару " * 30).strip()
+        self.product.seo_title_uk = long_title
+        self.product.seo_description_uk = long_description
+        self.product.save(update_fields=["seo_title_uk", "seo_description_uk"])
+        page = self.client.get(self.product.get_absolute_url())
+        title = re.search(r"<title>(.*?)</title>", page.content.decode()).group(1)
+        description = _meta_description(page)
+        self.assertLessEqual(len(title), TITLE_MAX)
+        self.assertLessEqual(len(description), DESCRIPTION_MAX)
+        self.assertTrue(title.endswith("…"))
+        self.assertTrue(description.endswith("…"))
+        self.assertTrue(_word_boundary(long_title, title))
+        self.assertTrue(_word_boundary(long_description, description))
+        self.assertEqual(clip_text(long_title, TITLE_MAX), title)
+        self.assertEqual(clip_text(long_description, DESCRIPTION_MAX), description)
 
 
 class SeoCrawlTests(SeoFixture):

@@ -2,16 +2,24 @@
 
 from __future__ import annotations
 
+import re
 from html import unescape
 from urllib.parse import urlsplit
 
 from django.conf import settings
 from django.templatetags.static import static
-from django.utils.html import strip_tags
 from django.utils.translation import get_language
+
+from src.core.utils import format_money, localized
 
 TITLE_MAX = 60
 DESCRIPTION_MAX = 160
+ELLIPSIS = "…"
+META_BRAND = "Gestia"
+_COPY_FIELDS = ("seo_description", "short_description", "description")
+_HIDDEN_BLOCK = re.compile(r"<(script|style)\b[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL)
+_TAG = re.compile(r"<[^>]+>")
+_TRAILING = " .,;:—-–"
 
 NOINDEX_URL_NAMES = frozenset(
     {
@@ -41,16 +49,60 @@ BRAND = "Gestia Home"
 PLACEHOLDER_PHONE_DIGITS = "380000000000"
 
 
+def plain_text(value) -> str:
+    raw = _HIDDEN_BLOCK.sub(" ", str(value or ""))
+    raw = _TAG.sub(" ", raw)
+    return " ".join(unescape(raw).split())
+
+
+def _splits_word(text: str, index: int) -> bool:
+    if index <= 0 or index >= len(text):
+        return False
+    return text[index - 1].isalnum() and text[index].isalnum()
+
+
 def clip_text(value, limit: int) -> str:
-    text = " ".join(unescape(strip_tags(str(value or ""))).split())
+    text = plain_text(value)
+    if limit <= 0 or not text:
+        return ""
     if len(text) <= limit:
         return text
-    trimmed = text[:limit].rstrip()
-    if " " in trimmed:
-        word = trimmed.rsplit(" ", 1)[0].rstrip()
-        if len(word) >= int(limit * 0.6):
-            trimmed = word
-    return trimmed.rstrip(" .,;:—-–")
+    if limit <= len(ELLIPSIS):
+        return ELLIPSIS[:limit]
+    budget = limit - len(ELLIPSIS)
+    trimmed = text[:budget]
+    if _splits_word(text, budget) and " " in trimmed:
+        trimmed = trimmed.rsplit(" ", 1)[0]
+    trimmed = trimmed.rstrip(_TRAILING)
+    if not trimmed:
+        return ELLIPSIS
+    return trimmed + ELLIPSIS
+
+
+def product_meta_description(product) -> str:
+    for field in _COPY_FIELDS:
+        text = plain_text(localized(product, field))
+        if text:
+            return text
+    parts = [plain_text(getattr(product, "name", ""))]
+    if getattr(product, "category_id", None):
+        parts.append(plain_text(product.category.name))
+    price = getattr(product, "price_uah", None)
+    if price is not None:
+        parts.append(format_money(price, "uah"))
+    parts.append(META_BRAND)
+    return ". ".join(part for part in parts if part)
+
+
+def category_meta_description(category) -> str:
+    parts = []
+    for node in reversed(category.chain()):
+        label = plain_text(node.name)
+        if label and label not in parts:
+            parts.append(label)
+    if not parts or parts[-1] != META_BRAND:
+        parts.append(META_BRAND)
+    return ". ".join(parts)
 
 
 def configured_origin() -> tuple[str, str] | None:

@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.translation import get_language, gettext_lazy as _
 
 from src.core.models import TimeStampedModel
+from src.core.seo import category_meta_description, product_meta_description
 from src.core.slug import ensure_new_slug
 from src.core.utils import localized
 
@@ -58,6 +59,10 @@ class Category(TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse("category", kwargs={"slug": self.slug})
+
+    @property
+    def seo_description(self):
+        return category_meta_description(self)
 
     @property
     def has_public_products(self):
@@ -296,7 +301,7 @@ class Product(TimeStampedModel):
 
     @property
     def seo_description(self):
-        return localized(self, "seo_description") or self.description[:300]
+        return product_meta_description(self)
 
     def amount(self, currency: str):
         if currency == "eur":

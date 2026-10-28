@@ -180,7 +180,7 @@ class SeoTests(TestCase):
         text = "Каталог святкових боксів і сервірування Gestia Home"
         self.assertContains(catalog, f'name="description" content="{text}"')
         category = self.client.get(self.category.get_absolute_url())
-        self.assertContains(category, 'name="description" content="Святкові бокси"')
+        self.assertContains(category, 'name="description" content="Святкові бокси. Gestia"')
 
     def test_sitemap_lists_active_product(self):
         response = self.client.get("/sitemap.xml")
