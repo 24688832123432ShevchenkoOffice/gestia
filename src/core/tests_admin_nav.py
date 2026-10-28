@@ -72,7 +72,7 @@ class SidebarTreeTests(TestCase):
         self.assertContains(response, "Стилі")
         self.assertContains(response, "Увесь сайт")
         self.assertContains(response, reverse("admin:content_globalpagestyle_changelist"))
-        self.assertContains(response, "Пошук додатків і моделей...")
+        self.assertContains(response, "Пошук розділів і моделей…")
         self.assertNotContains(response, "Search apps and models")
         self.assertContains(response, "Перемкнути світлу або темну тему")
         self.assertContains(response, "Світла")
