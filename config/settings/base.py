@@ -31,6 +31,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "src.core.middleware.AdminUkrainianMiddleware",
     "src.core.middleware.LanguagePrefixMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -162,7 +163,43 @@ LOGGING = {
 }
 
 UNFOLD = {
-    "SITE_TITLE": "Gestia",
-    "SITE_HEADER": "Gestia",
+    "SITE_TITLE": "Gestia Home",
+    "SITE_HEADER": "Gestia Home",
     "SITE_SYMBOL": "storefront",
+    "SITE_URL": "/",
+    "SHOW_HISTORY": True,
+    "SHOW_LANGUAGES": False,
+    "COLORS": {
+        "base": {
+            "50": "#faf7f2",
+            "100": "#f3eee6",
+            "200": "#e7e0d4",
+            "300": "#d9cfc2",
+            "400": "#b5a89a",
+            "500": "#8c7f72",
+            "600": "#5c5148",
+            "700": "#3d342c",
+            "800": "#2c241e",
+            "900": "#241c16",
+            "950": "#16110e",
+        },
+        "primary": {
+            "50": "#fbf6f4",
+            "100": "#f6ece8",
+            "200": "#ead5ce",
+            "300": "#d7b0a4",
+            "400": "#c07a68",
+            "500": "#a4513c",
+            "600": "#8d3b2a",
+            "700": "#743022",
+            "800": "#5c261b",
+            "900": "#4a1f16",
+            "950": "#2c120d",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": "src.core.admin_nav.build_navigation",
+    },
 }

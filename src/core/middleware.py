@@ -41,6 +41,32 @@ class ContentSecurityPolicyMiddleware:
         return response
 
 
+class AdminUkrainianMiddleware:
+    """Адмінка і TinyMCE лишаються українською, навіть якщо на вітрині обрано English."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if _is_staff_ui(request.path):
+            translation.activate("uk")
+            request.LANGUAGE_CODE = "uk"
+        return self.get_response(request)
+
+
+def _is_staff_ui(path: str) -> bool:
+    admin_root = "/" + str(settings.ADMIN_URL or "").strip("/")
+    if _under(path, admin_root):
+        return True
+    return _under(path, "/tinymce")
+
+
+def _under(path: str, root: str) -> bool:
+    normalized = (path or "/").rstrip("/") or "/"
+    base = (root or "/").rstrip("/") or "/"
+    return normalized == base or path.startswith(base + "/")
+
+
 class LanguagePrefixMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
