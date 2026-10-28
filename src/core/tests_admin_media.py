@@ -12,6 +12,7 @@ from django.urls import reverse
 from PIL import Image
 
 from src.catalog.models import Category, Product
+from src.content.models import AboutPage
 from src.core.admin_base import IMAGE_HELP
 from src.core.fields import WebPImageField
 from src.core.images import MAX_SIDE
@@ -166,11 +167,15 @@ class WebPAndAdminMediaTests(TestCase):
             "admin:catalog_catalogcell_changelist",
             "admin:content_homeblock_changelist",
             "admin:content_advantage_changelist",
-            "admin:content_aboutpage_changelist",
             "admin:content_sitesettings_changelist",
         ):
             page = self.client.get(reverse(name))
             self.assertEqual(page.status_code, 200, name)
+        about = self.client.get(reverse("admin:content_aboutpage_changelist"))
+        self.assertRedirects(
+            about,
+            reverse("admin:content_aboutpage_change", args=[AboutPage.objects.get().pk]),
+        )
 
 
 def _image_bytes(fmt, size, mode="RGB"):

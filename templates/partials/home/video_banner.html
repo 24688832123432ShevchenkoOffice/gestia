@@ -1,6 +1,18 @@
 {% load static %}
 <section class="vbanner{% if with_icon %} vbanner--icon{% endif %}" aria-hidden="true">
-  {% if block.image %}
+  {% if block.shows_video %}
+    <video
+      class="vbanner__img"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      {% if block.poster %}poster="{{ block.poster.url }}"{% elif block.image %}poster="{{ block.image.url }}"{% endif %}
+    >
+      <source src="{{ block.video.url }}" type="{% if '.webm' in block.video.name %}video/webm{% else %}video/mp4{% endif %}">
+    </video>
+  {% elif block.image %}
     <picture>
       {% if block.image_mobile %}
         <source media="(max-width: 767px)" srcset="{{ block.image_mobile.url }}">

@@ -1,4 +1,4 @@
-from src.content.models import HomeBlock
+from src.content.models import HomeBlock, SiteSettings
 
 
 class HomeHeroBlock(HomeBlock):
@@ -55,3 +55,10 @@ class HomeCallbackBlock(HomeBlock):
         proxy = True
         verbose_name = "Зворотний дзвінок"
         verbose_name_plural = "Зворотний дзвінок"
+
+
+class FooterChrome(SiteSettings):
+    class Meta:
+        proxy = True
+        verbose_name = "Тексти підвалу"
+        verbose_name_plural = "Тексти підвалу"

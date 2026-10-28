@@ -118,7 +118,8 @@
   margin-inline: auto;
 }
 
-.about-lead__list {
+.about-lead__list,
+.about-lead__text ul {
   width: 100%;
   margin: 0;
   padding: 0 0 0 1.15em;
@@ -129,7 +130,8 @@
   list-style: disc;
 }
 
-.about-lead__list li {
+.about-lead__list li,
+.about-lead__text li {
   margin: 0;
   padding: 0;
   line-height: 1.4;

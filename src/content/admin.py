@@ -1,10 +1,11 @@
 from django.contrib import admin
 
 from src.content.admin_limits import tighten
-from src.content.models import AboutPage, Advantage, FooterLink, HomeBlock, PrivacyPage, Review, SiteSettings
+from src.content.models import Advantage, FooterLink, HomeBlock, PrivacyPage, Review, SiteSettings
 from src.core.admin_base import GestiaModelAdmin
 
-# Реєстрація окремих блоків головної і форм.
+# Реєстрація окремих блоків головної, форм, «Про нас» і підвалу.
+import src.content.admin_about  # noqa: F401, E402
 import src.content.admin_blocks  # noqa: F401, E402
 
 
@@ -20,21 +21,11 @@ class SingletonAdmin(GestiaModelAdmin):
 class SiteSettingsAdmin(SingletonAdmin):
     fieldsets = (
         ("Контакти", {"fields": ("phone", "email", "instagram_url", "pinterest_url", "logo")}),
+        ("Пункти меню", {"fields": ("nav_about_uk", "nav_about_en", "nav_all_uk", "nav_all_en")}),
         ("Адреса", {"fields": ("address_uk", "address_en")}),
         ("Мови", {"fields": ("en_enabled",)}),
         ("Сповіщення", {"fields": ("telegram_notify_orders", "telegram_notify_leads")}),
         ("Кольори", {"fields": ("color_ink", "color_paper", "color_accent")}),
-        (
-            "Підвал",
-            {
-                "fields": (
-                    "footer_note_uk",
-                    "footer_note_en",
-                    "developer_note_uk",
-                    "developer_note_en",
-                )
-            },
-        ),
     )
 
 
@@ -59,15 +50,6 @@ class AdvantageAdmin(GestiaModelAdmin):
         if db_field.name == "image":
             hint = "303×197 px. Якщо порожньо — лишається фото блоку «Переваги». JPG або PNG."
         return tighten(formfield, self.text_limits.get(db_field.name), hint)
-
-
-@admin.register(AboutPage)
-class AboutPageAdmin(SingletonAdmin):
-    fieldsets = (
-        ("Українська", {"fields": ("title_uk", "body_uk", "seo_title_uk", "seo_description_uk")}),
-        ("Англійська", {"fields": ("title_en", "body_en", "seo_title_en", "seo_description_en")}),
-        ("Медіа", {"fields": ("image", "video")}),
-    )
 
 
 @admin.register(PrivacyPage)

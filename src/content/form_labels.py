@@ -1,6 +1,18 @@
+from django.db.utils import OperationalError, ProgrammingError
+
 from src.core.utils import localized
 
 _FIELDS = ("name", "phone", "message", "address", "email")
+
+
+def label_form(form):
+    from src.content.models import ContactForms
+
+    try:
+        copy = ContactForms.load()
+    except (OperationalError, ProgrammingError):
+        return form
+    return apply_labels(form, copy)
 
 
 def apply_labels(form, copy):

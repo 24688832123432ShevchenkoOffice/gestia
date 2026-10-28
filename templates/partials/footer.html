@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static content_tags %}
 <footer class="site-footer">
   <div class="site-footer__bar">
     <div class="site-footer__top">
@@ -38,7 +38,7 @@
           {% endif %}
         {% endif %}
         <p class="site-footer__credit">
-          {% trans "Вітрину зібрано в" %}
+          {% cms_field site_settings "credit" %}
           {% if request.resolver_match.url_name == "home" %}
             <a
               class="site-footer__credit-link"

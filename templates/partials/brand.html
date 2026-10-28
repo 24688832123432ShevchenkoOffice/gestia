@@ -1,7 +1,11 @@
 {% load static %}
 <a class="brand brand--{{ kind }}" href="{% url 'home' %}">
   <span class="brand__photo">
-    <img src="{% static 'figma/desktop/5493c.png' %}" alt="Gestia Home"{% if kind == "footer" %} width="191" height="73"{% else %} width="113" height="43"{% endif %}>
+    {% if site_settings.logo %}
+      <img src="{{ site_settings.logo.url }}" alt="Gestia Home"{% if kind == "footer" %} width="191" height="73"{% else %} width="113" height="43"{% endif %}>
+    {% else %}
+      <img src="{% static 'figma/desktop/5493c.png' %}" alt="Gestia Home"{% if kind == "footer" %} width="191" height="73"{% else %} width="113" height="43"{% endif %}>
+    {% endif %}
   </span>
   {% if kind == "footer" %}
     <span class="brand__gold brand__gold--footer" aria-hidden="true"></span>

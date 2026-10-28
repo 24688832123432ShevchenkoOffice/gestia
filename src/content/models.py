@@ -2,6 +2,8 @@ from django.core.cache import cache
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
+from src.content.media import MediaChoice
+from src.core.fields import WebPImageField
 from src.core.utils import localized
 
 IMAGE_VALIDATOR = FileExtensionValidator(["jpg", "jpeg", "png", "webp"])
@@ -28,7 +30,7 @@ class SingletonModel(models.Model):
 
 
 class SiteSettings(SingletonModel):
-    cache_key = "site_settings_v1"
+    cache_key = "site_settings_v2"
     phone = models.CharField("Телефон", max_length=40, default="+380000000000")
     email = models.EmailField("Email", blank=True)
     address_uk = models.CharField("Адреса", max_length=255, blank=True)
@@ -42,7 +44,21 @@ class SiteSettings(SingletonModel):
         upload_to="site/",
         blank=True,
         validators=[IMAGE_VALIDATOR],
+        help_text="Шапка близько 113×43, підвал 191×73. JPG або PNG.",
     )
+    nav_about_uk = models.CharField("Пункт «Про нас»", max_length=16, blank=True)
+    nav_about_en = models.CharField("Пункт «Про нас» (EN)", max_length=16, blank=True)
+    nav_all_uk = models.CharField("Пункт «Усі товари»", max_length=20, blank=True)
+    nav_all_en = models.CharField("Пункт «Усі товари» (EN)", max_length=20, blank=True)
+    menu_title_uk = models.CharField(
+        "Заголовок у меню",
+        max_length=16,
+        blank=True,
+        help_text="У мобільному меню. Кнопка в шапці лишається своєю.",
+    )
+    menu_title_en = models.CharField("Заголовок у меню (EN)", max_length=16, blank=True)
+    credit_uk = models.CharField("Текст перед PrometeyLabs", max_length=32, blank=True)
+    credit_en = models.CharField("Текст перед PrometeyLabs (EN)", max_length=32, blank=True)
     en_enabled = models.BooleanField("Англійська увімкнена", default=True)
     telegram_notify_orders = models.BooleanField("Telegram: замовлення", default=True)
     telegram_notify_leads = models.BooleanField("Telegram: заявки", default=True)
@@ -83,7 +99,7 @@ class SiteSettings(SingletonModel):
         return parts[1] if len(parts) == 2 else ""
 
 
-class HomeBlock(models.Model):
+class HomeBlock(MediaChoice):
     class Key(models.TextChoices):
         HERO = "hero", "Головний банер"
         CATEGORIES = "categories", "Категорії"
@@ -206,17 +222,32 @@ class Advantage(models.Model):
         return localized(self, "text")
 
 
-class AboutPage(SingletonModel):
-    cache_key = "about_page_v1"
+class AboutPage(MediaChoice, SingletonModel):
+    cache_key = "about_page_v2"
+    rich_text_fields = ("body_uk", "body_en")
     title_uk = models.CharField("Заголовок", max_length=200, default="Про нас")
     title_en = models.CharField("Заголовок (EN)", max_length=200, blank=True)
+    lead_uk = models.CharField("Підзаголовок", max_length=40, blank=True)
+    lead_en = models.CharField("Підзаголовок (EN)", max_length=40, blank=True)
+    crumb_uk = models.CharField("Посилання «Головна»", max_length=16, blank=True)
+    crumb_en = models.CharField("Посилання «Головна» (EN)", max_length=16, blank=True)
+    story_label_uk = models.CharField("Назва історії", max_length=32, blank=True)
+    story_label_en = models.CharField("Назва історії (EN)", max_length=32, blank=True)
     body_uk = models.TextField("Текст", blank=True)
     body_en = models.TextField("Текст (EN)", blank=True)
     image = models.ImageField(
-        "Фото",
+        "Фото для комп’ютера",
         upload_to="about/",
         blank=True,
         validators=[IMAGE_VALIDATOR],
+        help_text="Банер, у макеті 1442×871. JPG або PNG.",
+    )
+    image_mobile = WebPImageField(
+        "Фото для телефона",
+        upload_to="about/",
+        blank=True,
+        validators=[IMAGE_VALIDATOR],
+        help_text="Банер, у макеті 393×735. JPG або PNG.",
     )
     video = models.FileField(
         "Відео",
@@ -419,4 +450,5 @@ class ContactForms(SingletonModel):
         return "CTA та контактні форми"
 
 
+from src.content import models_about as _about_models  # noqa: E402,F401
 from src.content import proxies as _home_proxies  # noqa: E402,F401

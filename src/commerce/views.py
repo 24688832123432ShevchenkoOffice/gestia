@@ -28,6 +28,7 @@ from src.commerce.services import (
     row_from_product,
     unavailable_message,
 )
+from src.content.form_labels import label_form
 from src.core.ratelimit import honeypot_filled, reject_if_limited
 from src.core.utils import format_money
 
@@ -385,7 +386,7 @@ def cart_update(request):
 def callback(request):
     if honeypot_filled(request):
         return render(request, "commerce/_thanks_lead.html", {"long": True})
-    form = style_form(CallbackForm(request.POST))
+    form = label_form(style_form(CallbackForm(request.POST)))
     if reject_if_limited(request, form, "callback"):
         return render(request, "commerce/_callback_form.html", {"callback_form": form}, status=429)
     if not form.is_valid():
@@ -408,7 +409,7 @@ def buy_now(request):
     existing = _order_by_idem(request.POST.get("idem"))
     if existing is not None:
         return _finish_buy_now(request, existing)
-    form = style_form(BuyNowForm(request.POST))
+    form = label_form(style_form(BuyNowForm(request.POST)))
     if reject_if_limited(request, form, "buy_now"):
         return render(request, "commerce/_buy_form.html", {"buy_form": form}, status=429)
     product = Product.objects.filter(sku=request.POST.get("sku", ""), is_active=True).first()
@@ -446,7 +447,7 @@ def buy_now(request):
 def contact(request):
     if honeypot_filled(request):
         return render(request, "commerce/_thanks_lead.html", {"long": False})
-    form = style_form(ContactForm(request.POST))
+    form = label_form(style_form(ContactForm(request.POST)))
     if reject_if_limited(request, form, "contact"):
         return render(request, "commerce/_contact_form.html", {"contact_form": form}, status=429)
     if not form.is_valid():

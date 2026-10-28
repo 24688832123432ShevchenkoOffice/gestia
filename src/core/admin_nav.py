@@ -188,6 +188,12 @@ NAV_TREE = [
                 "url_name": "admin:content_sitesettings_changelist",
             },
             {
+                "key": "chrome_footer",
+                "title": "Тексти підвалу",
+                "icon": "notes",
+                "url_name": "admin:content_footerchrome_changelist",
+            },
+            {
                 "key": "chrome_footer_links",
                 "title": "Посилання футера",
                 "icon": "link",

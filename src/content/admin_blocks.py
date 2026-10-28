@@ -139,7 +139,7 @@ class HomeHeroAdmin(KeyedBlockAdmin):
     fieldsets = (
         ("Українська", {"fields": ("title_uk", "text_uk", "cta_uk")}),
         ("Англійська", {"fields": ("title_en", "text_en", "cta_en")}),
-        ("Медіа", {"fields": ("image", "image_mobile", "video")}),
+        ("Медіа", {"fields": ("media_kind", "image", "image_mobile", "video", "poster")}),
     )
 
 
@@ -158,7 +158,7 @@ class HomeVideoAdmin(KeyedBlockAdmin):
     block_key = HomeBlock.Key.VIDEO
     default_sort = 3
     image_hints = {"image": PHOTO_DESK, "image_mobile": PHOTO_MOBILE}
-    fieldsets = (("Медіа", {"fields": ("image", "image_mobile", "video")}),)
+    fieldsets = (("Медіа", {"fields": ("media_kind", "image", "image_mobile", "video", "poster")}),)
 
 
 @admin.register(HomePopularBlock)
@@ -205,7 +205,7 @@ class HomeVideo2Admin(KeyedBlockAdmin):
     block_key = HomeBlock.Key.VIDEO_2
     default_sort = 6
     image_hints = {"image": PHOTO_DESK, "image_mobile": PHOTO_MOBILE}
-    fieldsets = (("Медіа", {"fields": ("image", "image_mobile", "video")}),)
+    fieldsets = (("Медіа", {"fields": ("media_kind", "image", "image_mobile", "video", "poster")}),)
 
 
 @admin.register(HomeReviewsBlock)

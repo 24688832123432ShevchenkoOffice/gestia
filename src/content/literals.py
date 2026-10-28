@@ -89,6 +89,13 @@ LITERALS = {
     "label_message": ("Повідомлення", "Message"),
     "label_address": ("Адреса доставки", "Delivery address"),
     "label_email": ("Email", "Email"),
+    "lead": ("Сучасна жінка може все.", "A modern woman can do anything."),
+    "credit": ("Вітрину зібрано в", "Storefront assembled by"),
+    "nav_about": ("Про нас", "About"),
+    "nav_all": ("Усі товари", "All products"),
+    "menu_title": ("Каталог", "Catalogue"),
+    "crumb": ("Головна", "Home"),
+    "story_label": ("Про Gestia Home", "About Gestia Home"),
 }
 
 

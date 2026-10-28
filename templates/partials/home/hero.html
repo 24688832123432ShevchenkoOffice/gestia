@@ -2,8 +2,8 @@
 {% cms block.title "hero_title" as hero_title %}
 {% cms block.text "hero_text" as hero_text %}
 {% cms block.cta "hero_cta" as hero_cta %}
-<section class="hero{% if block.video %} hero--video{% endif %}">
-  {% if block.video %}
+<section class="hero{% if block.shows_video %} hero--video{% endif %}">
+  {% if block.shows_video %}
     <video
       class="hero__video"
       autoplay
@@ -11,9 +11,9 @@
       loop
       playsinline
       preload="metadata"
-      {% if block.image %}poster="{{ block.image.url }}"{% endif %}
+      {% if block.poster %}poster="{{ block.poster.url }}"{% elif block.image %}poster="{{ block.image.url }}"{% endif %}
     >
-      <source src="{{ block.video.url }}" type="video/mp4">
+      <source src="{{ block.video.url }}" type="{% if '.webm' in block.video.name %}video/webm{% else %}video/mp4{% endif %}">
     </video>
   {% elif block.image %}
     <picture class="hero__picture">
@@ -23,7 +23,7 @@
       <img class="hero__img" src="{{ block.image.url }}" alt="" width="1442" height="871">
     </picture>
   {% endif %}
-  {% if not block.video %}
+  {% if not block.shows_video %}
     <div class="video-mark video-mark--desk" aria-hidden="true">
       <img class="video-mark__a" src="{% static 'figma/desktop/e09d8.svg' %}" width="125.545" height="120.866" alt="">
       <span class="video-mark__b">
