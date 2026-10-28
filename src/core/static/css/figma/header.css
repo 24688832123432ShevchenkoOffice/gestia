@@ -41,6 +41,7 @@
   top: 12px;
   width: 44px;
   height: 44px;
+  --burger-close-size: 18px;
 }
 
 .burger-btn__open,
@@ -58,9 +59,9 @@
 
 .burger-btn__close {
   left: 8px;
-  top: 14px;
-  width: 36.6968px;
-  height: 15.4876px;
+  top: calc(23.4px - var(--burger-close-size) / 2);
+  width: var(--burger-close-size);
+  height: var(--burger-close-size);
   display: none;
 }
 
