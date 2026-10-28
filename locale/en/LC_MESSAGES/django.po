@@ -1,52 +1,16 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: Gestia\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-28 11:54+0200\n"
+"PO-Revision-Date: 2026-10-28 12:00+0200\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
 "Language: en\n"
-
-msgid "Меню"
-msgstr "Menu"
-
-msgid "Головна"
-msgstr "Home"
-
-msgid "Про нас"
-msgstr "About"
-
-msgid "Каталог"
-msgstr "Catalogue"
-
-msgid "Кошик"
-msgstr "Basket"
-
-msgid "Пошук товарів"
-msgstr "Search products"
-
-msgid "Пошук"
-msgstr "Search"
-
-msgid "Знайти"
-msgstr "Find"
-
-msgid "Зворотний зв'язок"
-msgstr "Contact"
-
-msgid "Політика конфіденційності"
-msgstr "Privacy policy"
-
-msgid "До каталогу"
-msgstr "Browse the catalogue"
-
-msgid "Розділ"
-msgstr "Section"
-
-msgid "Товарів немає."
-msgstr "No products found."
-
-msgid "Фільтр"
-msgstr "Filter"
-
-msgid "Закрити"
-msgstr "Close"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "В наявності"
 msgstr "In stock"
@@ -57,80 +21,8 @@ msgstr "Made to order"
 msgid "Немає в наявності"
 msgstr "Out of stock"
 
-msgid "Показати"
-msgstr "Show"
-
-msgid "Скинути"
-msgstr "Reset"
-
-msgid "Попереднє фото"
-msgstr "Previous photo"
-
-msgid "Наступне фото"
-msgstr "Next photo"
-
-msgid "Артикул"
-msgstr "SKU"
-
-msgid "Додати в кошик"
-msgstr "Add to basket"
-
-msgid "Замовити одразу"
-msgstr "Order now"
-
-msgid "Замовити"
-msgstr "Request a call"
-
-msgid "Товари з цього ж сету"
-msgstr "From the same set"
-
-msgid "Схожі товари"
-msgstr "Similar pieces"
-
-msgid "Кількість"
-msgstr "Quantity"
-
-msgid "Оновити"
-msgstr "Update"
-
-msgid "Разом"
-msgstr "Total"
-
-msgid "Оформити замовлення"
-msgstr "Checkout"
-
-msgid "Кошик порожній."
-msgstr "The basket is empty."
-
-msgid "Оформлення замовлення"
-msgstr "Checkout"
-
 msgid "Погоджуюсь на обробку персональних даних"
 msgstr "I agree to the processing of personal data"
-
-msgid "Підтвердити замовлення"
-msgstr "Place the order"
-
-msgid "Дякуємо"
-msgstr "Thank you"
-
-msgid "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами"
-msgstr "Thank you for the order. A consultant will contact you shortly"
-
-msgid "Номер"
-msgstr "Number"
-
-msgid "Надіслати заявку"
-msgstr "Send request"
-
-msgid "Надіслати"
-msgstr "Send"
-
-msgid "Сторінку не знайдено"
-msgstr "Page not found"
-
-msgid "На головну"
-msgstr "Back home"
 
 msgid "Ім'я"
 msgstr "Name"
@@ -147,56 +39,14 @@ msgstr "Delivery address"
 msgid "Email"
 msgstr "Email"
 
-msgid "Доставка"
-msgstr "Delivery"
-
-msgid "Оплата"
-msgstr "Payment"
-
-msgid "Поле обов'язкове для заповнення"
-msgstr "This field is required"
-
-msgid "Ім'я не може містити цифри або спецсимволи. Будь ласка, використовуйте лише букви"
-msgstr "The name cannot contain digits or special characters. Please use letters only"
-
-msgid "Занадто коротке значення"
-msgstr "The value is too short"
-
-msgid "Введіть коректний номер мобільного телефону у форматі +380 (XX) XXX-XX-XX"
-msgstr "Enter a valid mobile number in the format +380 (XX) XXX-XX-XX"
-
-msgid "Некоректний формат"
-msgstr "Invalid format"
-
-msgid "Цей товар зараз не можна замовити."
-msgstr "This piece cannot be ordered right now."
-
-msgid "Нова пошта — відділення"
-msgstr "Nova Poshta — branch"
-
-msgid "Нова пошта — кур'єр"
-msgstr "Nova Poshta — courier"
-
-msgid "Онлайн карткою"
-msgstr "Card online"
-
-msgid "При отриманні"
-msgstr "Pay on delivery"
-
-msgid "Замовлення %(number)s"
-msgstr "Order %(number)s"
-
-msgid "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами. Номер: %(number)s"
-msgstr "Thank you for the order. A consultant will contact you shortly. Number: %(number)s"
-
 msgid "Ім’я"
 msgstr "Name"
 
-msgid "Контактні дані"
-msgstr "Contact details"
-
 msgid "Номер телефону"
 msgstr "Phone number"
+
+msgid "Доставка"
+msgstr "Delivery"
 
 msgid "Нова пошта (відділення)"
 msgstr "Nova Poshta (branch)"
@@ -213,26 +63,236 @@ msgstr "City"
 msgid "Відділення"
 msgstr "Branch"
 
+msgid "Квартира"
+msgstr "Apartment"
+
+msgid "Оплата"
+msgstr "Payment"
+
 msgid "Онлайн карткою на сайті"
 msgstr "Card online on the website"
 
 msgid "При отриманні (інший погоджений спосіб)"
 msgstr "On delivery (another agreed method)"
 
-msgid "Погоджуюсь на обробку персональних даних згідно з"
-msgstr "I agree to the processing of personal data according to"
+msgid "Кошик"
+msgstr "Basket"
 
-msgid "Політикою конфіденційності"
-msgstr "the Privacy policy"
+msgid "Замовити одразу"
+msgstr "Order now"
 
-msgid "Перейти до оформлення"
-msgstr "Proceed to checkout"
+msgid "Нова пошта — відділення"
+msgstr "Nova Poshta — branch"
+
+msgid "Нова пошта — поштамат"
+msgstr "Nova Poshta — parcel locker"
+
+msgid "Нова пошта — кур'єр"
+msgstr "Nova Poshta — courier"
+
+msgid "Онлайн карткою"
+msgstr "Card online"
+
+msgid "При отриманні"
+msgstr "Pay on delivery"
+
+#, python-format
+msgid "Замовлення %(number)s"
+msgstr "Order %(number)s"
+
+#, python-format
+msgid "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами. Номер: %(number)s"
+msgstr "Thank you for the order. A consultant will contact you shortly. Number: %(number)s"
+
+#, python-format
+msgid "Товар «%(name)s» зараз відсутній. Приберіть його з кошика."
+msgstr "“%(name)s” is currently unavailable. Remove it from your basket."
+
+msgid "Поле обов'язкове для заповнення"
+msgstr "This field is required"
+
+msgid "Ім'я не може містити цифри або спецсимволи. Будь ласка, використовуйте лише букви"
+msgstr "The name cannot contain digits or special characters. Please use letters only"
+
+msgid "Занадто коротке значення"
+msgstr "The value is too short"
+
+msgid "Введіть коректний номер мобільного телефону у форматі +380 (XX) XXX-XX-XX"
+msgstr "Enter a valid mobile number in the format +380 (XX) XXX-XX-XX"
+
+msgid "Некоректний формат"
+msgstr "Invalid format"
+
+msgid "Деякі товари стали недоступні й прибрані з кошика."
+msgstr "Some items are no longer available and were removed from your basket."
+
+msgid "Кошик або ціни змінилися. Перевірте суму та підтвердіть замовлення ще раз."
+msgstr "Your basket or the prices have changed. Check the total and confirm the order again."
+
+msgid "Цей товар зараз не можна замовити."
+msgstr "This piece cannot be ordered right now."
+
+msgid "Підписка на старт святкових боксів"
+msgstr "Festive box launch subscription"
+
+msgid "Сторінку не знайдено"
+msgstr "Page not found"
+
+msgid "Схоже, цієї сторінки вже немає або адресу змінено."
+msgstr "This page is no longer here, or the address has changed."
+
+msgid "На головну"
+msgstr "Back home"
+
+msgid "До каталогу"
+msgstr "Browse the catalogue"
+
+msgid "Немає з'єднання. Перевірте інтернет і спробуйте ще раз."
+msgstr "No connection. Check your internet and try again."
+
+msgid "Сталася помилка. Спробуйте ще раз."
+msgstr "Something went wrong. Please try again."
+
+msgid "Категорії"
+msgstr "Categories"
+
+msgid "Попередні товари"
+msgstr "Previous products"
+
+msgid "Наступні товари"
+msgstr "Next products"
+
+msgid "Товарів немає."
+msgstr "No products found."
+
+msgid "Каталог"
+msgstr "Catalogue"
+
+msgid "Каталог святкових боксів і сервірування Gestia Home"
+msgstr "Festive boxes and table settings from Gestia Home"
+
+msgid "Головна"
+msgstr "Home"
+
+msgid "Фільтр"
+msgstr "Filter"
+
+msgid "Фільтри"
+msgstr "Filters"
+
+msgid "Пошук товарів"
+msgstr "Search products"
+
+msgid "Сортувати за "
+msgstr "Sort by "
+
+msgid "Застосувати"
+msgstr "Apply"
+
+msgid "Закрити"
+msgstr "Close"
+
+msgid "Попереднє фото"
+msgstr "Previous photo"
+
+msgid "Наступне фото"
+msgstr "Next photo"
+
+msgid "Арт."
+msgstr "SKU"
+
+msgid "Менше"
+msgstr "Decrease"
+
+msgid "Більше"
+msgstr "Increase"
+
+msgid "Додати в кошик"
+msgstr "Add to basket"
+
+msgid "Товари з цього ж сету"
+msgstr "From the same set"
+
+msgid "Товари з цього сету"
+msgstr "From this set"
+
+msgid "Схожі товари"
+msgstr "Similar pieces"
+
+msgid "Перейти до каталогу"
+msgstr "Go to the catalogue"
+
+msgid "Відгуки"
+msgstr "Reviews"
+
+msgid "Надіслати заявку"
+msgstr "Send request"
+
+msgid "Зменшити кількість"
+msgstr "Decrease quantity"
+
+msgid "Кількість"
+msgstr "Quantity"
+
+msgid "Збільшити кількість"
+msgstr "Increase quantity"
+
+msgid "Видалити з кошика"
+msgstr "Remove from basket"
 
 msgid "Продовжити покупки"
 msgstr "Continue shopping"
 
 msgid "Загальна ціна:"
 msgstr "Total price:"
+
+msgid "Перейти до оформлення"
+msgstr "Proceed to checkout"
+
+msgid "Кошик порожній."
+msgstr "The basket is empty."
+
+msgid "Надіслати"
+msgstr "Send"
+
+msgid "Дякуємо за замовлення, найближчим часом наш консультант зв'яжеться з вами"
+msgstr "Thank you for the order. A consultant will contact you shortly"
+
+msgid "Дякуємо"
+msgstr "Thank you"
+
+msgid "Обране"
+msgstr "Wishlist"
+
+msgid "До кошика"
+msgstr "Add to basket"
+
+msgid "Прибрати з обраного"
+msgstr "Remove from wishlist"
+
+msgid "У обраному поки порожньо."
+msgstr "Your wishlist is empty."
+
+msgid "Оформлення замовлення"
+msgstr "Checkout"
+
+msgid "Контактні дані"
+msgstr "Contact details"
+
+msgid "Поштомат"
+msgstr "Parcel locker"
+
+msgid "Вулиця, будинок"
+msgstr "Street and building"
+
+msgid "кв."
+msgstr "apt."
+
+msgid "Погоджуюсь на обробку персональних даних згідно з"
+msgstr "I agree to the processing of personal data according to"
+
+msgid "Політикою конфіденційності"
+msgstr "the Privacy policy"
 
 msgid "Ваше замовлення"
 msgstr "Your order"
@@ -243,11 +303,230 @@ msgstr "Delivery: at the carrier's rate"
 msgid "Разом:"
 msgstr "Total:"
 
-msgid "Збільшити кількість"
-msgstr "Increase quantity"
+msgid "Ми отримали ваше повідомлення і незабаром відповімо."
+msgstr "We have received your message and will reply soon."
 
-msgid "Зменшити кількість"
-msgstr "Decrease quantity"
+msgid "Дякуємо за замовлення"
+msgstr "Thank you for your order"
 
-msgid "Видалити з кошика"
-msgstr "Remove from basket"
+msgid "Найближчим часом наш консультант зв'яжеться з вами."
+msgstr "A consultant will contact you shortly."
+
+msgid "Номер замовлення"
+msgstr "Order number"
+
+msgid "Про нас"
+msgstr "About"
+
+msgid "Сучасна жінка може все."
+msgstr "A modern woman can do anything."
+
+msgid "Про Gestia Home"
+msgstr "About Gestia Home"
+
+msgid "Вона будує кар’єру, подорожує, реалізує свої мрії, виховує дітей, відкриває світ і щодня обирає, яким буде сьогодні її день."
+msgstr "She builds a career, travels, pursues her dreams, raises children, discovers the world, and chooses every day what her day will be."
+
+msgid "Серед безлічі можливостей, які відкриває для неї сучасний світ, є одна особлива роль — бути"
+msgstr "Among the many possibilities the modern world opens for her, there is one special role — to be"
+
+msgid "жінкою, яка створює дім"
+msgstr "a woman who creates a home"
+
+msgid "І це не про особливий статус, великий будинок чи вишуканий інтер’єр, це про дім, який стає важливою частиною особистого стилю, як мода, подорожі чи мистецтво."
+msgstr "And this is not about a special status, a large house, or a refined interior. It is about a home that becomes an important part of personal style, like fashion, travel, or art."
+
+msgid "Дім, який не є місцем нескінченних обов’язків, а є простором творчості, натхнення, любові та самовираження."
+msgstr "A home that is not a place of endless duties, but a space for creativity, inspiration, love, and self-expression."
+
+msgid "Наче давньогрецька богиня Гестія, вона стає берегинею родинного тепла, гармонії та священного вогню, що об’єднує людей, друзів та зв’язок між поколіннями."
+msgstr "Like the ancient Greek goddess Hestia, she becomes the keeper of family warmth, harmony, and the sacred fire that brings people, friends, and generations together."
+
+msgid "Вона збирає близьких за одним столом та створює незабутні моменти й традиції своєї родини. Зі своїми правилами, зі своїм власним стилем та світоглядом."
+msgstr "She gathers the people she loves around one table and creates unforgettable moments and traditions for her family, with her own rules, her own style, and her own view of the world."
+
+msgid "І як прекрасно, що сучасна Гестія не зобов’язана робити все самостійно. Вона може розділяти домашні турботи з партнером, залучати дітей, замовляти готові страви або звертатися по допомогу."
+msgstr "And how wonderful that a modern Hestia does not have to do everything herself. She can share the work of home with her partner, involve the children, order prepared food, or ask for help."
+
+msgid "Адже її головна роль — не виконувати нескінченний перелік справ, а"
+msgstr "Because her main role is not to work through an endless list of tasks, but"
+
+msgid "надихати, об’єднувати та створювати приємну атмосферу"
+msgstr "to inspire, bring people together, and create a pleasant atmosphere"
+
+msgid "Саме для того, щоб допомогти кожній жінці відчути себе Гестією, але не витрачати нескінченні години на пошук ідей до свята, підбір деталей для святкового столу чи складну підготовку, і було створено бренд GESTIA HOME."
+msgstr "GESTIA HOME was created so that every woman can feel like Hestia without spending endless hours looking for celebration ideas, choosing details for the table, or preparing something complicated."
+
+msgid "Ми хочемо повернути моду на домашні вечері, спонтанні зустрічі, великі сімейні свята та маленькі щоденні приводи бути разом."
+msgstr "We want to bring back a love of dinners at home, spontaneous gatherings, big family celebrations, and small everyday reasons to be together."
+
+msgid "Бо красиво накритий стіл — це не демонстрація достатку. Це жест уваги."
+msgstr "Because a beautifully set table is not a display of wealth. It is a gesture of care."
+
+msgid "Саме за столом народжуються дружба, довіра, сімейні історії та спогади."
+msgstr "It is at the table that friendship, trust, family stories, and memories begin."
+
+msgid "Це спосіб сказати без слів: «Я рада, що ти сьогодні тут»."
+msgstr "It is a way to say, without words: “I’m glad you are here today.”"
+
+msgid "Ми впевнені, що сучасна жінка може бути успішною в усьому, що вона сама обирає. І, погодьтесь, бути натхненною господинею власного дому — один із найкрасивіших її виборів."
+msgstr "We are sure a modern woman can succeed at anything she chooses for herself. And being the inspiring host of her own home is one of the most beautiful choices she can make."
+
+msgid "Всесвіт Gestia Home — це:"
+msgstr "The world of Gestia Home is:"
+
+msgid "Красиві речі для дому."
+msgstr "Beautiful things for the home."
+
+msgid "Столовий текстиль, квіти, свічки, декор і продумані деталі, які створюють настрій та роблять кожну зустріч особливою."
+msgstr "Table linen, flowers, candles, decor, and thoughtful details that set the mood and make every gathering special."
+
+msgid "Мистецтво сервірування."
+msgstr "The art of table setting."
+
+msgid "Ідеї, як поєднувати кольори, фактури, посуд і квіти, щоб навіть найпростіший стіл виглядав вишукано."
+msgstr "Ideas for combining colours, textures, tableware, and flowers so that even the simplest table looks refined."
+
+msgid "Натхнення для свят."
+msgstr "Inspiration for celebrations."
+
+msgid "Від романтичної вечері на двох до великого родинного Різдва, від літнього пікніка до вечірки з друзями."
+msgstr "From a romantic dinner for two to a large family Christmas, from a summer picnic to an evening with friends."
+
+msgid "Знання та традиції."
+msgstr "Knowledge and traditions."
+
+msgid "Знайомство з європейською культурою гостинності, флористикою, етикетом і мистецтвом організації домашніх подій."
+msgstr "An introduction to European hospitality, floristry, etiquette, and the art of hosting at home."
+
+msgid "Нові ідеї для сім’ї."
+msgstr "New ideas for the family."
+
+msgid "Маленькі ритуали та традиції, які легко впровадити у своє життя й передати дітям."
+msgstr "Small rituals and traditions that are easy to bring into your life and pass on to your children."
+
+msgid "Ми хочемо, щоб кожна жінка відчувала: створювати красу вдома може бути легко, захопливо й неймовірно приємно."
+msgstr "We want every woman to feel that creating beauty at home can be easy, absorbing, and genuinely joyful."
+
+msgid "Для цього не потрібно бути професійною декораторкою, флористкою чи організаторкою свят."
+msgstr "You do not have to be a professional decorator, florist, or party planner."
+
+msgid "Достатньо бажання. А ідеї, натхнення та красиві деталі ви знайдете разом із GESTIA HOME."
+msgstr "The wish is enough. You will find the ideas, the inspiration, and the beautiful details with GESTIA HOME."
+
+msgid "Оновлено"
+msgstr "Updated"
+
+msgid "Юридичні документи"
+msgstr "Legal documents"
+
+msgid "Оферта"
+msgstr "Public offer"
+
+msgid "Доставка та оплата"
+msgstr "Delivery and payment"
+
+msgid "Конфіденційність"
+msgstr "Privacy"
+
+msgid "Cookies"
+msgstr "Cookies"
+
+msgid "Розділ"
+msgstr "Section"
+
+msgid "Підвал"
+msgstr "Footer"
+
+msgid "Вітрину зібрано в"
+msgstr "Storefront assembled by"
+
+msgid "Меню"
+msgstr "Menu"
+
+msgid "Основне"
+msgstr "Main"
+
+msgid "Пошук"
+msgstr "Search"
+
+msgid "Зателефонувати"
+msgstr "Call"
+
+msgid "Закрити каталог"
+msgstr "Close catalogue"
+
+msgid "Усі товари"
+msgstr "All products"
+
+msgid "Ваш email"
+msgstr "Your email"
+
+msgid "Повідомити мене"
+msgstr "Notify me"
+
+msgid "Дякуємо!"
+msgstr "Thank you!"
+
+msgid "Ми повідомимо вас першими, коли святкові бокси стануть доступними."
+msgstr "We will let you know first when the festive boxes are available."
+
+msgid "Твоє ідеальне свято вже майже у коробці…"
+msgstr "Your perfect celebration is almost in the box…"
+
+msgid "Ми додаємо останні штрихи до святкових боксів Gestia Home, щоб ти могла легко створити особливу атмосферу за новорічним столом."
+msgstr "We're adding the final touches to the Gestia Home festive boxes, so you can easily create a special atmosphere for the New Year's table."
+
+msgid "Ще трішки — і мистецтво гостинності стане частиною твоїх сімейних історій!"
+msgstr "Just a little longer — and the art of hospitality will become part of your family stories!"
+
+msgid "Не пропусти старт продажів — залиш свій email та дізнайся першою, коли святкові бокси стануть доступними!"
+msgstr "Don't miss the launch — leave your email and be the first to know when the festive boxes are available!"
+
+msgid "Мова"
+msgstr "Language"
+
+msgid "Українська"
+msgstr "Ukrainian"
+
+msgid "Валюта"
+msgstr "Currency"
+
+msgid "Додати в обране"
+msgstr "Add to wishlist"
+
+#~ msgid "Знайти"
+#~ msgstr "Find"
+
+#~ msgid "Зворотний зв'язок"
+#~ msgstr "Contact"
+
+#~ msgid "Показати"
+#~ msgstr "Show"
+
+#~ msgid "Скинути"
+#~ msgstr "Reset"
+
+#~ msgid "Артикул"
+#~ msgstr "SKU"
+
+#~ msgid "Замовити"
+#~ msgstr "Request a call"
+
+#~ msgid "Разом"
+#~ msgstr "Total"
+
+#~ msgid "Підтвердити замовлення"
+#~ msgstr "Place the order"
+
+#~ msgid "Номер"
+#~ msgstr "Number"
+
+#~ msgid "Політика конфіденційності"
+#~ msgstr "Privacy policy"
+
+#~ msgid "Оформити замовлення"
+#~ msgstr "Checkout"
+
+#~ msgid "Оновити"
+#~ msgstr "Update"
