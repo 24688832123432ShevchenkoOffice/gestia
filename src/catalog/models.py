@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _
 
 from src.core.models import TimeStampedModel
 from src.core.utils import localized
@@ -60,7 +60,15 @@ class Category(TimeStampedModel):
 
     @property
     def filter_label(self):
-        return self.filter_name_uk or self.name
+        custom = (self.filter_name_uk or "").strip()
+        if not custom:
+            return self.name
+        if custom == (self.name_uk or "").strip():
+            lang = (get_language() or "uk").split("-")[0]
+            if lang != "uk":
+                return self.name
+            return self.filter_name_uk
+        return self.filter_name_uk
 
     def chain(self):
         nodes = []
@@ -344,6 +352,7 @@ class CatalogCell(models.Model):
     )
     slot = models.CharField("Слот", max_length=16, choices=Slot.choices, blank=True, default="")
     label_uk = models.CharField("Підпис у фреймі", max_length=200, blank=True)
+    label_en = models.CharField("Підпис у фреймі (EN)", max_length=200, blank=True)
     image = models.ImageField(
         "Фото комірки",
         upload_to="catalog/cells/",
@@ -361,7 +370,7 @@ class CatalogCell(models.Model):
 
     @property
     def label(self):
-        return self.label_uk or self.product.name
+        return localized(self, "label") or self.product.name
 
     @property
     def price_label(self):

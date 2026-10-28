@@ -70,6 +70,15 @@
               data-label-branch="{% trans 'Відділення' %}"
               data-label-locker="{% trans 'Поштомат' %}"
               data-label-street="{% trans 'Вулиця, будинок' %}"
+              data-hint-np-off="{% trans 'Підказки Нової пошти тимчасово недоступні. Додайте API-ключ.' %}"
+              data-hint-cities-fail="{% trans 'Не вдалося завантажити міста. Спробуйте ще раз.' %}"
+              data-hint-no-branches="{% trans 'Для цього міста відділень не знайдено.' %}"
+              data-hint-branches-fail="{% trans 'Не вдалося завантажити відділення.' %}"
+              data-hint-streets-off="{% trans 'Підказки вулиць тимчасово недоступні.' %}"
+              data-hint-no-streets="{% trans 'Вулиць не знайдено. Уточніть назву.' %}"
+              data-hint-streets-fail="{% trans 'Не вдалося завантажити вулиці.' %}"
+              data-hint-pick-city="{% trans 'Спочатку оберіть місто зі списку.' %}"
+              data-hint-street-format="{% trans 'Вулиця зі списку, потім номер будинку. Квартиру — окремо.' %}"
             >
               <div class="co-suggest">
                 <label class="co-field{% if form.city.errors %} is-invalid{% endif %}" data-field-wrap>
@@ -173,7 +182,7 @@
             {% for row in rows %}
               <div class="co-line"{% if row.over_stock %} data-over-stock{% endif %}>
                 <p>{{ row.product.name }}</p>
-                <p>х{{ row.qty }}</p>
+                <p>{% trans "х" %}{{ row.qty }}</p>
               </div>
             {% endfor %}
             <p class="co-ship">{% trans "Доставка: за тарифом перевізника" %}</p>

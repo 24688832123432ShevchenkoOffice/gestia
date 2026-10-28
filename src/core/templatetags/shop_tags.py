@@ -4,6 +4,7 @@ from django import template
 from django.template.loader_tags import BLOCK_CONTEXT_KEY
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _
 
 from src.core.utils import format_money
 
@@ -50,7 +51,7 @@ def sum_uah(context, amount):
     currency = context.get("currency") or "uah"
     if currency == "eur":
         return format_money(amount, "eur")
-    return f"₴ {_grouped(amount)} грн"
+    return f"₴ {_grouped(amount)} {_('грн')}"
 
 
 @register.simple_tag(takes_context=True)

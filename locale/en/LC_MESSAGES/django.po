@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gestia\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-28 12:32+0200\n"
+"POT-Creation-Date: 2026-10-28 14:18+0200\n"
 "PO-Revision-Date: 2026-10-28 12:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
@@ -149,6 +149,12 @@ msgstr "This piece cannot be ordered right now."
 
 msgid "Підписка на старт святкових боксів"
 msgstr "Festive box launch subscription"
+
+msgid "Забагато спроб. Спробуйте трохи пізніше."
+msgstr "Too many attempts. Please try again in a little while."
+
+msgid "грн"
+msgstr "UAH"
 
 msgid "Сторінку не знайдено"
 msgstr "Page not found"
@@ -301,6 +307,35 @@ msgstr "Parcel locker"
 msgid "Вулиця, будинок"
 msgstr "Street and building"
 
+msgid "Підказки Нової пошти тимчасово недоступні. Додайте API-ключ."
+msgstr "Nova Poshta suggestions are temporarily unavailable. Add an API key."
+
+msgid "Не вдалося завантажити міста. Спробуйте ще раз."
+msgstr "Could not load cities. Please try again."
+
+msgid "Для цього міста відділень не знайдено."
+msgstr "No branches were found for this city."
+
+msgid "Не вдалося завантажити відділення."
+msgstr "Could not load branches."
+
+msgid "Підказки вулиць тимчасово недоступні."
+msgstr "Street suggestions are temporarily unavailable."
+
+msgid "Вулиць не знайдено. Уточніть назву."
+msgstr "No streets found. Try a more specific name."
+
+msgid "Не вдалося завантажити вулиці."
+msgstr "Could not load streets."
+
+msgid "Спочатку оберіть місто зі списку."
+msgstr "Choose a city from the list first."
+
+msgid "Вулиця зі списку, потім номер будинку. Квартиру — окремо."
+msgstr ""
+"Pick a street from the list, then the building number. Enter the apartment "
+"separately."
+
 msgid "кв."
 msgstr "apt."
 
@@ -312,6 +347,9 @@ msgstr "the Privacy policy"
 
 msgid "Ваше замовлення"
 msgstr "Your order"
+
+msgid "х"
+msgstr "×"
 
 msgid "Доставка: за тарифом перевізника"
 msgstr "Delivery: at the carrier's rate"
@@ -574,6 +612,12 @@ msgstr "Thank you!"
 msgid "Ми повідомимо вас першими, коли святкові бокси стануть доступними."
 msgstr "We will let you know first when the festive boxes are available."
 
+msgid "Бокс «Різдвяний Шишки»"
+msgstr "Christmas box “Pine Cones”"
+
+msgid "Бокс Великодній «Український»"
+msgstr "Easter box “Ukrainian”"
+
 msgid "Твоє ідеальне свято вже майже у коробці…"
 msgstr "Your perfect celebration is almost in the box…"
 
@@ -608,9 +652,6 @@ msgstr "Currency"
 
 msgid "Додати в обране"
 msgstr "Add to wishlist"
-
-msgid "Забагато спроб. Спробуйте трохи пізніше."
-msgstr "Too many attempts. Please try again in a little while."
 
 #~ msgid "Знайти"
 #~ msgstr "Find"

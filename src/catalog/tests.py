@@ -283,3 +283,66 @@ class MenuNameEnTests(TestCase):
         self.assertEqual(page.status_code, 200)
         self.assertContains(page, "Christmas box “Pine Cones”")
         self.assertNotContains(page, "Бокс Різдвяний Шишки")
+
+
+class EnglishFrameLabelTests(TestCase):
+    def test_filter_label_uses_english_name_when_the_words_match(self):
+        textiles = Category.objects.create(
+            slug="tekstyl-en",
+            name_uk="Текстиль ",
+            name_en="Textiles",
+            filter_name_uk="Текстиль",
+        )
+        custom = Category.objects.create(
+            slug="custom-filter",
+            name_uk="Свічки",
+            name_en="Candles",
+            filter_name_uk="Інша назва",
+        )
+        with translation.override("uk"):
+            self.assertEqual(textiles.filter_label, "Текстиль")
+        with translation.override("en"):
+            self.assertEqual(textiles.filter_label, "Textiles")
+            self.assertEqual(custom.filter_label, "Інша назва")
+
+    def test_cell_stamp_gets_english_label(self):
+        copy = importlib.import_module("src.catalog.migrations.0013_fill_catalogcell_label_en")
+        category = Category.objects.create(slug="boxes", name_uk="Бокси", name_en="Boxes")
+        product = Product.objects.create(
+            category=category,
+            sku="CELL",
+            slug="cell-box",
+            name_uk="Інший",
+            name_en="Other",
+            price_uah=Decimal("10"),
+            price_eur=Decimal("1"),
+            stock_qty=1,
+        )
+        cell = CatalogCell.objects.create(
+            product=product,
+            band=0,
+            layout=CatalogCell.Layout.ROW,
+            role=CatalogCell.Role.GRID,
+            sort=1,
+            price_uah=Decimal("10"),
+            label_uk="Бокс Великодній «Український»",
+        )
+        kept = CatalogCell.objects.create(
+            product=product,
+            band=0,
+            layout=CatalogCell.Layout.ROW,
+            role=CatalogCell.Role.GRID,
+            sort=2,
+            price_uah=Decimal("10"),
+            label_uk="Бокс Великодній «Український»",
+            label_en="Custom",
+        )
+        copy.fill_catalogcell_label_en(apps, None)
+        cell.refresh_from_db()
+        kept.refresh_from_db()
+        self.assertEqual(cell.label_en, "Easter box “Ukrainian”")
+        self.assertEqual(kept.label_en, "Custom")
+        with translation.override("en"):
+            self.assertEqual(cell.label, "Easter box “Ukrainian”")
+        with translation.override("uk"):
+            self.assertEqual(cell.label, "Бокс Великодній «Український»")

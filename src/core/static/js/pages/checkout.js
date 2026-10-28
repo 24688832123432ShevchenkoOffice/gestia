@@ -62,9 +62,20 @@ function initNpShip() {
   const warehousesUrl = root.dataset.npWarehousesUrl || "";
   const streetsUrl = root.dataset.npStreetsUrl || "";
   const minChars = Number(root.dataset.npMin || 2);
-  const labelBranch = root.dataset.labelBranch || "Відділення";
-  const labelLocker = root.dataset.labelLocker || "Поштомат";
-  const labelStreet = root.dataset.labelStreet || "Вулиця, будинок";
+  const labelBranch = root.dataset.labelBranch || "";
+  const labelLocker = root.dataset.labelLocker || "";
+  const labelStreet = root.dataset.labelStreet || "";
+  const hints = {
+    npOff: root.dataset.hintNpOff || "",
+    citiesFail: root.dataset.hintCitiesFail || "",
+    noBranches: root.dataset.hintNoBranches || "",
+    branchesFail: root.dataset.hintBranchesFail || "",
+    streetsOff: root.dataset.hintStreetsOff || "",
+    noStreets: root.dataset.hintNoStreets || "",
+    streetsFail: root.dataset.hintStreetsFail || "",
+    pickCity: root.dataset.hintPickCity || "",
+    streetFormat: root.dataset.hintStreetFormat || "",
+  };
   let cityTimer = 0;
   let streetTimer = 0;
   let cityRequest = 0;
@@ -171,7 +182,7 @@ function initNpShip() {
       }
       if (response.status === 503 || payload.error === "not_configured") {
         closeList(cityList, cityInput);
-        setHint("Підказки Нової пошти тимчасово недоступні. Додайте API-ключ.");
+        setHint(hints.npOff);
         return;
       }
       if (!response.ok) {
@@ -201,7 +212,7 @@ function initNpShip() {
         return;
       }
       closeList(cityList, cityInput);
-      setHint("Не вдалося завантажити міста. Спробуйте ще раз.");
+      setHint(hints.citiesFail);
     }
   }
 
@@ -232,7 +243,7 @@ function initNpShip() {
       warehouses = Array.isArray(payload.items) ? payload.items : [];
       renderBranches(branchInput.value);
       if (!warehouses.length) {
-        setHint("Для цього міста відділень не знайдено.");
+        setHint(hints.noBranches);
       } else {
         setHint("");
       }
@@ -242,7 +253,7 @@ function initNpShip() {
       }
       warehouses = [];
       closeList(branchList, branchInput);
-      setHint("Не вдалося завантажити відділення.");
+      setHint(hints.branchesFail);
     }
   }
 
@@ -271,7 +282,7 @@ function initNpShip() {
       }
       if (response.status === 503 || payload.error === "not_configured") {
         closeList(branchList, branchInput);
-        setHint("Підказки вулиць тимчасово недоступні.");
+        setHint(hints.streetsOff);
         return;
       }
       if (!response.ok) {
@@ -292,14 +303,14 @@ function initNpShip() {
         }
       );
       if (!items.length) {
-        setHint("Вулиць не знайдено. Уточніть назву.");
+        setHint(hints.noStreets);
       }
     } catch (_error) {
       if (current !== streetRequest) {
         return;
       }
       closeList(branchList, branchInput);
-      setHint("Не вдалося завантажити вулиці.");
+      setHint(hints.streetsFail);
     }
   }
 
@@ -353,14 +364,14 @@ function initNpShip() {
   branchInput.addEventListener("focus", () => {
     if (isCourier()) {
       if (!cityRef) {
-        setHint("Спочатку оберіть місто зі списку.");
+        setHint(hints.pickCity);
         return;
       }
       const { street } = splitStreetQuery(branchInput.value);
       if (street.length >= minChars) {
         scheduleStreets();
       } else {
-        setHint("Вулиця зі списку, потім номер будинку. Квартиру — окремо.");
+        setHint(hints.streetFormat);
       }
       return;
     }
@@ -369,7 +380,7 @@ function initNpShip() {
     } else if (cityRef) {
       loadWarehouses();
     } else if (cityInput.value.trim().length >= minChars) {
-      setHint("Спочатку оберіть місто зі списку.");
+      setHint(hints.pickCity);
     }
   });
   branchInput.addEventListener("blur", () => {

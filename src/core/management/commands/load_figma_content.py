@@ -69,10 +69,20 @@ class Command(BaseCommand):
         self._footer()
         self._settings()
         self._clear_demo_pages()
+        self._fill_english()
         seed = Path(settings.MEDIA_ROOT) / "seed"
         if seed.exists():
             shutil.rmtree(seed)
         self.stdout.write(self.style.SUCCESS("load_figma_content завершено"))
+
+    def _fill_english(self):
+        from django.apps import apps as django_apps
+
+        from src.catalog.migrations.0013_fill_catalogcell_label_en import fill_catalogcell_label_en
+        from src.content.migrations.0007_english_content_copy import fill_english_content
+
+        fill_catalogcell_label_en(django_apps, None)
+        fill_english_content(django_apps, None)
 
     def _wipe(self):
         for cell in CatalogCell.objects.all():
@@ -279,6 +289,7 @@ class Command(BaseCommand):
                 surface=CatalogCell.Surface.MOBILE,
                 slot=slot,
                 label_uk=label,
+                label_en="Easter box “Ukrainian”" if label == stamped else "",
                 sort=sort,
                 price_uah=Decimal(price),
                 crop=crop,
