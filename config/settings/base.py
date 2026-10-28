@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "src.core.middleware.AdminRobotsTagMiddleware",
     "src.core.middleware.ContentSecurityPolicyMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -130,6 +131,9 @@ def _normalize_admin_url(raw: str) -> str:
 
 
 ADMIN_URL = _normalize_admin_url(config("ADMIN_URL", default="admin/"))
+
+# Порожній рядок: canonical і sitemap беруть scheme + host запиту.
+SITE_URL = str(config("SITE_URL", default="") or "").strip().rstrip("/")
 
 # Public pages load Google Fonts and have no inline scripts or map iframes.
 CSP_REPORT_ONLY = config("CSP_REPORT_ONLY", default=True, cast=bool)

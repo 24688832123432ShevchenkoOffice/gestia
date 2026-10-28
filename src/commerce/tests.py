@@ -1,6 +1,7 @@
 from decimal import Decimal
 from unittest.mock import patch
 
+from django.core.cache import cache
 from django.test import TestCase, override_settings
 from django.utils import translation
 
@@ -93,6 +94,7 @@ class NameTests(TestCase):
 
 class CheckoutTests(TestCase):
     def setUp(self):
+        cache.clear()
         translation.activate("uk")
         category = Category.objects.create(slug="cat", name_uk="Каталог")
         self.product = Product.objects.create(
@@ -440,6 +442,7 @@ def _customer():
 
 class CheckoutGuardTests(TestCase):
     def setUp(self):
+        cache.clear()
         translation.activate("uk")
         category = Category.objects.create(slug="cat", name_uk="Каталог")
         self.product = Product.objects.create(

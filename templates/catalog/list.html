@@ -10,10 +10,11 @@
 {% block extra_js %}
   <script src="{% static 'js/pages/catalog.js' %}" defer></script>
 {% endblock %}
-{% block title %}{% if category %}{{ category.name }}{% else %}{% trans "Каталог" %}{% endif %} — Gestia{% endblock %}
-{% block description %}{% if category %}{{ category.name }}{% else %}{% trans "Каталог святкових боксів і сервірування Gestia Home" %}{% endif %}{% endblock %}
+{% block title %}{% if category %}{{ category.seo_title }}{% else %}{% trans "Каталог" %} — Gestia{% endif %}{% endblock %}
+{% block description %}{% if category %}{{ category.seo_description }}{% else %}{% trans "Каталог святкових боксів і сервірування Gestia Home" %}{% endif %}{% endblock %}
 
 {% block content %}
+  <h1 class="visually-hidden">{% if category %}{{ category.name }}{% else %}{% trans "Каталог" %}{% endif %}</h1>
   <div class="catalog-frame{% if panel_open %} is-filters{% endif %}" data-catalog-page>
     <div class="catalog-closed" data-catalog-closed{% if panel_open %} hidden{% endif %}>
       <div class="catalog-top">

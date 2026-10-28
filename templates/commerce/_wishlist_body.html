@@ -9,7 +9,7 @@
             <article class="wish-item" role="listitem">
               <a class="wish-item__photo" href="{{ row.product.get_absolute_url }}">
                 {% if row.product.cover %}
-                  <img src="{{ row.product.cover.image.url }}" alt="">
+                  <img src="{{ row.product.cover.image.url }}" alt="{{ row.product.name }}" width="96" height="108">
                 {% endif %}
               </a>
               <div class="wish-item__body">

@@ -65,8 +65,8 @@ class CategoryAdmin(SlugAdminMixin, GestiaModelAdmin):
     ordering = ("sort", "name_uk")
     fieldsets = _language_fieldsets(
         ("parent", "slug", "image", "is_active", "sort", "home_sort", "menu_featured", "filter_sort"),
-        ("name_uk", "filter_name_uk"),
-        ("name_en",),
+        ("name_uk", "filter_name_uk", "seo_title_uk", "seo_description_uk"),
+        ("name_en", "seo_title_en", "seo_description_en"),
     )
 
 

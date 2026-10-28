@@ -6,6 +6,7 @@ from src.content.form_labels import apply_labels
 from src.content.theme import page_style_key
 from src.core.i18n import localize_path
 from src.core.middleware import language_enabled
+from src.core.seo import build_head
 
 
 def shop(request):
@@ -75,4 +76,5 @@ def shop(request):
         "page_style_key": page_style_key(request),
         "contact_form": apply_labels(style_form(ContactForm()), form_copy),
         "waitlist_form": apply_labels(style_form(WaitlistForm()), form_copy),
+        "seo": build_head(request, site),
     }

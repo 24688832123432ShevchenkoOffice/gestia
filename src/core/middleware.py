@@ -23,6 +23,24 @@ def language_enabled(lang: str) -> bool:
     return False
 
 
+class AdminRobotsTagMiddleware:
+    """Закриває префікс адмінки від індексації, не згадуючи його в robots.txt."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        admin = str(getattr(settings, "ADMIN_URL", "") or "").strip("/")
+        if not admin:
+            return response
+        root = "/" + admin
+        path = request.path or "/"
+        if path == root or path.startswith(root + "/"):
+            response["X-Robots-Tag"] = "noindex, nofollow"
+        return response
+
+
 class ContentSecurityPolicyMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
