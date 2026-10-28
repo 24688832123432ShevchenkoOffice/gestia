@@ -29,12 +29,6 @@ NAV_TREE = [
                 "url_name": "admin:content_homecategoriesblock_changelist",
             },
             {
-                "key": "home_video",
-                "title": "Відео",
-                "icon": "smart_display",
-                "url_name": "admin:content_homevideoblock_changelist",
-            },
-            {
                 "key": "home_popular",
                 "title": "Популярні товари",
                 "icon": "star",
@@ -51,12 +45,6 @@ NAV_TREE = [
                 "title": "Картки переваг",
                 "icon": "dashboard",
                 "url_name": "admin:content_advantage_changelist",
-            },
-            {
-                "key": "home_video_2",
-                "title": "Відео 2",
-                "icon": "smart_display",
-                "url_name": "admin:content_homevideo2block_changelist",
             },
             {
                 "key": "home_reviews",

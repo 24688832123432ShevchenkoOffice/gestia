@@ -92,3 +92,91 @@ class HomeBlockAdminTests(TestCase):
         bound.save()
         self.assertEqual(block.lines_uk, "Ім’я\nНомер телефону\nПовідомлення")
         self.assertEqual(block.lines_en, "Name\nPhone number\nMessage")
+
+    def test_categories_form_keeps_the_video_files(self):
+        categories = _block("categories", title_uk="Секція", sort=2)
+        video = _block(
+            "video",
+            media_kind="photo",
+            sort=3,
+            image="home/video-figma.webp",
+            image_mobile="home/video-m.webp",
+        )
+        url = reverse("admin:content_homecategoriesblock_change", args=[categories.pk])
+        before = HomeBlock.objects.filter(key="video").count()
+        page = self.client.get(url)
+        self.assertEqual(HomeBlock.objects.filter(key="video").count(), before)
+        self.assertContains(page, "Відео-блок після категорій")
+        self.assertContains(page, "перед популярними товарами")
+        self.assertContains(page, "home/video-figma.webp")
+        response = self.client.post(
+            url,
+            {
+                "title_uk": "Після правки",
+                "title_en": "After",
+                "page_video_media_kind": "video",
+                "_save": "1",
+            },
+        )
+        self._assert_saved(response)
+        categories.refresh_from_db()
+        video.refresh_from_db()
+        self.assertEqual(categories.title_uk, "Після правки")
+        self.assertEqual(video.media_kind, "video")
+        self.assertEqual(video.image.name, "home/video-figma.webp")
+        self.assertEqual(video.image_mobile.name, "home/video-m.webp")
+        self.assertEqual(video.sort, 3)
+        self.assertEqual(HomeBlock.objects.filter(key="video").count(), 1)
+        self.assertContains(self.client.get("/"), "home/video-figma.webp")
+
+    def test_advantages_form_keeps_both_images(self):
+        advantages = _block("advantages", title_uk="Чому ми", sort=5, image="home/card.webp")
+        video = _block(
+            "video_2",
+            media_kind="photo",
+            sort=6,
+            image="home/video_2-figma.webp",
+        )
+        url = reverse("admin:content_homeadvantagesblock_change", args=[advantages.pk])
+        page = self.client.get(url)
+        self.assertContains(page, "Відео-блок після переваг")
+        self.assertContains(page, "перед відгуками")
+        self.assertContains(page, "home/video_2-figma.webp")
+        self.assertContains(page, "home/card.webp")
+        response = self.client.post(
+            url,
+            {
+                "title_uk": "Чому Gestia",
+                "title_en": "",
+                "text_uk": "",
+                "text_en": "",
+                "text_mobile_uk": "",
+                "text_mobile_en": "",
+                "cta_uk": "",
+                "cta_en": "",
+                "page_video_media_kind": "photo",
+                "_save": "1",
+            },
+        )
+        self._assert_saved(response)
+        advantages.refresh_from_db()
+        video.refresh_from_db()
+        self.assertEqual(advantages.title_uk, "Чому Gestia")
+        self.assertEqual(advantages.image.name, "home/card.webp")
+        self.assertEqual(video.image.name, "home/video_2-figma.webp")
+        self.assertEqual(video.media_kind, "photo")
+        self.assertEqual(HomeBlock.objects.filter(key="video_2").count(), 1)
+
+    def _assert_saved(self, response):
+        if response.status_code == 302:
+            return
+        form = response.context["adminform"].form
+        self.fail(form.errors.as_text())
+
+
+def _block(key, **values):
+    block, _created = HomeBlock.objects.get_or_create(key=key, defaults=values)
+    for name, value in values.items():
+        setattr(block, name, value)
+    block.save()
+    return block

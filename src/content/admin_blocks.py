@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from src.content.admin_limits import tighten
+from src.content.admin_home_video import PageVideoMixin
 from src.content.models import ContactForms, HomeBlock
 from src.content.proxies import (
     HomeAdvantagesBlock,
@@ -12,8 +13,6 @@ from src.content.proxies import (
     HomeHeroBlock,
     HomePopularBlock,
     HomeReviewsBlock,
-    HomeVideo2Block,
-    HomeVideoBlock,
 )
 from src.core.admin_base import GestiaModelAdmin
 
@@ -148,21 +147,19 @@ class HomeHeroAdmin(KeyedBlockAdmin):
 
 
 @admin.register(HomeCategoriesBlock)
-class HomeCategoriesAdmin(KeyedBlockAdmin):
+class HomeCategoriesAdmin(PageVideoMixin, KeyedBlockAdmin):
     block_key = HomeBlock.Key.CATEGORIES
     default_sort = 2
+    page_video_key = HomeBlock.Key.VIDEO
+    page_video_sort = 3
+    page_video_title = "Відео-блок після категорій"
+    page_video_description = (
+        "На головній цей блок стоїть одразу після категорій і перед популярними товарами."
+    )
     text_limits = {"title_uk": 20, "title_en": 20}
     fieldsets = (
         ("Назва секції", {"fields": ("title_uk", "title_en")}),
     )
-
-
-@admin.register(HomeVideoBlock)
-class HomeVideoAdmin(KeyedBlockAdmin):
-    block_key = HomeBlock.Key.VIDEO
-    default_sort = 3
-    image_hints = {"image": PHOTO_DESK, "image_mobile": PHOTO_MOBILE}
-    fieldsets = (("Медіа", {"fields": ("media_kind", "image", "image_mobile", "video", "poster")}),)
 
 
 @admin.register(HomePopularBlock)
@@ -177,9 +174,15 @@ class HomePopularAdmin(KeyedBlockAdmin):
 
 
 @admin.register(HomeAdvantagesBlock)
-class HomeAdvantagesAdmin(KeyedBlockAdmin):
+class HomeAdvantagesAdmin(PageVideoMixin, KeyedBlockAdmin):
     block_key = HomeBlock.Key.ADVANTAGES
     default_sort = 5
+    page_video_key = HomeBlock.Key.VIDEO_2
+    page_video_sort = 6
+    page_video_title = "Відео-блок після переваг"
+    page_video_description = (
+        "На головній цей блок стоїть одразу після переваг і перед відгуками."
+    )
     text_limits = {
         "title_uk": 36,
         "title_en": 36,
@@ -202,14 +205,6 @@ class HomeAdvantagesAdmin(KeyedBlockAdmin):
         if db_field.name == "text_mobile_uk" and formfield is not None:
             formfield.help_text = "Для телефона. Якщо порожньо — текст із комп’ютера."
         return formfield
-
-
-@admin.register(HomeVideo2Block)
-class HomeVideo2Admin(KeyedBlockAdmin):
-    block_key = HomeBlock.Key.VIDEO_2
-    default_sort = 6
-    image_hints = {"image": PHOTO_DESK, "image_mobile": PHOTO_MOBILE}
-    fieldsets = (("Медіа", {"fields": ("media_kind", "image", "image_mobile", "video", "poster")}),)
 
 
 @admin.register(HomeReviewsBlock)

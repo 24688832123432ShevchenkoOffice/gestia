@@ -4,7 +4,7 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.backends.db import SessionStore
 from django.core.exceptions import PermissionDenied
 from django.test import RequestFactory, TestCase
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 from django.utils import translation
 
 from src.core.admin_nav import NAV_TREE, build_navigation, iter_nav_entries
@@ -25,6 +25,8 @@ class SidebarTreeTests(TestCase):
         self.assertIn("legal_cookies", keys)
         self.assertIn("legal_shipping", keys)
         self.assertIn("legal_privacy", keys)
+        self.assertNotIn("home_video", keys)
+        self.assertNotIn("home_video_2", keys)
 
     def test_navigation_skips_missing_urls(self):
         groups = build_navigation(None)
@@ -47,6 +49,9 @@ class SidebarTreeTests(TestCase):
         self.assertIn("Доставка та оплата", labels)
         self.assertIn("CTA та контактні форми", labels)
         self.assertIn("Головний банер", labels)
+        self.assertIn("Переваги", labels)
+        self.assertNotIn("Відео", labels)
+        self.assertNotIn("Відео 2", labels)
 
     def test_admin_index_renders_ukrainian_tree(self):
         self.client.cookies["django_language"] = "en"
@@ -73,6 +78,12 @@ class SidebarTreeTests(TestCase):
         self.assertContains(response, "Світла")
         self.assertContains(response, "Темна")
         self.assertContains(response, "Системна")
+        self.assertNotContains(response, "homevideoblock")
+        self.assertNotContains(response, "homevideo2block")
+        with self.assertRaises(NoReverseMatch):
+            reverse("admin:content_homevideoblock_changelist")
+        with self.assertRaises(NoReverseMatch):
+            reverse("admin:content_homevideo2block_changelist")
 
     def test_unfold_changelist_actions_are_ukrainian(self):
         page = self.client.get(reverse("admin:catalog_product_changelist"))
