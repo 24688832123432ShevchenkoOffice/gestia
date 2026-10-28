@@ -1,5 +1,10 @@
 from django.contrib import admin
 
+from src.catalog.admin_filters import (
+    CatalogBooleanFilter,
+    CatalogChoicesFilter,
+    CatalogRelatedFilter,
+)
 from src.catalog.models import (
     CatalogCell,
     Category,
@@ -121,10 +126,32 @@ class ProductAdmin(SlugAdminMixin, GestiaModelAdmin):
         "stock_status",
         "stock_qty",
         "is_active",
+        "is_sale",
     )
     list_display_links = ("name_uk",)
     list_editable = ("stock_qty",)
-    list_filter = ("is_active", "stock_status", "category", "product_set")
+    list_filter_submit = True
+    list_filter_sheet = False
+    list_filter = (
+        ("category", CatalogRelatedFilter),
+        ("product_set", CatalogRelatedFilter),
+        ("stock_status", CatalogChoicesFilter),
+        ("is_active", CatalogBooleanFilter),
+        ("is_sale", CatalogBooleanFilter),
+    )
+    list_filter_options = {
+        "category": {"horizontal": True, "label": "Категорія"},
+        "product_set": {"horizontal": True, "label": "Сет"},
+        "stock_status": {"horizontal": True, "label": "Наявність"},
+        "is_active": {"horizontal": True, "label": "Активний"},
+        "is_sale": {"horizontal": True, "label": "Акція"},
+    }
+    actions = (
+        "activate_products",
+        "deactivate_products",
+        "set_sale",
+        "unset_sale",
+    )
     search_fields = ("name_uk", "name_en", "sku", "slug")
     autocomplete_fields = ("category", "product_set")
     filter_horizontal = ("filter_attrs", "related_manual")
@@ -141,6 +168,7 @@ class ProductAdmin(SlugAdminMixin, GestiaModelAdmin):
             "stock_status",
             "stock_qty",
             "is_active",
+            "is_sale",
             "is_popular",
             "price_weight",
             "card_crop",
@@ -153,3 +181,19 @@ class ProductAdmin(SlugAdminMixin, GestiaModelAdmin):
         ("name_uk", "menu_name_uk", "description_uk", "seo_title_uk", "seo_description_uk"),
         ("name_en", "menu_name_en", "description_en", "seo_title_en", "seo_description_en"),
     )
+
+    @admin.action(description="Активувати")
+    def activate_products(self, request, queryset):
+        queryset.update(is_active=True)
+
+    @admin.action(description="Деактивувати")
+    def deactivate_products(self, request, queryset):
+        queryset.update(is_active=False)
+
+    @admin.action(description="Позначити акцією")
+    def set_sale(self, request, queryset):
+        queryset.update(is_sale=True)
+
+    @admin.action(description="Зняти акцію")
+    def unset_sale(self, request, queryset):
+        queryset.update(is_sale=False)

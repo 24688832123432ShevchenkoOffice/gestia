@@ -13,6 +13,7 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 INSTALLED_APPS = [
     "unfold",
     "unfold.contrib.forms",
+    "unfold.contrib.filters",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

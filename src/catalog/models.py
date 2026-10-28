@@ -205,6 +205,7 @@ class Product(TimeStampedModel):
     )
     stock_qty = models.PositiveIntegerField("Залишок, шт", default=0)
     is_active = models.BooleanField("Активний", default=True)
+    is_sale = models.BooleanField("Акція", default=False)
     is_popular = models.BooleanField("Популярний на головній", default=False)
     menu_name_uk = models.CharField("Назва в меню", max_length=200, blank=True)
     menu_name_en = models.CharField("Назва в меню (EN)", max_length=200, blank=True)
