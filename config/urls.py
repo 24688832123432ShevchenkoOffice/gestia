@@ -9,7 +9,7 @@ from src.core.sitemaps import SITEMAPS
 from src.core.views import healthz, page_not_found, robots_txt, set_currency, set_language, theme_css
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
     path("healthz/", healthz, name="healthz"),
     path("theme.css", theme_css, name="theme_css"),
     path("robots.txt", robots_txt, name="robots"),

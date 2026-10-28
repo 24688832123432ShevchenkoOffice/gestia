@@ -609,6 +609,9 @@ msgstr "Currency"
 msgid "Додати в обране"
 msgstr "Add to wishlist"
 
+msgid "Забагато спроб. Спробуйте трохи пізніше."
+msgstr "Too many attempts. Please try again in a little while."
+
 #~ msgid "Знайти"
 #~ msgstr "Find"
 

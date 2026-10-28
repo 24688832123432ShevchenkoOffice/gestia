@@ -10,6 +10,7 @@
   {% include "commerce/_validate_attrs.html" %}
 >
   {% csrf_token %}
+  {% include "commerce/_honeypot.html" %}
   {% if waitlist_form.non_field_errors %}
     <p class="waitlist-modal__error">{{ waitlist_form.non_field_errors|striptags }}</p>
   {% endif %}

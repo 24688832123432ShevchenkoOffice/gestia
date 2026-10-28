@@ -27,6 +27,19 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Strict"
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_HSTS_SECONDS = config("SECURE_HSTS_SECONDS", default=31536000, cast=int)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = config(
+    "SECURE_HSTS_INCLUDE_SUBDOMAINS",
+    default=False,
+    cast=bool,
+)
+SECURE_HSTS_PRELOAD = False
+SESSION_COOKIE_HTTPONLY = True
+# HTMX copies the token from <meta name="csrf-token">, not from the CSRF cookie.
+CSRF_COOKIE_HTTPONLY = False
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+X_FRAME_OPTIONS = "DENY"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",

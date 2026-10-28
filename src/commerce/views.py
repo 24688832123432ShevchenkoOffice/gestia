@@ -28,6 +28,7 @@ from src.commerce.services import (
     row_from_product,
     unavailable_message,
 )
+from src.core.ratelimit import honeypot_filled, reject_if_limited
 from src.core.utils import format_money
 
 
@@ -38,6 +39,28 @@ def _currency(request):
 
 def _hx(request):
     return request.headers.get("HX-Request")
+
+
+def _pretend_order_thanks(request):
+    target = f"{reverse('thanks')}?kind=order"
+    if _hx(request):
+        response = HttpResponse()
+        response["HX-Redirect"] = target
+        return response
+    return HttpResponseRedirect(target)
+
+
+def _waitlist_form_response(request, form, status):
+    response = render(
+        request,
+        "partials/home/_waitlist_form.html",
+        {"waitlist_form": form},
+        status=status,
+    )
+    if _hx(request):
+        response["HX-Retarget"] = "#waitlist-form-slot"
+        response["HX-Reswap"] = "innerHTML"
+    return response
 
 
 def _no_stock(product):
@@ -157,6 +180,8 @@ def cart_page(request):
 
 def checkout(request):
     currency = _currency(request)
+    if request.method == "POST" and honeypot_filled(request):
+        return _pretend_order_thanks(request)
     if request.method == "POST":
         existing = _order_by_idem(request.POST.get("idem"))
         if existing is not None:
@@ -165,6 +190,13 @@ def checkout(request):
     if not rows:
         return HttpResponseRedirect(reverse("cart"))
     form = style_form(CheckoutForm(request.POST or None))
+    if request.method == "POST" and reject_if_limited(request, form, "checkout"):
+        return render(
+            request,
+            "commerce/checkout.html",
+            _checkout_render(request, form, rows, total, currency),
+            status=429,
+        )
     if request.method == "POST" and _checkout_post_ok(form, request, rows):
         try:
             order = create_order(
@@ -351,7 +383,11 @@ def cart_update(request):
 
 @require_POST
 def callback(request):
+    if honeypot_filled(request):
+        return render(request, "commerce/_thanks_lead.html", {"long": True})
     form = style_form(CallbackForm(request.POST))
+    if reject_if_limited(request, form, "callback"):
+        return render(request, "commerce/_callback_form.html", {"callback_form": form}, status=429)
     if not form.is_valid():
         status = 422 if _hx(request) else 200
         return render(request, "commerce/_callback_form.html", {"callback_form": form}, status=status)
@@ -367,10 +403,14 @@ def callback(request):
 
 @require_POST
 def buy_now(request):
+    if honeypot_filled(request):
+        return _pretend_order_thanks(request)
     existing = _order_by_idem(request.POST.get("idem"))
     if existing is not None:
         return _finish_buy_now(request, existing)
     form = style_form(BuyNowForm(request.POST))
+    if reject_if_limited(request, form, "buy_now"):
+        return render(request, "commerce/_buy_form.html", {"buy_form": form}, status=429)
     product = Product.objects.filter(sku=request.POST.get("sku", ""), is_active=True).first()
     valid = form.is_valid()
     if product is None or product.stock_status == Product.Stock.OUT:
@@ -404,7 +444,11 @@ def buy_now(request):
 
 @require_POST
 def contact(request):
+    if honeypot_filled(request):
+        return render(request, "commerce/_thanks_lead.html", {"long": False})
     form = style_form(ContactForm(request.POST))
+    if reject_if_limited(request, form, "contact"):
+        return render(request, "commerce/_contact_form.html", {"contact_form": form}, status=429)
     if not form.is_valid():
         status = 422 if _hx(request) else 200
         return render(request, "commerce/_contact_form.html", {"contact_form": form}, status=status)
@@ -420,19 +464,14 @@ def contact(request):
 
 @require_POST
 def waitlist(request):
+    if honeypot_filled(request):
+        return render(request, "partials/home/_waitlist_thanks.html")
     form = style_form(WaitlistForm(request.POST))
+    if reject_if_limited(request, form, "waitlist"):
+        return _waitlist_form_response(request, form, 429)
     if not form.is_valid():
         status = 422 if _hx(request) else 200
-        response = render(
-            request,
-            "partials/home/_waitlist_form.html",
-            {"waitlist_form": form},
-            status=status,
-        )
-        if _hx(request):
-            response["HX-Retarget"] = "#waitlist-form-slot"
-            response["HX-Reswap"] = "innerHTML"
-        return response
+        return _waitlist_form_response(request, form, status)
     email = form.cleaned_data["email"]
     create_inquiry(
         kind=Inquiry.Kind.WAITLIST,

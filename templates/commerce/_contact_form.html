@@ -1,6 +1,7 @@
 {% load i18n %}
 <form data-qa="lead-form" method="post" action="{% url 'contact' %}" hx-post="{% url 'contact' %}" hx-target="this" hx-swap="outerHTML" {% include "commerce/_validate_attrs.html" %}>
   {% csrf_token %}
+  {% include "commerce/_honeypot.html" %}
   {% if contact_form.non_field_errors %}<p class="field__error">{{ contact_form.non_field_errors }}</p>{% endif %}
   {% include "commerce/_field.html" with field=contact_form.name %}
   {% include "commerce/_field.html" with field=contact_form.phone %}

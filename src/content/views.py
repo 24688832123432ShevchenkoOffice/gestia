@@ -9,14 +9,20 @@ from src.catalog.models import Category, Product
 from src.commerce.forms import ContactForm, style_form
 from src.commerce.models import Inquiry
 from src.commerce.services import create_inquiry
+from src.core.ratelimit import honeypot_filled, reject_if_limited
 from src.content.legal_copy import get_legal
 from src.content.models import AboutPage, Advantage, HomeBlock, Review
 
 
 @require_http_methods(["GET", "HEAD", "POST"])
 def home(request):
+    if request.method == "POST" and honeypot_filled(request):
+        return redirect(f"{reverse('thanks')}?kind=contact")
     form = style_form(ContactForm(request.POST or None))
-    if request.method == "POST" and form.is_valid():
+    status = 200
+    if request.method == "POST" and reject_if_limited(request, form, "home"):
+        status = 429
+    elif request.method == "POST" and form.is_valid():
         create_inquiry(
             kind=Inquiry.Kind.CONTACT,
             name=form.cleaned_data["name"],
@@ -41,6 +47,7 @@ def home(request):
             "reviews": Review.objects.all(),
             "home_form": form,
         },
+        status=status,
     )
 
 

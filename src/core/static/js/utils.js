@@ -3,6 +3,7 @@ if (window.htmx) {
     { code: "204", swap: false },
     { code: "[23]..", swap: true },
     { code: "422", swap: true },
+    { code: "429", swap: true },
     { code: "[45]..", swap: false, error: true },
   ];
 }

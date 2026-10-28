@@ -23,6 +23,24 @@ def language_enabled(lang: str) -> bool:
     return False
 
 
+class ContentSecurityPolicyMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        policy = getattr(settings, "CSP_POLICY", "") or ""
+        if not policy:
+            return response
+        header = (
+            "Content-Security-Policy-Report-Only"
+            if getattr(settings, "CSP_REPORT_ONLY", True)
+            else "Content-Security-Policy"
+        )
+        response[header] = policy
+        return response
+
+
 class LanguagePrefixMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

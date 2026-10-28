@@ -27,6 +27,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "src.core.middleware.ContentSecurityPolicyMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -111,6 +112,38 @@ CACHES = {
         "LOCATION": "gestia",
     }
 }
+
+# Per-form overrides use the same shape. Missing keys fall back to "default".
+RATE_LIMITS = {
+    "default": {"limit": 5, "window": 600},
+}
+TRUST_X_FORWARDED_FOR = config("TRUST_X_FORWARDED_FOR", default=False, cast=bool)
+
+
+def _normalize_admin_url(raw: str) -> str:
+    value = str(raw or "").strip().strip("/")
+    if not value:
+        return "admin/"
+    return f"{value}/"
+
+
+ADMIN_URL = _normalize_admin_url(config("ADMIN_URL", default="admin/"))
+
+# Public pages load Google Fonts and have no inline scripts or map iframes.
+CSP_REPORT_ONLY = config("CSP_REPORT_ONLY", default=True, cast=bool)
+CSP_POLICY = "; ".join(
+    [
+        "default-src 'self'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-ancestors 'none'",
+        "script-src 'self'",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "img-src 'self' data: https:",
+        "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com",
+    ]
+)
 
 LOGGING = {
     "version": 1,

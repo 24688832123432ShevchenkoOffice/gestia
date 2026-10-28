@@ -38,7 +38,7 @@
 
   function onError(event) {
     var xhr = event.detail && event.detail.xhr;
-    if (xhr && xhr.status === 422) {
+    if (xhr && (xhr.status === 422 || xhr.status === 429)) {
       return;
     }
     show(messageFor(event));

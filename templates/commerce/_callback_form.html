@@ -1,6 +1,7 @@
 {% load i18n %}
 <form data-qa="lead-form" method="post" action="{% url 'callback' %}" hx-post="{% url 'callback' %}" hx-target="this" hx-swap="outerHTML" {% include "commerce/_validate_attrs.html" %}>
   {% csrf_token %}
+  {% include "commerce/_honeypot.html" %}
   {{ callback_form.sku }}
   {% if callback_form.non_field_errors %}<p class="field__error">{{ callback_form.non_field_errors }}</p>{% endif %}
   {% include "commerce/_field.html" with field=callback_form.name %}
