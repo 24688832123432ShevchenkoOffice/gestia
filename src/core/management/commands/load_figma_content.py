@@ -181,6 +181,7 @@ class Command(BaseCommand):
                 slug=slug,
                 name_uk=name,
                 menu_name_uk="Бокс Різдвяний Шишки" if slug == "boks-rizdvyanyi-shyshky" else "",
+                menu_name_en="Christmas box “Pine Cones”" if slug == "boks-rizdvyanyi-shyshky" else "",
                 price_uah=Decimal(price),
                 price_eur=ZERO,
                 price_weight=weight,

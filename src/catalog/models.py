@@ -179,6 +179,7 @@ class Product(TimeStampedModel):
     is_active = models.BooleanField("Активний", default=True)
     is_popular = models.BooleanField("Популярний на головній", default=False)
     menu_name_uk = models.CharField("Назва в меню", max_length=200, blank=True)
+    menu_name_en = models.CharField("Назва в меню (EN)", max_length=200, blank=True)
     price_weight = models.PositiveSmallIntegerField("Насиченість ціни на головній", default=400)
     card_crop = models.CharField(
         "Кадр картки",
@@ -249,7 +250,7 @@ class Product(TimeStampedModel):
 
     @property
     def menu_name(self):
-        return self.menu_name_uk or self.name
+        return localized(self, "menu_name") or self.name
 
     @property
     def description(self):

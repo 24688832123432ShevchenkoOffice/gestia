@@ -87,3 +87,25 @@ class ProductAdmin(ModelAdmin):
     filter_horizontal = ("filter_attrs", "related_manual")
     inlines = [ProductImageInline]
     ordering = ("sort", "name_uk")
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = []
+        for title, options in super().get_fieldsets(request, obj):
+            fields = []
+            pending = None
+            for name in options["fields"]:
+                if name == "menu_name_uk":
+                    pending = name
+                    continue
+                if pending == "menu_name_uk" and name == "menu_name_en":
+                    fields.append(("menu_name_uk", "menu_name_en"))
+                    pending = None
+                    continue
+                if pending:
+                    fields.append(pending)
+                    pending = None
+                fields.append(name)
+            if pending:
+                fields.append(pending)
+            fieldsets.append((title, {**options, "fields": tuple(fields)}))
+        return fieldsets
