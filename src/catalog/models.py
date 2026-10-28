@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.translation import get_language, gettext_lazy as _
 
 from src.core.models import TimeStampedModel
+from src.core.slug import ensure_new_slug
 from src.core.utils import localized
 
 IMAGE_VALIDATOR = FileExtensionValidator(["jpg", "jpeg", "png", "webp"])
@@ -44,6 +45,12 @@ class Category(TimeStampedModel):
 
     def __str__(self):
         return self.name_uk
+
+    def save(self, *args, **kwargs):
+        slug_set = ensure_new_slug(self)
+        if slug_set and kwargs.get("update_fields") is not None:
+            kwargs["update_fields"] = set(kwargs["update_fields"]) | {"slug"}
+        super().save(*args, **kwargs)
 
     @property
     def name(self):
@@ -127,6 +134,13 @@ class ProductAttribute(models.Model):
     def __str__(self):
         return f"{self.group.name_uk}: {self.name_uk}"
 
+    def save(self, *args, **kwargs):
+        extra = {"group_id": self.group_id} if self.group_id else None
+        slug_set = ensure_new_slug(self, extra_filter=extra)
+        if slug_set and kwargs.get("update_fields") is not None:
+            kwargs["update_fields"] = set(kwargs["update_fields"]) | {"slug"}
+        super().save(*args, **kwargs)
+
     @property
     def name(self):
         return localized(self, "name")
@@ -143,6 +157,12 @@ class ProductSet(models.Model):
 
     def __str__(self):
         return self.name_uk
+
+    def save(self, *args, **kwargs):
+        slug_set = ensure_new_slug(self)
+        if slug_set and kwargs.get("update_fields") is not None:
+            kwargs["update_fields"] = set(kwargs["update_fields"]) | {"slug"}
+        super().save(*args, **kwargs)
 
     @property
     def name(self):
@@ -240,6 +260,7 @@ class Product(TimeStampedModel):
         return self.name_uk
 
     def save(self, *args, **kwargs):
+        slug_set = ensure_new_slug(self)
         status_changed = False
         if self.stock_qty == 0 and self.stock_status == self.Stock.IN_STOCK:
             self.stock_status = self.Stock.OUT
@@ -248,8 +269,13 @@ class Product(TimeStampedModel):
             self.stock_status = self.Stock.IN_STOCK
             status_changed = True
         update_fields = kwargs.get("update_fields")
-        if status_changed and update_fields is not None:
-            kwargs["update_fields"] = set(update_fields) | {"stock_status"}
+        extra = set()
+        if status_changed:
+            extra.add("stock_status")
+        if slug_set:
+            extra.add("slug")
+        if extra and update_fields is not None:
+            kwargs["update_fields"] = set(update_fields) | extra
         super().save(*args, **kwargs)
 
     @property

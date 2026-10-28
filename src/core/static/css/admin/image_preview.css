@@ -1,0 +1,18 @@
+.gestia-admin-thumb-link {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.gestia-admin-thumb {
+  display: block;
+  width: auto;
+  max-width: 10rem;
+  max-height: 6rem;
+  object-fit: contain;
+  border-radius: 4px;
+  background-color: #f3eee6;
+}
+
+html.dark .gestia-admin-thumb {
+  background-color: #2c241e;
+}

@@ -1,5 +1,4 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin, TabularInline
 
 from src.catalog.models import (
     CatalogCell,
@@ -10,16 +9,18 @@ from src.catalog.models import (
     ProductImage,
     ProductSet,
 )
+from src.core.admin_base import GestiaModelAdmin, GestiaTabularInline
+from src.core.admin_slug import SlugAdminMixin
 
 
-class ProductImageInline(TabularInline):
+class ProductImageInline(GestiaTabularInline):
     model = ProductImage
     fields = ("image", "sort", "frame_height", "frame_top")
     extra = 1
 
 
 @admin.register(Category)
-class CategoryAdmin(ModelAdmin):
+class CategoryAdmin(SlugAdminMixin, GestiaModelAdmin):
     list_display = (
         "name_uk",
         "parent",
@@ -32,32 +33,31 @@ class CategoryAdmin(ModelAdmin):
     )
     list_filter = ("is_active", "parent")
     search_fields = ("name_uk", "name_en", "slug")
-    prepopulated_fields = {"slug": ("name_uk",)}
     ordering = ("sort", "name_uk")
 
 
 @admin.register(ProductAttributeGroup)
-class ProductAttributeGroupAdmin(ModelAdmin):
+class ProductAttributeGroupAdmin(SlugAdminMixin, GestiaModelAdmin):
+    auto_slug = False
     list_display = ("slug", "name_uk")
     search_fields = ("name_uk", "slug")
 
 
 @admin.register(ProductAttribute)
-class ProductAttributeAdmin(ModelAdmin):
+class ProductAttributeAdmin(SlugAdminMixin, GestiaModelAdmin):
     list_display = ("name_uk", "group", "slug", "sort", "is_filterable")
     list_filter = ("group", "is_filterable")
     search_fields = ("name_uk", "name_en", "slug")
 
 
 @admin.register(ProductSet)
-class ProductSetAdmin(ModelAdmin):
+class ProductSetAdmin(SlugAdminMixin, GestiaModelAdmin):
     list_display = ("name_uk", "slug")
     search_fields = ("name_uk", "name_en", "slug")
-    prepopulated_fields = {"slug": ("name_uk",)}
 
 
 @admin.register(CatalogCell)
-class CatalogCellAdmin(ModelAdmin):
+class CatalogCellAdmin(GestiaModelAdmin):
     list_display = ("product", "surface", "band", "layout", "role", "slot", "sort", "price_uah", "crop")
     list_filter = ("surface", "band", "layout", "role", "slot")
     autocomplete_fields = ("product",)
@@ -65,7 +65,7 @@ class CatalogCellAdmin(ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(ModelAdmin):
+class ProductAdmin(SlugAdminMixin, GestiaModelAdmin):
     list_display = (
         "name_uk",
         "sku",
@@ -82,7 +82,6 @@ class ProductAdmin(ModelAdmin):
     list_editable = ("stock_qty",)
     list_filter = ("is_active", "stock_status", "category", "product_set")
     search_fields = ("name_uk", "name_en", "sku", "slug")
-    prepopulated_fields = {"slug": ("name_uk",)}
     autocomplete_fields = ("category", "product_set")
     filter_horizontal = ("filter_attrs", "related_manual")
     inlines = [ProductImageInline]

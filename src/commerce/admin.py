@@ -1,10 +1,10 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin, TabularInline
 
 from src.commerce.models import Inquiry, Order, OrderItem
+from src.core.admin_base import GestiaModelAdmin, GestiaTabularInline
 
 
-class OrderItemInline(TabularInline):
+class OrderItemInline(GestiaTabularInline):
     model = OrderItem
     extra = 0
     readonly_fields = ("sku", "name", "qty", "unit_price")
@@ -12,7 +12,7 @@ class OrderItemInline(TabularInline):
 
 
 @admin.register(Order)
-class OrderAdmin(ModelAdmin):
+class OrderAdmin(GestiaModelAdmin):
     list_display = (
         "number",
         "source",
@@ -31,7 +31,7 @@ class OrderAdmin(ModelAdmin):
 
 
 @admin.register(Inquiry)
-class InquiryAdmin(ModelAdmin):
+class InquiryAdmin(GestiaModelAdmin):
     list_display = ("created_at", "kind", "name", "email", "phone", "sku", "product_name")
     list_filter = ("kind",)
     search_fields = ("name", "email", "phone", "sku", "product_name", "message")

@@ -163,6 +163,15 @@ LOGGING = {
     },
 }
 
+def _admin_asset(path):
+    def href(request):
+        from django.templatetags.static import static
+
+        return static(path)
+
+    return href
+
+
 TINYMCE_DEFAULT_CONFIG = {
     "height": 280,
     "menubar": False,
@@ -197,6 +206,13 @@ UNFOLD = {
     "SITE_URL": "/",
     "SHOW_HISTORY": True,
     "SHOW_LANGUAGES": False,
+    "STYLES": [
+        _admin_asset("css/admin/char_counter.css"),
+        _admin_asset("css/admin/image_preview.css"),
+    ],
+    "SCRIPTS": [
+        _admin_asset("js/admin/char_counter.js"),
+    ],
     "COLORS": {
         "base": {
             "50": "#faf7f2",

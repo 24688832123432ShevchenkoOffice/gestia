@@ -1,10 +1,10 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 
 from src.content.models import AboutPage, Advantage, FooterLink, HomeBlock, PrivacyPage, Review, SiteSettings
+from src.core.admin_base import GestiaModelAdmin
 
 
-class SingletonAdmin(ModelAdmin):
+class SingletonAdmin(GestiaModelAdmin):
     def has_add_permission(self, request):
         return not self.model.objects.exists()
 
@@ -35,7 +35,7 @@ class SiteSettingsAdmin(SingletonAdmin):
 
 
 @admin.register(HomeBlock)
-class HomeBlockAdmin(ModelAdmin):
+class HomeBlockAdmin(GestiaModelAdmin):
     list_display = ("key", "title_uk", "sort")
     list_filter = ("key",)
     search_fields = ("title_uk", "title_en", "text_uk")
@@ -43,7 +43,7 @@ class HomeBlockAdmin(ModelAdmin):
 
 
 @admin.register(Advantage)
-class AdvantageAdmin(ModelAdmin):
+class AdvantageAdmin(GestiaModelAdmin):
     list_display = ("title_uk", "sort")
     search_fields = ("title_uk", "title_en")
     ordering = ("sort",)
@@ -67,14 +67,14 @@ class PrivacyPageAdmin(SingletonAdmin):
 
 
 @admin.register(Review)
-class ReviewAdmin(ModelAdmin):
+class ReviewAdmin(GestiaModelAdmin):
     list_display = ("author_uk", "rating_kind", "sort")
     search_fields = ("author_uk", "text_uk")
     ordering = ("sort",)
 
 
 @admin.register(FooterLink)
-class FooterLinkAdmin(ModelAdmin):
+class FooterLinkAdmin(GestiaModelAdmin):
     list_display = ("label_uk", "column", "url_name", "underlined", "sort")
     list_filter = ("column", "underlined")
     search_fields = ("label_uk", "label_en")
