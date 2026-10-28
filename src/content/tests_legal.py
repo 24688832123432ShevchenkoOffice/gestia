@@ -7,6 +7,7 @@ from django.utils import translation
 from django.utils.html import strip_tags
 
 from src.content.legal_copy import DOCS, get_legal, sections_to_html
+from src.content.legal_copy_en import DOCS_EN
 from src.content.models_legal import LegalPage
 from src.core.html_sanitize import sanitize_rich_html
 
@@ -25,9 +26,14 @@ class LegalPageRenderTests(TestCase):
             self.assertEqual(reverse(key), path)
             page = LegalPage.objects.get(key=key)
             literal = get_legal(key)
+            english = DOCS_EN[key]()
             self.assertEqual(page.title_uk, literal["title"])
-            self.assertEqual(page.title_en, "")
-            self.assertEqual(page.body_en, "")
+            self.assertEqual(page.title_en, english["title"])
+            self.assertEqual(page.body_en, sections_to_html(english["sections"]))
+            self.assertEqual(page.seo_title_en, english["seo_title"])
+            self.assertEqual(page.seo_description_en, english["seo_description"])
+            self.assertEqual(page.body_uk.count("<h2>"), page.body_en.count("<h2>"))
+            self.assertEqual(page.body_uk.count("<p>"), page.body_en.count("<p>"))
             self.assertEqual(page.seo_title_uk, literal["seo_title"])
             self.assertEqual(page.updated_on.strftime("%d.%m.%Y"), literal["updated"])
             self.assertEqual(page.body_uk, sections_to_html(literal["sections"]))
@@ -44,6 +50,14 @@ class LegalPageRenderTests(TestCase):
             copy = response.content.decode().split('class="legal-copy"', 1)[1].split("</div>", 1)[0]
             self.assertNotIn("<script", copy)
             self.assertNotIn("onerror", copy)
+        for key, path in paths.items():
+            english = DOCS_EN[key]()
+            english_page = self.client.get(f"/en{path}")
+            self.assertEqual(english_page.status_code, 200)
+            main = english_page.content.decode().split('<main id="main">', 1)[1].split("</main>", 1)[0]
+            self.assertNotRegex(main, r"[\u0400-\u04FF]")
+            self.assertIn(english["title"], main)
+            self.assertIn(english["sections"][0]["heading"], main)
 
     def test_empty_model_falls_back_to_the_literal(self):
         translation.activate("uk")
@@ -58,6 +72,9 @@ class LegalPageRenderTests(TestCase):
     def test_english_uses_translation_or_ukrainian_text(self):
         translation.activate("en")
         page = LegalPage.objects.get(key="shipping")
+        page.title_en = ""
+        page.body_en = ""
+        page.save(update_fields=["title_en", "body_en"])
         ukrainian = self.client.get("/en/dostavka-ta-oplata/")
         self.assertContains(ukrainian, page.title_uk)
         self.assertContains(ukrainian, "Updated")
