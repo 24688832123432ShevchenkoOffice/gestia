@@ -200,6 +200,13 @@ TINYMCE_DEFAULT_CONFIG = {
     ),
 }
 
+TINYMCE_SHORT_CONFIG = {
+    **TINYMCE_DEFAULT_CONFIG,
+    "height": 160,
+    "toolbar": "undo redo | bold italic underline | bullist | link | removeformat",
+    "valid_elements": "p,br,strong/b,em/i,u,a[href|target|rel],ul,li",
+}
+
 UNFOLD = {
     "SITE_TITLE": "Gestia Home",
     "SITE_HEADER": "Gestia Home",

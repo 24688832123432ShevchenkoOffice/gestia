@@ -20,14 +20,17 @@ def shop(request):
     cart_count = 0
     wishlist_count = 0
     form_copy = None
+    discount_modal = None
     try:
         from src.catalog.models import Category, Product
         from src.catalog.selectors import nav_categories as load_nav
         from src.commerce.cart import item_count
         from src.commerce.wishlist import item_count as wish_count
         from src.content.models import ContactForms, FooterLink, HomeBlock, SiteSettings
+        from src.content.models_discount import DiscountModal
 
         site = SiteSettings.load()
+        discount_modal = DiscountModal.load()
         form_copy = ContactForms.load()
         home_blocks = {block.key: block for block in HomeBlock.objects.all()}
         nav_categories = list(load_nav())
@@ -63,6 +66,7 @@ def shop(request):
             code: language_enabled(code) for code, _label in settings.LANGUAGES
         },
         "form_copy": form_copy,
+        "discount_modal": discount_modal,
         "contact_form": apply_labels(style_form(ContactForm()), form_copy),
         "waitlist_form": apply_labels(style_form(WaitlistForm()), form_copy),
     }

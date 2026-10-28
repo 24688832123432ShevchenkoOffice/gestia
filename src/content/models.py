@@ -416,5 +416,6 @@ class ContactForms(SingletonModel):
 
 
 from src.content import models_about as _about_models  # noqa: E402,F401
+from src.content import models_discount as _discount_models  # noqa: E402,F401
 from src.content import models_legal as _legal_models  # noqa: E402,F401
 from src.content import proxies as _home_proxies  # noqa: E402,F401

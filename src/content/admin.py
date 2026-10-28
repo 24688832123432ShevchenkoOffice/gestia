@@ -7,6 +7,7 @@ from src.core.admin_base import GestiaModelAdmin
 # Реєстрація окремих блоків головної, форм, «Про нас» і підвалу.
 import src.content.admin_about  # noqa: F401, E402
 import src.content.admin_blocks  # noqa: F401, E402
+import src.content.admin_discount  # noqa: F401, E402
 import src.content.admin_legal  # noqa: F401, E402
 
 

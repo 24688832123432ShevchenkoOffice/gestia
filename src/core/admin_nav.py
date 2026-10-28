@@ -145,7 +145,7 @@ NAV_TREE = [
                 "key": "discount",
                 "title": "Знижка",
                 "icon": "percent",
-                "url_name": "",
+                "url_name": "admin:content_discountmodal_changelist",
             },
         ],
     },

@@ -1,0 +1,36 @@
+{% load i18n richtext %}
+<dialog
+  class="sheet"
+  id="discount-dialog"
+  data-discount-modal
+  data-delay-ms="{{ discount_modal.delay_ms }}"
+  data-shows="{{ discount_modal.show_limit }}"
+  data-storage-key="gestia_discount_modal_shows"
+  role="dialog"
+  aria-modal="true"
+  {% if discount_modal.title %}aria-labelledby="discount-dialog-title"{% else %}aria-label="{% trans 'Знижка' %}"{% endif %}
+  {% if discount_modal.text %}aria-describedby="discount-dialog-text"{% endif %}
+>
+  {% if discount_modal.image %}
+    <img
+      class="discount-dialog__image"
+      src="{{ discount_modal.image.url }}"
+      alt="{% if not discount_modal.title %}{% trans 'Знижка' %}{% endif %}"
+      decoding="async"
+    >
+  {% endif %}
+  {% if discount_modal.title %}
+    <h2 class="discount-dialog__title" id="discount-dialog-title">{{ discount_modal.title }}</h2>
+  {% endif %}
+  {% if discount_modal.text %}
+    <div class="sheet__meta" id="discount-dialog-text">{{ discount_modal.text|richhtml }}</div>
+  {% endif %}
+  <div class="sheet__actions">
+    {% if discount_modal.button and discount_modal.public_url %}
+      <a class="sheet__btn sheet__btn--primary" href="{{ discount_modal.public_url }}">{{ discount_modal.button }}</a>
+    {% endif %}
+    <button class="sheet__btn sheet__btn--ghost" type="button" data-close-dialog aria-label="{% trans 'Закрити' %}">
+      {% trans "Закрити" %}
+    </button>
+  </div>
+</dialog>
