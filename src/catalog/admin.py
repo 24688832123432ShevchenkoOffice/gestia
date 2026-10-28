@@ -34,6 +34,37 @@ class CategoryAdmin(SlugAdminMixin, GestiaModelAdmin):
     list_filter = ("is_active", "parent")
     search_fields = ("name_uk", "name_en", "slug")
     ordering = ("sort", "name_uk")
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "parent",
+                    "slug",
+                    "name_uk",
+                    "name_en",
+                    "image",
+                    "is_active",
+                    "sort",
+                    "home_sort",
+                    "menu_featured",
+                    "filter_sort",
+                    "filter_name_uk",
+                )
+            },
+        ),
+        (
+            "SEO",
+            {
+                "fields": (
+                    "seo_title_uk",
+                    "seo_title_en",
+                    "seo_description_uk",
+                    "seo_description_en",
+                )
+            },
+        ),
+    )
 
 
 @admin.register(ProductAttributeGroup)

@@ -37,6 +37,30 @@ class Category(TimeStampedModel):
     menu_featured = models.BooleanField("Акцент у меню", default=False)
     filter_sort = models.PositiveSmallIntegerField("Порядок у фільтрі", null=True, blank=True)
     filter_name_uk = models.CharField("Назва у фільтрі", max_length=160, blank=True)
+    seo_title_uk = models.CharField(
+        "SEO title",
+        max_length=200,
+        blank=True,
+        help_text="Цільова довжина: 50–60 символів.",
+    )
+    seo_title_en = models.CharField(
+        "SEO title (EN)",
+        max_length=200,
+        blank=True,
+        help_text="Цільова довжина: 50–60 символів.",
+    )
+    seo_description_uk = models.CharField(
+        "SEO description",
+        max_length=300,
+        blank=True,
+        help_text="Цільова довжина: 140–160 символів.",
+    )
+    seo_description_en = models.CharField(
+        "SEO description (EN)",
+        max_length=300,
+        blank=True,
+        help_text="Цільова довжина: 140–160 символів.",
+    )
 
     class Meta:
         ordering = ["sort", "name_uk"]
@@ -59,6 +83,10 @@ class Category(TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse("category", kwargs={"slug": self.slug})
+
+    @property
+    def seo_title(self):
+        return localized(self, "seo_title").strip() or f"{self.name} — Gestia"
 
     @property
     def seo_description(self):

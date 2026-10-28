@@ -95,6 +95,9 @@ def product_meta_description(product) -> str:
 
 
 def category_meta_description(category) -> str:
+    custom = plain_text(localized(category, "seo_description"))
+    if custom:
+        return custom
     parts = []
     for node in reversed(category.chain()):
         label = plain_text(node.name)
