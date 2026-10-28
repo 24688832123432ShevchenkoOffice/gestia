@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.utils.html import format_html
-from unfold.admin import ModelAdmin, TabularInline
+from unfold.admin import ModelAdmin, StackedInline, TabularInline
 from unfold.widgets import UnfoldAdminImageFieldWidget
 
 IMAGE_HELP = "JPG або PNG, довша сторона до 2560 px."
@@ -43,6 +43,10 @@ class GestiaModelAdmin(ImagePreviewMixin, ModelAdmin):
 
 
 class GestiaTabularInline(ImagePreviewMixin, TabularInline):
+    pass
+
+
+class GestiaStackedInline(ImagePreviewMixin, StackedInline):
     pass
 
 

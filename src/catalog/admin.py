@@ -9,14 +9,38 @@ from src.catalog.models import (
     ProductImage,
     ProductSet,
 )
-from src.core.admin_base import GestiaModelAdmin, GestiaTabularInline
+from src.core.admin_base import GestiaModelAdmin, GestiaStackedInline
 from src.core.admin_slug import SlugAdminMixin
 
+GALLERY_HINT = "1272×1540 px. JPG або PNG."
 
-class ProductImageInline(GestiaTabularInline):
+
+def _language_fieldsets(main, ukrainian, english):
+    return (
+        ("Основне", {"fields": main}),
+        ("Українська", {"classes": ("tab",), "fields": ukrainian}),
+        ("English", {"classes": ("tab",), "fields": english}),
+    )
+
+
+class ProductImageInline(GestiaStackedInline):
     model = ProductImage
-    fields = ("image", "sort", "frame_height", "frame_top")
+    fields = ("image", "frame_height", "frame_top", "sort")
     extra = 1
+    ordering_field = "sort"
+    hide_ordering_field = True
+    classes = ("gestia-product-gallery",)
+    verbose_name = "Фото"
+    verbose_name_plural = "Галерея"
+
+    class Media:
+        css = {"all": ("css/admin/product_gallery.css",)}
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == "image" and formfield is not None:
+            formfield.help_text = GALLERY_HINT
+        return formfield
 
 
 @admin.register(Category)
@@ -34,6 +58,11 @@ class CategoryAdmin(SlugAdminMixin, GestiaModelAdmin):
     list_filter = ("is_active", "parent")
     search_fields = ("name_uk", "name_en", "slug")
     ordering = ("sort", "name_uk")
+    fieldsets = _language_fieldsets(
+        ("parent", "slug", "image", "is_active", "sort", "home_sort", "menu_featured", "filter_sort"),
+        ("name_uk", "filter_name_uk"),
+        ("name_en",),
+    )
 
 
 @admin.register(ProductAttributeGroup)
@@ -41,6 +70,11 @@ class ProductAttributeGroupAdmin(SlugAdminMixin, GestiaModelAdmin):
     auto_slug = False
     list_display = ("slug", "name_uk")
     search_fields = ("name_uk", "slug")
+    fieldsets = _language_fieldsets(
+        ("slug",),
+        ("name_uk",),
+        ("name_en",),
+    )
 
 
 @admin.register(ProductAttribute)
@@ -48,12 +82,22 @@ class ProductAttributeAdmin(SlugAdminMixin, GestiaModelAdmin):
     list_display = ("name_uk", "group", "slug", "sort", "is_filterable")
     list_filter = ("group", "is_filterable")
     search_fields = ("name_uk", "name_en", "slug")
+    fieldsets = _language_fieldsets(
+        ("group", "slug", "is_filterable", "show_on_pdp", "sort"),
+        ("name_uk",),
+        ("name_en",),
+    )
 
 
 @admin.register(ProductSet)
 class ProductSetAdmin(SlugAdminMixin, GestiaModelAdmin):
     list_display = ("name_uk", "slug")
     search_fields = ("name_uk", "name_en", "slug")
+    fieldsets = _language_fieldsets(
+        ("slug",),
+        ("name_uk",),
+        ("name_en",),
+    )
 
 
 @admin.register(CatalogCell)
@@ -86,25 +130,26 @@ class ProductAdmin(SlugAdminMixin, GestiaModelAdmin):
     filter_horizontal = ("filter_attrs", "related_manual")
     inlines = [ProductImageInline]
     ordering = ("sort", "name_uk")
-
-    def get_fieldsets(self, request, obj=None):
-        fieldsets = []
-        for title, options in super().get_fieldsets(request, obj):
-            fields = []
-            pending = None
-            for name in options["fields"]:
-                if name == "menu_name_uk":
-                    pending = name
-                    continue
-                if pending == "menu_name_uk" and name == "menu_name_en":
-                    fields.append(("menu_name_uk", "menu_name_en"))
-                    pending = None
-                    continue
-                if pending:
-                    fields.append(pending)
-                    pending = None
-                fields.append(name)
-            if pending:
-                fields.append(pending)
-            fieldsets.append((title, {**options, "fields": tuple(fields)}))
-        return fieldsets
+    fieldsets = _language_fieldsets(
+        (
+            "category",
+            "product_set",
+            "sku",
+            "slug",
+            "price_uah",
+            "price_eur",
+            "stock_status",
+            "stock_qty",
+            "is_active",
+            "is_popular",
+            "price_weight",
+            "card_crop",
+            "name_width",
+            "card_image",
+            "sort",
+            "filter_attrs",
+            "related_manual",
+        ),
+        ("name_uk", "menu_name_uk", "description_uk", "seo_title_uk", "seo_description_uk"),
+        ("name_en", "menu_name_en", "description_en", "seo_title_en", "seo_description_en"),
+    )

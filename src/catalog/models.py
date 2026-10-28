@@ -429,3 +429,6 @@ class ProductImage(models.Model):
         ordering = ["sort", "id"]
         verbose_name = "Фото товару"
         verbose_name_plural = "Фото товару"
+
+    def __str__(self):
+        return "Фото"
