@@ -46,14 +46,6 @@ def seed_about_and_chrome(apps, schema_editor):
         page_updates["body_uk"] = STORY_UK
     if not page.body_en:
         page_updates["body_en"] = STORY_EN
-    if not page.crumb_uk:
-        page_updates["crumb_uk"] = LITERALS["crumb"][0]
-    if not page.crumb_en:
-        page_updates["crumb_en"] = LITERALS["crumb"][1]
-    if not page.story_label_uk:
-        page_updates["story_label_uk"] = LITERALS["story_label"][0]
-    if not page.story_label_en:
-        page_updates["story_label_en"] = LITERALS["story_label"][1]
     if not page.image:
         page_updates["image"] = _stored(
             "figma/about/e6ffe24a-dab5-4cc2-8155-190e3c001158.png",
@@ -128,7 +120,7 @@ def seed_about_and_chrome(apps, schema_editor):
 
     settings_row, _created = SiteSettings.objects.get_or_create(pk=1)
     chrome = {}
-    for key in ("credit", "nav_about", "nav_all", "menu_title"):
+    for key in ("credit", "nav_about", "nav_all"):
         uk, en = LITERALS[key]
         if not getattr(settings_row, f"{key}_uk"):
             chrome[f"{key}_uk"] = uk
@@ -210,36 +202,6 @@ class Migration(migrations.Migration):
             model_name='sitesettings',
             name='credit_uk',
             field=models.CharField(blank=True, max_length=32, verbose_name='Текст перед PrometeyLabs'),
-        ),
-        migrations.AddField(
-            model_name='aboutpage',
-            name='crumb_en',
-            field=models.CharField(blank=True, max_length=16, verbose_name='Посилання «Головна» (EN)'),
-        ),
-        migrations.AddField(
-            model_name='aboutpage',
-            name='crumb_uk',
-            field=models.CharField(blank=True, max_length=16, verbose_name='Посилання «Головна»'),
-        ),
-        migrations.AddField(
-            model_name='aboutpage',
-            name='story_label_en',
-            field=models.CharField(blank=True, max_length=32, verbose_name='Назва історії (EN)'),
-        ),
-        migrations.AddField(
-            model_name='aboutpage',
-            name='story_label_uk',
-            field=models.CharField(blank=True, max_length=32, verbose_name='Назва історії'),
-        ),
-        migrations.AddField(
-            model_name='sitesettings',
-            name='menu_title_en',
-            field=models.CharField(blank=True, max_length=16, verbose_name='Заголовок у меню (EN)'),
-        ),
-        migrations.AddField(
-            model_name='sitesettings',
-            name='menu_title_uk',
-            field=models.CharField(blank=True, help_text='У мобільному меню. Кнопка в шапці лишається своєю.', max_length=16, verbose_name='Заголовок у меню'),
         ),
         migrations.AddField(
             model_name='sitesettings',

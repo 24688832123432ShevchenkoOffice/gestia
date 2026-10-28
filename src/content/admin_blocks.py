@@ -135,7 +135,11 @@ class HomeHeroAdmin(KeyedBlockAdmin):
         "cta_uk": 28,
         "cta_en": 28,
     }
-    image_hints = {"image": PHOTO_DESK, "image_mobile": PHOTO_MOBILE}
+    image_hints = {
+        "image": PHOTO_DESK,
+        "image_mobile": PHOTO_MOBILE,
+        "poster": "Кадр до старту відео, 1442×871 px. Якщо порожньо — основне фото. JPG або PNG.",
+    }
     fieldsets = (
         ("Українська", {"fields": ("title_uk", "text_uk", "cta_uk")}),
         ("Англійська", {"fields": ("title_en", "text_en", "cta_en")}),

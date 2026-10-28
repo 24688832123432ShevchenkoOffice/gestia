@@ -3,7 +3,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import translation
 
-from src.content.models import AboutPage, SiteSettings
+from src.content.media import MediaChoice
+from src.content.models import AboutPage, HomeBlock, SiteSettings
 
 
 class AboutRenderTests(TestCase):
@@ -34,6 +35,8 @@ class AboutRenderTests(TestCase):
         page = self.client.get("/en/pro-nas/")
         self.assertContains(page, "A modern woman can do anything.")
         self.assertContains(page, "She builds a career")
+        self.assertContains(page, "Christmas box")
+        self.assertContains(page, "About Gestia Home")
         self.assertNotContains(page, "Сучасна жінка може все.")
 
 
@@ -67,3 +70,23 @@ class HeaderFooterRenderTests(TestCase):
         english = self.client.get("/en/")
         self.assertContains(english, ">All products</a>")
         self.assertContains(english, "Storefront assembled by")
+
+    def test_menu_heading_does_not_replace_the_header_button(self):
+        self.site.menu_title_uk = "Бокси"
+        self.site.menu_title_en = "Boxes"
+        self.site.save()
+        page = self.client.get("/")
+        self.assertContains(page, "<p>Бокси</p>")
+        self.assertContains(page, "head-nav__catalog")
+        self.assertContains(page, "Каталог")
+        english = self.client.get("/en/")
+        self.assertContains(english, "<p>Boxes</p>")
+        self.assertContains(english, "Catalogue")
+
+
+class MediaChoiceTests(TestCase):
+    def test_photo_keeps_a_video_file_hidden(self):
+        block = HomeBlock(media_kind=MediaChoice.Kind.PHOTO, video="home/video/clip.mp4")
+        self.assertFalse(block.shows_video)
+        block.media_kind = MediaChoice.Kind.VIDEO
+        self.assertTrue(block.shows_video)

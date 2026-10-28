@@ -21,7 +21,19 @@ class SingletonAdmin(GestiaModelAdmin):
 class SiteSettingsAdmin(SingletonAdmin):
     fieldsets = (
         ("Контакти", {"fields": ("phone", "email", "instagram_url", "pinterest_url", "logo")}),
-        ("Пункти меню", {"fields": ("nav_about_uk", "nav_about_en", "nav_all_uk", "nav_all_en")}),
+        (
+            "Пункти меню",
+            {
+                "fields": (
+                    "nav_about_uk",
+                    "nav_about_en",
+                    "nav_all_uk",
+                    "nav_all_en",
+                    "menu_title_uk",
+                    "menu_title_en",
+                )
+            },
+        ),
         ("Адреса", {"fields": ("address_uk", "address_en")}),
         ("Мови", {"fields": ("en_enabled",)}),
         ("Сповіщення", {"fields": ("telegram_notify_orders", "telegram_notify_leads")}),

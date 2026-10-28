@@ -46,8 +46,8 @@ class AboutPageAdmin(_OpenSingleton):
     inlines = (AboutGalleryInline, AboutPickInline)
     text_limits = {"title_uk": 24, "title_en": 24}
     fieldsets = (
-        ("Українська", {"fields": ("title_uk", "lead_uk", "body_uk")}),
-        ("Англійська", {"fields": ("title_en", "lead_en", "body_en")}),
+        ("Українська", {"fields": ("title_uk", "lead_uk", "crumb_uk", "story_label_uk", "body_uk")}),
+        ("Англійська", {"fields": ("title_en", "lead_en", "crumb_en", "story_label_en", "body_en")}),
         ("Банер", {"fields": ("media_kind", "image", "image_mobile", "video", "poster")}),
         (
             "Пошук",
