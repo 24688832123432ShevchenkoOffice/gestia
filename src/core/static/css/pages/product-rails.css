@@ -470,3 +470,25 @@
     letter-spacing: -0.54px;
   }
 }
+
+@media (max-width: 359px) {
+  .pdp-band h2 {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+}
+
+@media (max-width: 374px) {
+  .pdp-more {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .pdp-cta {
+    flex: 1 1 auto;
+    width: min(257px, calc(100% - 104px));
+    max-width: min(257px, calc(100% - 104px));
+    min-width: 0;
+  }
+}
