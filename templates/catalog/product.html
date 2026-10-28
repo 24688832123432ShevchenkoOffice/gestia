@@ -12,6 +12,7 @@
 {% endblock %}
 {% block title %}{{ product.seo_title }}{% endblock %}
 {% block description %}{{ product.seo_description }}{% endblock %}
+{% block og_image %}{% if product.cover %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ product.cover.image.url }}">{% endif %}{% endblock %}
 
 {% block content %}
   <article class="pdp" data-pdp>

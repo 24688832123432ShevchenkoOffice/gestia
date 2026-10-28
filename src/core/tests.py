@@ -1,7 +1,10 @@
+from decimal import Decimal
+
 from django.core.cache import cache
 from django.test import TestCase, override_settings
 from django.utils import translation
 
+from src.catalog.models import Category, Product
 from src.content.models import SiteSettings
 
 
@@ -58,3 +61,96 @@ class NotFoundTests(TestCase):
         self.assertContains(response, "Сторінку не знайдено", status_code=404)
         self.assertContains(response, "На головну", status_code=404)
         self.assertContains(response, "css/pages/utility.css", status_code=404)
+
+
+class SeoTests(TestCase):
+    def setUp(self):
+        translation.activate("uk")
+        cache.clear()
+        SiteSettings.objects.update_or_create(pk=1, defaults={"ru_enabled": False, "en_enabled": True})
+        cache.clear()
+        self.category = Category.objects.create(slug="seo-cat", name_uk="Святкові бокси", is_active=True)
+        self.product = Product.objects.create(
+            category=self.category,
+            sku="SEO-1",
+            slug="seo-box",
+            name_uk="Святковий бокс",
+            seo_description_uk="Опис святкового боксу для столу.",
+            price_uah=Decimal("100.00"),
+            price_eur=Decimal("2.00"),
+            is_active=True,
+        )
+        Product.objects.create(
+            category=self.category,
+            sku="SEO-OFF",
+            slug="seo-hidden",
+            name_uk="Прихований",
+            price_uah=Decimal("10.00"),
+            price_eur=Decimal("1.00"),
+            is_active=False,
+        )
+        Category.objects.create(slug="seo-empty", name_uk="Порожня", is_active=True)
+        parent = Category.objects.create(slug="seo-parent", name_uk="Батько", is_active=True)
+        child = Category.objects.create(slug="seo-child", name_uk="Дитина", parent=parent, is_active=True)
+        Product.objects.create(
+            category=child,
+            sku="SEO-CHILD",
+            slug="seo-child-box",
+            name_uk="Дитячий бокс",
+            price_uah=Decimal("50.00"),
+            price_eur=Decimal("1.00"),
+            is_active=True,
+        )
+
+    def tearDown(self):
+        translation.activate("uk")
+        cache.clear()
+
+    def test_home_and_product_have_canonical_and_og_title(self):
+        home = self.client.get("/")
+        self.assertContains(home, '<link rel="canonical" href="http://testserver/">')
+        self.assertContains(home, '<meta property="og:title" content="Gestia Home">')
+        self.assertContains(home, '<meta property="og:site_name" content="Gestia Home">')
+        self.assertContains(home, '<title>Gestia Home</title>')
+        product = self.client.get(self.product.get_absolute_url())
+        self.assertContains(product, '<link rel="canonical" href="http://testserver/tovar/seo-box/">')
+        self.assertContains(product, '<meta property="og:title" content="Святковий бокс">')
+        self.assertContains(product, 'property="og:description" content="Опис святкового боксу для столу."')
+        queried = self.client.get("/?utm=ig")
+        self.assertContains(queried, '<link rel="canonical" href="http://testserver/">')
+        self.assertNotContains(queried, 'rel="canonical" href="http://testserver/?utm=ig"')
+
+    def test_catalog_description(self):
+        catalog = self.client.get("/katalog/")
+        text = "Каталог святкових боксів і сервірування Gestia Home"
+        self.assertContains(catalog, f'name="description" content="{text}"')
+        category = self.client.get(self.category.get_absolute_url())
+        self.assertContains(category, 'name="description" content="Святкові бокси"')
+
+    def test_sitemap_lists_active_product(self):
+        response = self.client.get("/sitemap.xml")
+        self.assertEqual(response.status_code, 200)
+        body = response.content.decode()
+        self.assertIn("/tovar/seo-box/", body)
+        self.assertIn("/katalog/seo-cat/", body)
+        self.assertIn("/katalog/seo-parent/", body)
+        self.assertIn("/katalog/seo-child/", body)
+        self.assertIn("/pro-nas/", body)
+        self.assertNotIn("/tovar/seo-hidden/", body)
+        self.assertNotIn("/katalog/seo-empty/", body)
+
+    def test_robots_points_at_sitemap(self):
+        response = self.client.get("/robots.txt")
+        self.assertContains(response, "Sitemap: http://testserver/sitemap.xml")
+
+    def test_english_waitlist_modal(self):
+        response = self.client.get("/en/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'lang="en"')
+        self.assertContains(
+            response,
+            "We're adding the final touches to the Gestia Home festive boxes",
+        )
+        self.assertNotContains(response, "Ми додаємо останні штрихи")
+        self.assertContains(response, "No connection. Check your internet and try again.")
+        self.assertContains(response, "Something went wrong. Please try again.")

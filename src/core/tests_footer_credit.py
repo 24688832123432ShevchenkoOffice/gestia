@@ -1,10 +1,14 @@
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import translation
 
 CREDIT_URL = "https://www.prometeylabs.com/internet-shop-v2/"
 
 
 class FooterDeveloperLinkTests(TestCase):
+    def setUp(self):
+        translation.activate("uk")
+
     def test_home_has_nofollow_credit_link(self):
         response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 200)

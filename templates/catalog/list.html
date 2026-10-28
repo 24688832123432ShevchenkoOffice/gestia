@@ -11,6 +11,7 @@
   <script src="{% static 'js/pages/catalog.js' %}" defer></script>
 {% endblock %}
 {% block title %}{% if category %}{{ category.name }}{% else %}{% trans "Каталог" %}{% endif %} — Gestia{% endblock %}
+{% block description %}{% if category %}{{ category.name }}{% else %}{% trans "Каталог святкових боксів і сервірування Gestia Home" %}{% endif %}{% endblock %}
 
 {% block content %}
   <div class="catalog-frame{% if panel_open %} is-filters{% endif %}" data-catalog-page>

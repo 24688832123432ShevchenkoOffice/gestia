@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django import template
+from django.template.loader_tags import BLOCK_CONTEXT_KEY
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
@@ -50,6 +51,15 @@ def sum_uah(context, amount):
     if currency == "eur":
         return format_money(amount, "eur")
     return f"₴ {_grouped(amount)} грн"
+
+
+@register.simple_tag(takes_context=True)
+def block_text(context, name, default=""):
+    block_context = context.render_context.get(BLOCK_CONTEXT_KEY)
+    block = block_context.get_block(name) if block_context is not None else None
+    if block is None:
+        return default
+    return mark_safe(block.nodelist.render(context).strip())
 
 
 @register.simple_tag(takes_context=True)

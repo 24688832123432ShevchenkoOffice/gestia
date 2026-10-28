@@ -23,8 +23,9 @@ def page_not_found(request, exception):
 
 
 def robots_txt(request):
-    lines = ["User-agent: *", "Allow: /", ""]
-    return HttpResponse("\n".join(lines), content_type="text/plain")
+    sitemap_url = request.build_absolute_uri("/sitemap.xml")
+    lines = ["User-agent: *", "Allow: /", "", f"Sitemap: {sitemap_url}"]
+    return HttpResponse("\n".join(lines) + "\n", content_type="text/plain")
 
 
 def theme_css(request):

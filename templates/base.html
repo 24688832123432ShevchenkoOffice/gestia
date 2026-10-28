@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n shop_tags static %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
@@ -8,6 +8,13 @@
   <meta name="theme-color" content="#ffffff">
   <title>{% block title %}Gestia{% endblock %}</title>
   <meta name="description" content="{% block description %}{% endblock %}">
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% block_text 'title' 'Gestia' %}">
+  <meta property="og:description" content="{% block_text 'description' %}">
+  <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  <meta property="og:site_name" content="Gestia Home">
+  {% block og_image %}{% endblock %}
   {% for code, url in lang_switch_urls.items %}
     <link rel="alternate" hreflang="{{ code }}" href="{{ request.scheme }}://{{ request.get_host }}{{ url }}">
   {% endfor %}
@@ -30,6 +37,7 @@
   <link rel="stylesheet" href="{% static 'css/components/cards.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/modal.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/waitlist-modal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/net-toast.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/crumbs.css' %}">
   <link rel="stylesheet" href="{% url 'theme_css' %}">
   {% block extra_css %}{% endblock %}
@@ -41,7 +49,9 @@
   </main>
   {% include "partials/footer.html" %}
   {% include "partials/home/waitlist_modal.html" %}
+  <div hidden data-net-toast-root data-offline="{% trans "Немає з'єднання. Перевірте інтернет і спробуйте ще раз." %}" data-error="{% trans "Сталася помилка. Спробуйте ще раз." %}"></div>
   <script src="{% static 'js/vendor/htmx.min.js' %}" defer></script>
+  <script src="{% static 'js/htmx-errors.js' %}" defer></script>
   <script src="{% static 'js/utils.js' %}" defer></script>
   <script src="{% static 'js/form-validate.js' %}" defer></script>
   <script src="{% static 'js/nav.js' %}" defer></script>
