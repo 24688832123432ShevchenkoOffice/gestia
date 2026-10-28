@@ -183,7 +183,7 @@ msgid "Run"
 msgstr "Виконати"
 
 msgid "Search apps and models..."
-msgstr "Пошук додатків і моделей..."
+msgstr "Пошук розділів і моделей…"
 
 msgid "Select"
 msgstr "Вибрати"
